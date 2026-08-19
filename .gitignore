@@ -1,0 +1,9 @@
+node_modules
+.next
+out
+.env*
+!.env.example
+npm-debug.log*
+4EverEcig_Logo_New(NoBckgrnd)_20170725.png
+artifacts/
+CLAUDE.md

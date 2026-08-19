@@ -1,0 +1,23 @@
+name: hifive-wholesale-preview
+region: nyc
+services:
+  - name: storefront
+    environment_slug: node-js
+    github:
+      repo: Lobbiui/hifivewholesale
+      branch: main
+      deploy_on_push: true
+    build_command: npm run build
+    run_command: npm start
+    http_port: 3000
+    instance_count: 1
+    instance_size_slug: apps-s-1vcpu-0.5gb
+    health_check:
+      http_path: /
+ingress:
+  rules:
+    - component:
+        name: storefront
+      match:
+        path:
+          prefix: /
