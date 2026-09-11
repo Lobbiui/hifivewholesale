@@ -10,6 +10,7 @@
     "db:migrate": "tsx scripts/db-migrate.ts",
     "db:check": "tsx scripts/db-smoke.ts",
     "admin:seed": "tsx scripts/admin-seed.ts",
+    "admin:invite": "tsx scripts/admin-invite.ts",
     "clover:check": "tsx scripts/clover-check.ts",
     "catalog": "node scripts/generate-catalog.mjs",
     "remotion": "remotion studio src/remotion/index.ts --no-open"
