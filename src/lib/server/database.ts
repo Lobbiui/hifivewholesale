@@ -111,7 +111,12 @@ function createPostgresDatabase(connectionString: string) {
         rejectUnauthorized: process.env.DATABASE_SSL_REJECT_UNAUTHORIZED !== "false",
         ...(ca ? { ca } : {}),
       };
-  return new PostgresDatabase(new Pool({ connectionString: parsedConnection.toString(), ssl, max: 10 }));
+  return new PostgresDatabase(new Pool({
+    connectionString: parsedConnection.toString(),
+    ssl,
+    max: 10,
+    connectionTimeoutMillis: 10_000,
+  }));
 }
 
 async function createDatabase(): Promise<Database> {

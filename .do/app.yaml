@@ -15,7 +15,7 @@ services:
     envs:
       - key: DATABASE_URL
         scope: RUN_TIME
-        value: ${hifive-db.DATABASE_PRIVATE_URL}
+        value: ${hifive-db.DATABASE_URL}
       - key: DATABASE_CA_CERT
         scope: RUN_TIME
         value: ${hifive-db.CA_CERT}
