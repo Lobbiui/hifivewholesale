@@ -20,6 +20,7 @@ async function main() {
   const displayName = argument("name");
   const baseUrl = (argument("base-url") || "http://localhost:3010").replace(/\/$/, "");
   const role = argument("role") === "ADMIN" ? "ADMIN" : "SUPER_ADMIN";
+  const resetActive = process.argv.includes("--reset-active");
   if (!email || !email.includes("@") || !displayName) {
     throw new Error("Use --email, --name, and optionally --role and --base-url.");
   }
@@ -30,7 +31,9 @@ async function main() {
     "SELECT id, status FROM users WHERE LOWER(email) = LOWER($1)",
     [email],
   );
-  if (existing.rows[0]?.status === "ACTIVE") throw new Error("That administrator is already active.");
+  if (existing.rows[0]?.status === "ACTIVE" && !resetActive) {
+    throw new Error("That administrator is already active. Use --reset-active to issue a replacement activation link.");
+  }
 
   const userId = existing.rows[0]?.id ?? `usr_${randomUUID()}`;
   const token = randomBytes(32).toString("base64url");
@@ -55,6 +58,12 @@ async function main() {
          failed_attempts = 0, locked_until = NULL`,
       [userId, placeholderHash, tokenHash(token)],
     );
+    if (resetActive) {
+      await transaction.query(
+        "UPDATE sessions SET revoked_at = CURRENT_TIMESTAMP WHERE user_id = $1 AND revoked_at IS NULL",
+        [userId],
+      );
+    }
   });
 
   console.log(`${baseUrl}/admin/activate?token=${encodeURIComponent(token)}`);
