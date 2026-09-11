@@ -1,0 +1,133 @@
+{
+  "source_page": "https://ntrl.co/ntrl-creamy-collection-d9-15mg-300mg-20ct-jar/",
+  "product": "NTRL Creamy Collection D9 15mg 300mg 20ct Jar (Tennessee Compliant)",
+  "collection_scope": "Only the specified PDP; related/catalog products were not scraped.",
+  "gallery_images": [
+    {
+      "flavor": "Blue Razz",
+      "filename": "products/01-blue-razz.jpg",
+      "source_url": "https://cdn11.bigcommerce.com/s-76v0o1qq3k/images/stencil/original/products/255/1242/CREAMY_BLUE_RASP__82181.1786490198.1280.1280__70249.1786650592.jpg?c=1",
+      "resolution_request": "stencil/original/",
+      "downloaded": true
+    },
+    {
+      "flavor": "Cherry",
+      "filename": "products/02-cherry.jpg",
+      "source_url": "https://cdn11.bigcommerce.com/s-76v0o1qq3k/images/stencil/original/products/255/1244/CREAMY_CHERRY__64095.1786490198.1280.1280__06660.1786650592.jpg?c=1",
+      "resolution_request": "stencil/original/",
+      "downloaded": true
+    },
+    {
+      "flavor": "Grape",
+      "filename": "products/03-grape.jpg",
+      "source_url": "https://cdn11.bigcommerce.com/s-76v0o1qq3k/images/stencil/original/products/255/1239/CREAMY_GRAPE__37860.1786490198.1280.1280__05034.1786650592.jpg?c=1",
+      "resolution_request": "stencil/original/",
+      "downloaded": true
+    },
+    {
+      "flavor": "Green Apple",
+      "filename": "products/04-green-apple.jpg",
+      "source_url": "https://cdn11.bigcommerce.com/s-76v0o1qq3k/images/stencil/original/products/255/1238/CREAMY_GREEN_APPLE__80858.1786490200.1280.1280__07903.1786650592.jpg?c=1",
+      "resolution_request": "stencil/original/",
+      "downloaded": true
+    },
+    {
+      "flavor": "Mango",
+      "filename": "products/05-mango.jpg",
+      "source_url": "https://cdn11.bigcommerce.com/s-76v0o1qq3k/images/stencil/original/products/255/1243/CREAMY_MANGO__34542.1786490198.1280.1280__08803.1786650592.jpg?c=1",
+      "resolution_request": "stencil/original/",
+      "downloaded": true
+    },
+    {
+      "flavor": "Orange",
+      "filename": "products/06-orange.jpg",
+      "source_url": "https://cdn11.bigcommerce.com/s-76v0o1qq3k/images/stencil/original/products/255/1241/CREAMY_ORANGE__06925.1786490200.1280.1280__31481.1786650592.jpg?c=1",
+      "resolution_request": "stencil/original/",
+      "downloaded": true
+    },
+    {
+      "flavor": "White Strawnana / Strawnana",
+      "filename": "products/07-strawnana.jpg",
+      "source_url": "https://cdn11.bigcommerce.com/s-76v0o1qq3k/images/stencil/original/products/255/1240/CREAMY_WHITE_STRAW__52964.1786490198.1280.1280__82948.1786650592.jpg?c=1",
+      "resolution_request": "stencil/original/",
+      "downloaded": true
+    }
+  ],
+  "coas": [
+    {
+      "flavor": "Green Apple",
+      "filename": "coa/creamies-green-apple-d9-15mg.pdf",
+      "source_url": "https://ntrl.co/content/COA/2026%20COAS/138458-processed-date-5-22-26-creamy-green-apple-d9-15mg-batch-ni-gac-008215.pdf",
+      "type": "PDF",
+      "d9_mg": 15,
+      "downloaded": true
+    },
+    {
+      "flavor": "Mango",
+      "filename": "coa/creamies-mango-d9-15mg.pdf",
+      "source_url": "https://ntrl.co/content/COA/2026%20COAS/138459-processed-date-5-22-26-creamy-mango-d9-15mg-batch-ni-mc-006515.pdf",
+      "type": "PDF",
+      "d9_mg": 15,
+      "downloaded": true
+    },
+    {
+      "flavor": "Strawnana",
+      "filename": "coa/creamies-strawnana-d9-15mg.pdf",
+      "source_url": "https://ntrl.co/content/COA/2026%20COAS/138460-processed-date-5-22-26-creamy-strawnana-d9-15mg-batch-ni-wsc-006415.pdf",
+      "type": "PDF",
+      "d9_mg": 15,
+      "downloaded": true
+    },
+    {
+      "flavor": "Grape",
+      "filename": "coa/creamies-grape-d9-15mg.pdf",
+      "source_url": "https://ntrl.co/content/COA/2026%20COAS/138461-processed-date-5-22-26-creamy-grape-d9-15mg-batch-ni-gc-003315.pdf",
+      "type": "PDF",
+      "d9_mg": 15,
+      "downloaded": true
+    },
+    {
+      "flavor": "Blue Razz",
+      "filename": "coa/creamies-blue-razz-d9-15mg.pdf",
+      "source_url": "https://ntrl.co/content/COA/2026%20COAS/138462-processed-date-6-3-26-blue-razz-cream-d9-15mg-ni-brc-007715.pdf",
+      "type": "PDF",
+      "d9_mg": 15,
+      "downloaded": true
+    },
+    {
+      "flavor": "Cherry",
+      "filename": "coa/creamies-cherry-d9-15mg.pdf",
+      "source_url": "https://ntrl.co/content/COA/2026%20COAS/138463-processed-date-5-22-26-creamy-cherry-d9-15mg-batch-ni-cc-006815.pdf",
+      "type": "PDF",
+      "d9_mg": 15,
+      "downloaded": true
+    },
+    {
+      "flavor": "Orange",
+      "filename": "coa/creamies-orange-d9-15mg.pdf",
+      "source_url": "https://ntrl.co/content/COA/2026%20COAS/138457-processed-date-5-22-26-creamy-orange-d9-15mg-batch-ni-oc-006915.pdf",
+      "type": "PDF",
+      "d9_mg": 15,
+      "downloaded": true
+    }
+  ],
+  "logos": [
+    {
+      "filename": "logos/ntrl-color-horiz.png",
+      "source_url": "https://cdn11.bigcommerce.com/s-76v0o1qq3k/images/stencil/original/ntrl-color-horiz_1610653785__91954.original.png",
+      "downloaded": true
+    }
+  ],
+  "counts": {
+    "gallery_images": 7,
+    "coas": 7,
+    "logos": 1,
+    "total_files": 15
+  },
+  "missing_links": [],
+  "notes": [
+    "PDP displayed seven flavor gallery renders/swatches: Blue Razz, Cherry, Grape, Green Apple, Mango, Orange, and White Strawnana (COA named Strawnana).",
+    "All seven requested Creamies D9 15mg COA links were present on the PDP and downloaded.",
+    "Gallery source paths use BigCommerce stencil/original/."
+  ]
+}

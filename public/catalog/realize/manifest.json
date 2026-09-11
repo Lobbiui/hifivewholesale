@@ -1,0 +1,872 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-09-02T19:50:07Z",
+  "source": {
+    "site": "https://realizehemp.com/",
+    "collection_url": "https://realizehemp.com/collections/realize-edibles",
+    "coa_page_url": "https://realizehemp.com/pages/certificate-of-analysis-coa"
+  },
+  "scope": "Realize Hemp gummy edibles only",
+  "age_gate_confirmed": true,
+  "product_count": 20,
+  "total_gallery_images": 68,
+  "brand_logo": {
+    "path": "logos/realize-logo-black.png",
+    "source_url": "https://realizehemp.com/cdn/shop/files/Realize_Logo_Black.png?v=1675120249",
+    "description": "Realize brand logo"
+  },
+  "products": [
+    {
+      "name": "Realize Live Resin Gummies, Pineapple - Pineapple Express",
+      "slug": "realize-live-resin-gummies-pineapple-express-pineapple-express",
+      "url": "https://realizehemp.com/collections/realize-edibles/products/realize-live-resin-gummies-pineapple-express-pineapple-express",
+      "line": "Live Resin",
+      "flavor": "Pineapple",
+      "strain": "Pineapple Express",
+      "gallery_image_count": 3,
+      "gallery_images": [
+        {
+          "path": "products/realize-live-resin-gummies-pineapple-express-pineapple-express/01_realize_web_gummies_200mg_march2025_pineapplecopy_35d9ad72-6652-46f8-a72e-123a936d513e.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_gummies_200mg_march2025_pineapplecopy_35d9ad72-6652-46f8-a72e-123a936d513e.jpg?v=1747421526",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/realize-live-resin-gummies-pineapple-express-pineapple-express/02_realize_web_gummies_callouts_april2026_pineapple.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_gummies_callouts_april2026_pineapple.jpg?v=1775587737",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/realize-live-resin-gummies-pineapple-express-pineapple-express/03_realize_web_gummies_200mg_march2025_pineapple_b_badef491-0ce8-408a-aafb-97cc16adb55e.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_gummies_200mg_march2025_pineapple_b_badef491-0ce8-408a-aafb-97cc16adb55e.jpg?v=1775586376",
+          "highest_resolution_source": true
+        }
+      ],
+      "coa": [
+        {
+          "path": "coa/coa_015_2503EXL1022.4111_-_Realize_Hemp_-_PINEAPPLE-REALIZE_LIVE_RESIN_GUMMIES_200_MG.pdf",
+          "source_url": "https://realizehemp.com/cdn/shop/files/2503EXL1022.4111_-_Realize_Hemp_-_PINEAPPLE-REALIZE_LIVE_RESIN_GUMMIES_200_MG.pdf?v=8787202540788101925"
+        },
+        {
+          "path": "coa/coa_046_GPE240328_Realize_PINEAPPLEPINEAPPLE_EXPRESS_Potency__Standard_Cannabinoid_Analysis.pdf",
+          "source_url": "https://realizehemp.com/cdn/shop/files/GPE240328_Realize_PINEAPPLEPINEAPPLE_EXPRESS_Potency__Standard_Cannabinoid_Analysis.pdf?v=407193825685585922"
+        }
+      ]
+    },
+    {
+      "name": "Realize Live Resin Gummies, Green Apple - Sour Diesel",
+      "slug": "realize-live-resin-gummies-green-apple-sour-diesel",
+      "url": "https://realizehemp.com/collections/realize-edibles/products/realize-live-resin-gummies-green-apple-sour-diesel",
+      "line": "Live Resin",
+      "flavor": "Green Apple",
+      "strain": "Sour Diesel",
+      "gallery_image_count": 3,
+      "gallery_images": [
+        {
+          "path": "products/realize-live-resin-gummies-green-apple-sour-diesel/01_realize_web_gummies_200mg_march2025_apple_ac29e549-e4b7-45bd-a2b5-8737d3811572.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_gummies_200mg_march2025_apple_ac29e549-e4b7-45bd-a2b5-8737d3811572.jpg?v=1747421500",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/realize-live-resin-gummies-green-apple-sour-diesel/02_realize_web_gummies_callouts_april2026_greenApple.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_gummies_callouts_april2026_greenApple.jpg?v=1775587728",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/realize-live-resin-gummies-green-apple-sour-diesel/03_realize_web_gummies_200mg_march2025_apple_b_9fd057e9-0062-4945-bb39-f6f4f3a1d2e9.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_gummies_200mg_march2025_apple_b_9fd057e9-0062-4945-bb39-f6f4f3a1d2e9.jpg?v=1775586321",
+          "highest_resolution_source": true
+        }
+      ],
+      "coa": [
+        {
+          "path": "coa/coa_020_2503EXL1092.4443_-_Realize_Hemp_-_GREEN_APPLE-_REALIZE_LIVE_RESIN_GUMMIES_200MG.pdf",
+          "source_url": "https://realizehemp.com/cdn/shop/files/2503EXL1092.4443_-_Realize_Hemp_-_GREEN_APPLE-_REALIZE_LIVE_RESIN_GUMMIES_200MG.pdf?v=1402506757228067755"
+        },
+        {
+          "path": "coa/coa_044_GGA240328_Realize_GREEN_APPLESOUR_DIESEL_Potency__Standard_Cannabinoid_Analysis.pdf",
+          "source_url": "https://realizehemp.com/cdn/shop/files/GGA240328_Realize_GREEN_APPLESOUR_DIESEL_Potency__Standard_Cannabinoid_Analysis.pdf?v=4215517704312698262"
+        }
+      ]
+    },
+    {
+      "name": "Realize Live Resin Gummies, Black Raspberry - Northern Lights",
+      "slug": "realize-live-resin-gummies-black-raspberry-northern-lights",
+      "url": "https://realizehemp.com/collections/realize-edibles/products/realize-live-resin-gummies-black-raspberry-northern-lights",
+      "line": "Live Resin",
+      "flavor": "Black Raspberry",
+      "strain": "Northern Lights",
+      "gallery_image_count": 3,
+      "gallery_images": [
+        {
+          "path": "products/realize-live-resin-gummies-black-raspberry-northern-lights/01_realize_web_gummies_200mg_march2025_blackRasp_dea5dbe7-4471-42ec-9071-0af414b1db52.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_gummies_200mg_march2025_blackRasp_dea5dbe7-4471-42ec-9071-0af414b1db52.jpg?v=1747421468",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/realize-live-resin-gummies-black-raspberry-northern-lights/02_realize_web_gummies_callouts_april2026_blackRasp.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_gummies_callouts_april2026_blackRasp.jpg?v=1775587716",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/realize-live-resin-gummies-black-raspberry-northern-lights/03_realize_web_gummies_200mg_march2025_blackRasp_b_775d6511-03a3-4346-ac0a-868c853a0c29.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_gummies_200mg_march2025_blackRasp_b_775d6511-03a3-4346-ac0a-868c853a0c29.jpg?v=1775586268",
+          "highest_resolution_source": true
+        }
+      ],
+      "coa": [
+        {
+          "path": "coa/coa_022_2503EXL1092.4445_-_Realize_Hemp_-_BLACK_RASPBERRY-REALIZE_LIVE_RESIN_GUMMIES_200MG.pdf",
+          "source_url": "https://realizehemp.com/cdn/shop/files/2503EXL1092.4445_-_Realize_Hemp_-_BLACK_RASPBERRY-REALIZE_LIVE_RESIN_GUMMIES_200MG.pdf?v=18379079032600739894"
+        },
+        {
+          "path": "coa/coa_043_GBR240328_Realize_BLACK_RASPBERRYNORTHERN_LIGHTS_Potency__Standard_Cannabinoid_Analysis.pdf",
+          "source_url": "https://realizehemp.com/cdn/shop/files/GBR240328_Realize_BLACK_RASPBERRYNORTHERN_LIGHTS_Potency__Standard_Cannabinoid_Analysis.pdf?v=6380345348574405988"
+        },
+        {
+          "path": "coa/coa_051_Realize_BEDTIME_BLACK_RASPBERRY_Northern_Lights_Potency__Standard_Cannabinoid_Analysis_2.pdf",
+          "source_url": "https://realizehemp.com/cdn/shop/files/Realize_BEDTIME_BLACK_RASPBERRY_Northern_Lights_Potency__Standard_Cannabinoid_Analysis_2.pdf?v=13843417881529591987"
+        }
+      ]
+    },
+    {
+      "name": "Realize Bedtime Gummies, Black Raspberry - Northern Lights + CBN",
+      "slug": "realize-bedtime-gummies-black-raspberry-northern-lights",
+      "url": "https://realizehemp.com/collections/realize-edibles/products/realize-bedtime-gummies-black-raspberry-northern-lights",
+      "line": "Bedtime",
+      "flavor": "Black Raspberry",
+      "strain": "Northern Lights + CBN",
+      "gallery_image_count": 3,
+      "gallery_images": [
+        {
+          "path": "products/realize-bedtime-gummies-black-raspberry-northern-lights/01_realize_web_gummies_150mg_march2025_bedtime_054ac8a8-3e91-46e5-a8c5-92c1814b59cd.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_gummies_150mg_march2025_bedtime_054ac8a8-3e91-46e5-a8c5-92c1814b59cd.jpg?v=1747421387",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/realize-bedtime-gummies-black-raspberry-northern-lights/02_realize_web_gummies_callouts_april2026_bedtime.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_gummies_callouts_april2026_bedtime.jpg?v=1775587704",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/realize-bedtime-gummies-black-raspberry-northern-lights/03_realize_web_gummies_150mg_march2025_bedtime_b_486351b6-29ed-413e-9492-071beac0f1a5.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_gummies_150mg_march2025_bedtime_b_486351b6-29ed-413e-9492-071beac0f1a5.jpg?v=1775586218",
+          "highest_resolution_source": true
+        }
+      ],
+      "coa": [
+        {
+          "path": "coa/coa_021_2503EXL1092.4444_-_Realize_Hemp_-_BEDTIME_BLACK_RASPBERRY-REALIZE_LIVE_RESIN_GUMMIES_150MG_THC_CBN.pdf",
+          "source_url": "https://realizehemp.com/cdn/shop/files/2503EXL1092.4444_-_Realize_Hemp_-_BEDTIME_BLACK_RASPBERRY-REALIZE_LIVE_RESIN_GUMMIES_150MG_THC_CBN.pdf?v=16606739361498838129"
+        },
+        {
+          "path": "coa/coa_051_Realize_BEDTIME_BLACK_RASPBERRY_Northern_Lights_Potency__Standard_Cannabinoid_Analysis_2.pdf",
+          "source_url": "https://realizehemp.com/cdn/shop/files/Realize_BEDTIME_BLACK_RASPBERRY_Northern_Lights_Potency__Standard_Cannabinoid_Analysis_2.pdf?v=13843417881529591987"
+        }
+      ]
+    },
+    {
+      "name": "Realize Live Resin Gummies, Strawberry - Cereal Milk",
+      "slug": "realize-live-resin-gummies-strawberry-cereal-milk",
+      "url": "https://realizehemp.com/collections/realize-edibles/products/realize-live-resin-gummies-strawberry-cereal-milk",
+      "line": "Live Resin",
+      "flavor": "Strawberry",
+      "strain": "Cereal Milk",
+      "gallery_image_count": 3,
+      "gallery_images": [
+        {
+          "path": "products/realize-live-resin-gummies-strawberry-cereal-milk/01_realize_web_gummies_200mg_march2025_strawberrycopy.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_gummies_200mg_march2025_strawberrycopy.jpg?v=1747421646",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/realize-live-resin-gummies-strawberry-cereal-milk/02_realize_web_gummies_callouts_april2026_strawberry.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_gummies_callouts_april2026_strawberry.jpg?v=1775587965",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/realize-live-resin-gummies-strawberry-cereal-milk/03_realize_web_gummies_200mg_march2025_strawberry_b.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_gummies_200mg_march2025_strawberry_b.jpg?v=1775586679",
+          "highest_resolution_source": true
+        }
+      ],
+      "coa": [
+        {
+          "path": "coa/coa_012_2503EXL1022.4108_-_Realize_Hemp_-_Strawberry-Realize_Live_Resin_Gummies_200_mg.pdf",
+          "source_url": "https://realizehemp.com/cdn/shop/files/2503EXL1022.4108_-_Realize_Hemp_-_Strawberry-Realize_Live_Resin_Gummies_200_mg.pdf?v=14389423522671631464"
+        },
+        {
+          "path": "coa/coa_048_GST230402_Realize_Strawberry_Live_Resin_Gummies_Cereal_Milk_Potency__Standard_Cannabinoid_Analysis.pdf",
+          "source_url": "https://realizehemp.com/cdn/shop/files/GST230402_Realize_Strawberry_Live_Resin_Gummies_Cereal_Milk_Potency__Standard_Cannabinoid_Analysis.pdf?v=11939598889936555770"
+        }
+      ]
+    },
+    {
+      "name": "Realize Live Resin Gummies, Raspberry Lemonade - Wedding Cake",
+      "slug": "limited-edition-realize-live-resin-gummies-raspberry-lemonade-wedding-cake",
+      "url": "https://realizehemp.com/collections/realize-edibles/products/limited-edition-realize-live-resin-gummies-raspberry-lemonade-wedding-cake",
+      "line": "Live Resin",
+      "flavor": "Raspberry Lemonade",
+      "strain": "Wedding Cake",
+      "gallery_image_count": 3,
+      "gallery_images": [
+        {
+          "path": "products/limited-edition-realize-live-resin-gummies-raspberry-lemonade-wedding-cake/01_realize_web_gummies_200mg_march2025_raspLemon_cf3e5fb5-4b47-4791-9f04-e4baf80310e4.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_gummies_200mg_march2025_raspLemon_cf3e5fb5-4b47-4791-9f04-e4baf80310e4.jpg?v=1747421579",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/limited-edition-realize-live-resin-gummies-raspberry-lemonade-wedding-cake/02_realize_web_gummies_callouts_april2026_raspLemon.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_gummies_callouts_april2026_raspLemon.jpg?v=1775587948",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/limited-edition-realize-live-resin-gummies-raspberry-lemonade-wedding-cake/03_realize_web_gummies_200mg_march2025_raspLemon_b_e3b2b558-3d9b-475c-93b9-18ae793f2b22.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_gummies_200mg_march2025_raspLemon_b_e3b2b558-3d9b-475c-93b9-18ae793f2b22.jpg?v=1775586634",
+          "highest_resolution_source": true
+        }
+      ],
+      "coa": [
+        {
+          "path": "coa/coa_019_2503EXL1022.4115_-_Realize_Hemp_-_RASPBERRY_LEMONADE-REALIZE_LIVE_RESIN_GUMMIES_200_MG.pdf",
+          "source_url": "https://realizehemp.com/cdn/shop/files/2503EXL1022.4115_-_Realize_Hemp_-_RASPBERRY_LEMONADE-REALIZE_LIVE_RESIN_GUMMIES_200_MG.pdf?v=574150139837502519"
+        },
+        {
+          "path": "coa/coa_047_GRL230404Realize_Raspberry_LemonadeWedding_Cake_Gummies_Potency__Standard_Cannabinoid_Analysis.pdf",
+          "source_url": "https://realizehemp.com/cdn/shop/files/GRL230404Realize_Raspberry_LemonadeWedding_Cake_Gummies_Potency__Standard_Cannabinoid_Analysis.pdf?v=13332886921137705474"
+        }
+      ]
+    },
+    {
+      "name": "Realize Live Resin Gummies, Peach - Mimosa",
+      "slug": "pow-pow-live-resin-gummies-peach-mimosa",
+      "url": "https://realizehemp.com/collections/realize-edibles/products/pow-pow-live-resin-gummies-peach-mimosa",
+      "line": "Live Resin",
+      "flavor": "Peach",
+      "strain": "Mimosa",
+      "gallery_image_count": 3,
+      "gallery_images": [
+        {
+          "path": "products/pow-pow-live-resin-gummies-peach-mimosa/01_realize_web_gummies_100mg_march2025_peach_35f36d20-d4a4-4714-a6c4-78925fed3c11.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_gummies_100mg_march2025_peach_35f36d20-d4a4-4714-a6c4-78925fed3c11.jpg?v=1747421830",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/pow-pow-live-resin-gummies-peach-mimosa/02_realize_web_gummies_callouts_april2026_peach.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_gummies_callouts_april2026_peach.jpg?v=1775588077",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/pow-pow-live-resin-gummies-peach-mimosa/03_realize_web_gummies_100mg_march2025_peach_b_18b4ef8b-48ea-4c2a-9e56-03b62eb2e7ae.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_gummies_100mg_march2025_peach_b_18b4ef8b-48ea-4c2a-9e56-03b62eb2e7ae.jpg?v=1775586976",
+          "highest_resolution_source": true
+        }
+      ],
+      "coa": [
+        {
+          "path": "coa/coa_014_2503EXL1022.4110_-_Realize_Hemp_-_PEACH-REALIZE_LIVE_RESIN_GUMMIES_100_MG.pdf",
+          "source_url": "https://realizehemp.com/cdn/shop/files/2503EXL1022.4110_-_Realize_Hemp_-_PEACH-REALIZE_LIVE_RESIN_GUMMIES_100_MG.pdf?v=2893359395967659203"
+        },
+        {
+          "path": "coa/coa_045_GPE230316_Realize_Peach1_Potency__Standard_Cannabinoid_Analysis.pdf",
+          "source_url": "https://realizehemp.com/cdn/shop/files/GPE230316_Realize_Peach1_Potency__Standard_Cannabinoid_Analysis.pdf?v=6046364132618380404"
+        },
+        {
+          "path": "coa/coa_053_Realize_Peach_Live_Resin_Gummies_Potency__Standard_Cannabinoid_Analysis.pdf",
+          "source_url": "https://realizehemp.com/cdn/shop/files/Realize_Peach_Live_Resin_Gummies_Potency__Standard_Cannabinoid_Analysis.pdf?v=10090274492137905074"
+        }
+      ]
+    },
+    {
+      "name": "Realize Live Resin Gummies, Watermelon - Gelato",
+      "slug": "pow-pow-live-resin-gummies-watermelon-gelato",
+      "url": "https://realizehemp.com/collections/realize-edibles/products/pow-pow-live-resin-gummies-watermelon-gelato",
+      "line": "Live Resin",
+      "flavor": "Watermelon",
+      "strain": "Gelato",
+      "gallery_image_count": 3,
+      "gallery_images": [
+        {
+          "path": "products/pow-pow-live-resin-gummies-watermelon-gelato/01_realize_web_gummies_100mg_march2025_watermelon_ce2018e2-2857-49f1-aaaf-5718fc371d88.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_gummies_100mg_march2025_watermelon_ce2018e2-2857-49f1-aaaf-5718fc371d88.jpg?v=1747421929",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/pow-pow-live-resin-gummies-watermelon-gelato/02_realize_web_gummies_callouts_april2026_watermelon.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_gummies_callouts_april2026_watermelon.jpg?v=1775588097",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/pow-pow-live-resin-gummies-watermelon-gelato/03_realize_web_gummies_100mg_march2025_watermelon_b_d3c60603-56e1-4684-82fd-7d2986d52b13.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_gummies_100mg_march2025_watermelon_b_d3c60603-56e1-4684-82fd-7d2986d52b13.jpg?v=1775587097",
+          "highest_resolution_source": true
+        }
+      ],
+      "coa": [
+        {
+          "path": "coa/coa_013_2503EXL1022.4109_-_Realize_Hemp_-_WATERMELON-REALIZE_LIVE_RESIN_GUMMIES_100_MG.pdf",
+          "source_url": "https://realizehemp.com/cdn/shop/files/2503EXL1022.4109_-_Realize_Hemp_-_WATERMELON-REALIZE_LIVE_RESIN_GUMMIES_100_MG.pdf?v=7121733818195695502"
+        },
+        {
+          "path": "coa/coa_049_GWA230312_Realize_Watermelon1_Potency__Standard_Cannabinoid_Analysis.pdf",
+          "source_url": "https://realizehemp.com/cdn/shop/files/GWA230312_Realize_Watermelon1_Potency__Standard_Cannabinoid_Analysis.pdf?v=11405529486915384661"
+        },
+        {
+          "path": "coa/coa_054_W-G22C21.pdf",
+          "source_url": "https://realizehemp.com/cdn/shop/files/W-G22C21.pdf?v=17002380934946020390"
+        }
+      ]
+    },
+    {
+      "name": "Realize Live Resin Gummies, Blueberry - Grandaddy Purple",
+      "slug": "pow-pow-live-resin-gummies-blueberry-grandaddy-purple",
+      "url": "https://realizehemp.com/collections/realize-edibles/products/pow-pow-live-resin-gummies-blueberry-grandaddy-purple",
+      "line": "Live Resin",
+      "flavor": "Blueberry",
+      "strain": "Grandaddy Purple",
+      "gallery_image_count": 3,
+      "gallery_images": [
+        {
+          "path": "products/pow-pow-live-resin-gummies-blueberry-grandaddy-purple/01_realize_web_gummies_100mg_march2025_blueberry_9093cf75-840a-4de7-bc7c-90ea6025a715.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_gummies_100mg_march2025_blueberry_9093cf75-840a-4de7-bc7c-90ea6025a715.jpg?v=1747421854",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/pow-pow-live-resin-gummies-blueberry-grandaddy-purple/02_realize_web_gummies_callouts_april2026_blueberry.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_gummies_callouts_april2026_blueberry.jpg?v=1775588067",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/pow-pow-live-resin-gummies-blueberry-grandaddy-purple/03_realize_web_gummies_100mg_march2025_blueberry_b_0efd8970-fe89-40ac-8375-4961c1f1ccaf.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_gummies_100mg_march2025_blueberry_b_0efd8970-fe89-40ac-8375-4961c1f1ccaf.jpg?v=1775587039",
+          "highest_resolution_source": true
+        }
+      ],
+      "coa": [
+        {
+          "path": "coa/coa_018_2503EXL1022.4114_-_Realize_Hemp_-_BLUEBERRY-REALIZE_LIVE_RESIN_GUMMIES_100_MG.pdf",
+          "source_url": "https://realizehemp.com/cdn/shop/files/2503EXL1022.4114_-_Realize_Hemp_-_BLUEBERRY-REALIZE_LIVE_RESIN_GUMMIES_100_MG.pdf?v=9652724935170539146"
+        },
+        {
+          "path": "coa/coa_041_GBB230314_Realize_Blueberry1_Potency__Standard_Cannabinoid_Analysis.pdf",
+          "source_url": "https://realizehemp.com/cdn/shop/files/GBB230314_Realize_Blueberry1_Potency__Standard_Cannabinoid_Analysis.pdf?v=14052085963591267488"
+        },
+        {
+          "path": "coa/coa_052_Realize_Blueberry_Live_Resin_Gummies_Potency__Standard_Cannabinoid_Analysis.pdf",
+          "source_url": "https://realizehemp.com/cdn/shop/files/Realize_Blueberry_Live_Resin_Gummies_Potency__Standard_Cannabinoid_Analysis.pdf?v=1055426061586566116"
+        }
+      ]
+    },
+    {
+      "name": "Realize Live Resin Gummies, Blood Orange - OG Kush",
+      "slug": "pow-pow-live-resin-gummies",
+      "url": "https://realizehemp.com/collections/realize-edibles/products/pow-pow-live-resin-gummies",
+      "line": "Live Resin",
+      "flavor": "Blood Orange",
+      "strain": "OG Kush",
+      "gallery_image_count": 3,
+      "gallery_images": [
+        {
+          "path": "products/pow-pow-live-resin-gummies/01_realize_web_gummies_100mg_march2025_orange_546db326-218d-4fae-967d-e9e57f5a049f.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_gummies_100mg_march2025_orange_546db326-218d-4fae-967d-e9e57f5a049f.jpg?v=1747421950",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/pow-pow-live-resin-gummies/02_realize_web_gummies_callouts_april2026_orange.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_gummies_callouts_april2026_orange.jpg?v=1775588087",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/pow-pow-live-resin-gummies/03_realize_web_gummies_100mg_march2025_orange_b_073df96c-7e63-44c4-bce0-66f296f87e97.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_gummies_100mg_march2025_orange_b_073df96c-7e63-44c4-bce0-66f296f87e97.jpg?v=1775587140",
+          "highest_resolution_source": true
+        }
+      ],
+      "coa": [
+        {
+          "path": "coa/coa_016_2503EXL1022.4112_-_Realize_Hemp_-_BLOOD_ORANGE-REALIZE_LIVE_RESIN_GUMMIES_100_MG.pdf",
+          "source_url": "https://realizehemp.com/cdn/shop/files/2503EXL1022.4112_-_Realize_Hemp_-_BLOOD_ORANGE-REALIZE_LIVE_RESIN_GUMMIES_100_MG.pdf?v=8323206550351497331"
+        },
+        {
+          "path": "coa/coa_042_GBO230310_Realize_Blood_Orange1_Potency__Standard_Cannabinoid_Analysis.pdf",
+          "source_url": "https://realizehemp.com/cdn/shop/files/GBO230310_Realize_Blood_Orange1_Potency__Standard_Cannabinoid_Analysis.pdf?v=3530656307383594216"
+        },
+        {
+          "path": "coa/coa_050_O-G22C21.pdf",
+          "source_url": "https://realizehemp.com/cdn/shop/files/O-G22C21.pdf?v=2100085359679233938"
+        }
+      ]
+    },
+    {
+      "name": "Realize x Apotheca Live Resin Gummies, Dragon Fruit - Gorilla Glue",
+      "slug": "realize-x-apotheca-live-resin-gummies-dragon-fruit-gorilla-glue",
+      "url": "https://realizehemp.com/collections/realize-edibles/products/realize-x-apotheca-live-resin-gummies-dragon-fruit-gorilla-glue",
+      "line": "Live Resin (x Apotheca)",
+      "flavor": "Dragon Fruit",
+      "strain": "Gorilla Glue",
+      "gallery_image_count": 3,
+      "gallery_images": [
+        {
+          "path": "products/realize-x-apotheca-live-resin-gummies-dragon-fruit-gorilla-glue/01_WhatsAppImage2025-03-21at15.02.27.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/WhatsAppImage2025-03-21at15.02.27.jpg?v=1742584245",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/realize-x-apotheca-live-resin-gummies-dragon-fruit-gorilla-glue/02_realize_web_gummies_callouts_april2026_dragonfruit.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_gummies_callouts_april2026_dragonfruit.jpg?v=1775587564",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/realize-x-apotheca-live-resin-gummies-dragon-fruit-gorilla-glue/03_WhatsAppImage2025-03-21at15.02.28.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/WhatsAppImage2025-03-21at15.02.28.jpg?v=1775585958",
+          "highest_resolution_source": true
+        }
+      ],
+      "coa": [
+        {
+          "path": "coa/coa_023_2503EXL1210.4915_-_Realize_Hemp_-_DRAGON_FRUIT-REALIZE_LIVE_RESIN_GUMMY_100_MG.pdf",
+          "source_url": "https://realizehemp.com/cdn/shop/files/2503EXL1210.4915_-_Realize_Hemp_-_DRAGON_FRUIT-REALIZE_LIVE_RESIN_GUMMY_100_MG.pdf?v=2333466466686135336"
+        }
+      ]
+    },
+    {
+      "name": "Realize BIG TIME Gummies, Pineapple - Pineapple Express",
+      "slug": "realize-big-time-gummies-pineapple-pineapple-express",
+      "url": "https://realizehemp.com/collections/realize-edibles/products/realize-big-time-gummies-pineapple-pineapple-express",
+      "line": "BIG TIME",
+      "flavor": "Pineapple",
+      "strain": "Pineapple Express",
+      "gallery_image_count": 4,
+      "gallery_images": [
+        {
+          "path": "products/realize-big-time-gummies-pineapple-pineapple-express/01_realize_web_bigTime_pineapple.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_bigTime_pineapple.jpg?v=1757622279",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/realize-big-time-gummies-pineapple-pineapple-express/02_realize_web_bigTime_callouts_april2026_pineapple.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_bigTime_callouts_april2026_pineapple.jpg?v=1775587484",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/realize-big-time-gummies-pineapple-pineapple-express/03_realize_web_bigTime_pineappleHomepage.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_bigTime_pineappleHomepage.jpg?v=1775587484",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/realize-big-time-gummies-pineapple-pineapple-express/04_realize_web_bigTime_pineapple_b.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_bigTime_pineapple_b.jpg?v=1775587484",
+          "highest_resolution_source": true
+        }
+      ],
+      "coa": [
+        {
+          "path": "coa/coa_031_BTPX061525-_BIG_TIME_Pineapple.pdf",
+          "source_url": "https://realizehemp.com/cdn/shop/files/BTPX061525-_BIG_TIME_Pineapple.pdf?v=11416471965179314017"
+        }
+      ]
+    },
+    {
+      "name": "Realize BIG TIME Gummies, Raspberry Lemonade - Wedding Cake",
+      "slug": "realize-big-time-gummies-raspberry-lemonade-wedding-cake",
+      "url": "https://realizehemp.com/collections/realize-edibles/products/realize-big-time-gummies-raspberry-lemonade-wedding-cake",
+      "line": "BIG TIME",
+      "flavor": "Raspberry Lemonade",
+      "strain": "Wedding Cake",
+      "gallery_image_count": 4,
+      "gallery_images": [
+        {
+          "path": "products/realize-big-time-gummies-raspberry-lemonade-wedding-cake/01_realize_web_bigTime_raspLemonade.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_bigTime_raspLemonade.jpg?v=1757622280",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/realize-big-time-gummies-raspberry-lemonade-wedding-cake/02_realize_web_bigTime_callouts_april2026_raspLemon.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_bigTime_callouts_april2026_raspLemon.jpg?v=1775587473",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/realize-big-time-gummies-raspberry-lemonade-wedding-cake/03_realize_web_bigTime_raspLemonadeHomepage.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_bigTime_raspLemonadeHomepage.jpg?v=1775587473",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/realize-big-time-gummies-raspberry-lemonade-wedding-cake/04_realize_web_bigTime_raspLemonade_b.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_bigTime_raspLemonade_b.jpg?v=1775587473",
+          "highest_resolution_source": true
+        }
+      ],
+      "coa": [
+        {
+          "path": "coa/coa_033_BTRL061525-_BIG_TIME_Raspberry_Lemonade.pdf",
+          "source_url": "https://realizehemp.com/cdn/shop/files/BTRL061525-_BIG_TIME_Raspberry_Lemonade.pdf?v=14212896736527094025"
+        }
+      ]
+    },
+    {
+      "name": "Realize BIG TIME Gummies, Strawberry Kiwi - Strawberry Kiwi",
+      "slug": "realize-big-time-gummies-strawberry-kiwi-strawberry-kiwi",
+      "url": "https://realizehemp.com/collections/realize-edibles/products/realize-big-time-gummies-strawberry-kiwi-strawberry-kiwi",
+      "line": "BIG TIME",
+      "flavor": "Strawberry Kiwi",
+      "strain": "Strawberry Kiwi",
+      "gallery_image_count": 4,
+      "gallery_images": [
+        {
+          "path": "products/realize-big-time-gummies-strawberry-kiwi-strawberry-kiwi/01_realize_web_bigTime_strawKiwi.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_bigTime_strawKiwi.jpg?v=1757622280",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/realize-big-time-gummies-strawberry-kiwi-strawberry-kiwi/02_realize_web_bigTime_callouts_april2026_strawKiwi.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_bigTime_callouts_april2026_strawKiwi.jpg?v=1775587462",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/realize-big-time-gummies-strawberry-kiwi-strawberry-kiwi/03_realize_web_bigTime_strawKiwiHomepage.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_bigTime_strawKiwiHomepage.jpg?v=1775587462",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/realize-big-time-gummies-strawberry-kiwi-strawberry-kiwi/04_realize_web_bigTime_strawKiwi_b.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_bigTime_strawKiwi_b.jpg?v=1775587462",
+          "highest_resolution_source": true
+        }
+      ],
+      "coa": [
+        {
+          "path": "coa/coa_035_BTSK061525-_BIG_TIME_Strawberry_Kiwi.pdf",
+          "source_url": "https://realizehemp.com/cdn/shop/files/BTSK061525-_BIG_TIME_Strawberry_Kiwi.pdf?v=9972517325075860205"
+        }
+      ]
+    },
+    {
+      "name": "Realize BIG TIME Gummies, Blueberry - Grandaddy Purple",
+      "slug": "realize-big-time-gummies-blueberry-grandaddy-purple",
+      "url": "https://realizehemp.com/collections/realize-edibles/products/realize-big-time-gummies-blueberry-grandaddy-purple",
+      "line": "BIG TIME",
+      "flavor": "Blueberry",
+      "strain": "Grandaddy Purple",
+      "gallery_image_count": 4,
+      "gallery_images": [
+        {
+          "path": "products/realize-big-time-gummies-blueberry-grandaddy-purple/01_realize_web_bigTime_blueberry.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_bigTime_blueberry.jpg?v=1757622310",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/realize-big-time-gummies-blueberry-grandaddy-purple/02_realize_web_bigTime_callouts_april2026_blueberry.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_bigTime_callouts_april2026_blueberry.jpg?v=1775587450",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/realize-big-time-gummies-blueberry-grandaddy-purple/03_realize_web_bigTime_blueberryHomepage.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_bigTime_blueberryHomepage.jpg?v=1775587450",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/realize-big-time-gummies-blueberry-grandaddy-purple/04_realize_web_bigTime_blueberry_b.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_bigTime_blueberry_b.jpg?v=1775587450",
+          "highest_resolution_source": true
+        }
+      ],
+      "coa": [
+        {
+          "path": "coa/coa_028_BTBB061525-_BIG_TIME_Blueberry.pdf",
+          "source_url": "https://realizehemp.com/cdn/shop/files/BTBB061525-_BIG_TIME_Blueberry.pdf?v=13516125449177259882"
+        }
+      ]
+    },
+    {
+      "name": "Realize FITTY Gummies, Pineapple - Pineapple Express",
+      "slug": "realize-fitty-gummies-pineapple-pineapple-express",
+      "url": "https://realizehemp.com/collections/realize-edibles/products/realize-fitty-gummies-pineapple-pineapple-express",
+      "line": "FITTY",
+      "flavor": "Pineapple",
+      "strain": "Pineapple Express",
+      "gallery_image_count": 4,
+      "gallery_images": [
+        {
+          "path": "products/realize-fitty-gummies-pineapple-pineapple-express/01_realize_web_fitty_july2025_pineapple.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_fitty_july2025_pineapple.jpg?v=1775587331",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/realize-fitty-gummies-pineapple-pineapple-express/02_realize_web_fitty_callouts_april2026_pineapple.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_fitty_callouts_april2026_pineapple.jpg?v=1775587500",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/realize-fitty-gummies-pineapple-pineapple-express/03_realize_web_fitty_july2025_pineappleHomepage.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_fitty_july2025_pineappleHomepage.jpg?v=1775587500",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/realize-fitty-gummies-pineapple-pineapple-express/04_realize_web_fitty_july2025_pineapple_b.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_fitty_july2025_pineapple_b.jpg?v=1775587500",
+          "highest_resolution_source": true
+        }
+      ],
+      "coa": [
+        {
+          "path": "coa/coa_025_50PX061525-_FITTY_Pineapple.pdf",
+          "source_url": "https://realizehemp.com/cdn/shop/files/50PX061525-_FITTY_Pineapple.pdf?v=593525785843850306"
+        }
+      ]
+    },
+    {
+      "name": "Realize FITTY Gummies, Raspberry Lemonade - Wedding Cake",
+      "slug": "realize-fitty-gummies-raspberry-lemonade-wedding-cake",
+      "url": "https://realizehemp.com/collections/realize-edibles/products/realize-fitty-gummies-raspberry-lemonade-wedding-cake",
+      "line": "FITTY",
+      "flavor": "Raspberry Lemonade",
+      "strain": "Wedding Cake",
+      "gallery_image_count": 4,
+      "gallery_images": [
+        {
+          "path": "products/realize-fitty-gummies-raspberry-lemonade-wedding-cake/01_realize_web_fitty_july2025_raspLemon.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_fitty_july2025_raspLemon.jpg?v=1775587318",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/realize-fitty-gummies-raspberry-lemonade-wedding-cake/02_realize_web_fitty_callouts_april2026_raspLemon.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_fitty_callouts_april2026_raspLemon.jpg?v=1775587512",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/realize-fitty-gummies-raspberry-lemonade-wedding-cake/03_realize_web_fitty_july2025_raspLemonHomepage.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_fitty_july2025_raspLemonHomepage.jpg?v=1775587512",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/realize-fitty-gummies-raspberry-lemonade-wedding-cake/04_realize_web_fitty_july2025_raspLemon_b.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_fitty_july2025_raspLemon_b.jpg?v=1775587512",
+          "highest_resolution_source": true
+        }
+      ],
+      "coa": [
+        {
+          "path": "coa/coa_026_50RL061525-_FITTY_Raspberry_Lemonade.pdf",
+          "source_url": "https://realizehemp.com/cdn/shop/files/50RL061525-_FITTY_Raspberry_Lemonade.pdf?v=1214057917591953318"
+        }
+      ]
+    },
+    {
+      "name": "Realize FITTY Gummies, Strawberry Kiwi - Strawberry Kiwi",
+      "slug": "realize-fitty-gummies-strawberry-kiwi-strawberry-kiwi",
+      "url": "https://realizehemp.com/collections/realize-edibles/products/realize-fitty-gummies-strawberry-kiwi-strawberry-kiwi",
+      "line": "FITTY",
+      "flavor": "Strawberry Kiwi",
+      "strain": "Strawberry Kiwi",
+      "gallery_image_count": 4,
+      "gallery_images": [
+        {
+          "path": "products/realize-fitty-gummies-strawberry-kiwi-strawberry-kiwi/01_realize_web_fitty_july2025_strawKiwi.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_fitty_july2025_strawKiwi.jpg?v=1775587306",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/realize-fitty-gummies-strawberry-kiwi-strawberry-kiwi/02_realize_web_fitty_callouts_april2026_strawKiwi.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_fitty_callouts_april2026_strawKiwi.jpg?v=1775587524",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/realize-fitty-gummies-strawberry-kiwi-strawberry-kiwi/03_realize_web_fitty_july2025_strawKiwiHomepage.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_fitty_july2025_strawKiwiHomepage.jpg?v=1775587524",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/realize-fitty-gummies-strawberry-kiwi-strawberry-kiwi/04_realize_web_fitty_july2025_strawKiwi_b.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_fitty_july2025_strawKiwi_b.jpg?v=1775587524",
+          "highest_resolution_source": true
+        }
+      ],
+      "coa": [
+        {
+          "path": "coa/coa_027_50SK061525-_FITTY_Strawberry_Kiwi.pdf",
+          "source_url": "https://realizehemp.com/cdn/shop/files/50SK061525-_FITTY_Strawberry_Kiwi.pdf?v=6605941382143224822"
+        }
+      ]
+    },
+    {
+      "name": "Realize FITTY Gummies, Blueberry - Grandaddy Purple",
+      "slug": "realize-fitty-gummies-blueberry-grandaddy-purple",
+      "url": "https://realizehemp.com/collections/realize-edibles/products/realize-fitty-gummies-blueberry-grandaddy-purple",
+      "line": "FITTY",
+      "flavor": "Blueberry",
+      "strain": "Grandaddy Purple",
+      "gallery_image_count": 4,
+      "gallery_images": [
+        {
+          "path": "products/realize-fitty-gummies-blueberry-grandaddy-purple/01_realize_web_fitty_july2025_blueberry.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_fitty_july2025_blueberry.jpg?v=1775587295",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/realize-fitty-gummies-blueberry-grandaddy-purple/02_realize_web_fitty_callouts_april2026_blueberry.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_fitty_callouts_april2026_blueberry.jpg?v=1775587534",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/realize-fitty-gummies-blueberry-grandaddy-purple/03_realize_web_fitty_july2025_blueberryHomepage.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_fitty_july2025_blueberryHomepage.jpg?v=1775587534",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/realize-fitty-gummies-blueberry-grandaddy-purple/04_realize_web_fitty_july2025_blueberry_b.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_fitty_july2025_blueberry_b.jpg?v=1775587534",
+          "highest_resolution_source": true
+        }
+      ],
+      "coa": [
+        {
+          "path": "coa/coa_024_50BB061525-_FITTY_Blueberry.pdf",
+          "source_url": "https://realizehemp.com/cdn/shop/files/50BB061525-_FITTY_Blueberry.pdf?v=12881353159359287485"
+        }
+      ]
+    },
+    {
+      "name": "Realize x Apotheca Live Resin Gummies, Strawberry Kiwi - Strawberry Kiwi",
+      "slug": "realize-live-resin-gummies-strawberry-kiwi-strawberry-kiwi",
+      "url": "https://realizehemp.com/collections/realize-edibles/products/realize-live-resin-gummies-strawberry-kiwi-strawberry-kiwi",
+      "line": "Live Resin (x Apotheca)",
+      "flavor": "Strawberry Kiwi",
+      "strain": "Strawberry Kiwi",
+      "gallery_image_count": 3,
+      "gallery_images": [
+        {
+          "path": "products/realize-live-resin-gummies-strawberry-kiwi-strawberry-kiwi/01_realize_web_gummies_100mg_march2025_strawKiwi.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_gummies_100mg_march2025_strawKiwi.jpg?v=1747421101",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/realize-live-resin-gummies-strawberry-kiwi-strawberry-kiwi/02_realize_web_gummies_callouts_april2026_strawKiwi.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_gummies_callouts_april2026_strawKiwi.jpg?v=1775587659",
+          "highest_resolution_source": true
+        },
+        {
+          "path": "products/realize-live-resin-gummies-strawberry-kiwi-strawberry-kiwi/03_realize_web_gummies_100mg_march2025_strawKiwi_b.jpg",
+          "source_url": "https://cdn.shopify.com/s/files/1/0113/1852/6048/files/realize_web_gummies_100mg_march2025_strawKiwi_b.jpg?v=1775586168",
+          "highest_resolution_source": true
+        }
+      ],
+      "coa": [
+        {
+          "path": "coa/coa_011_240808U001-001_CoA.pdf",
+          "source_url": "https://realizehemp.com/cdn/shop/files/240808U001-001_CoA.pdf?v=12963522283562765354"
+        },
+        {
+          "path": "coa/coa_017_2503EXL1022.4113_-_Realize_Hemp_-_STRAWBERRY_KIWI-REALIZE_LIVE_RESIN_GUMMY_100_MG.pdf",
+          "source_url": "https://realizehemp.com/cdn/shop/files/2503EXL1022.4113_-_Realize_Hemp_-_STRAWBERRY_KIWI-REALIZE_LIVE_RESIN_GUMMY_100_MG.pdf?v=8974148433056897282"
+        }
+      ]
+    }
+  ],
+  "coa_page_additional": [
+    {
+      "path": "coa/coa_001_100GBB020625-_Live_Resin_Gummies_Blueberry_ecd859e5-9f86-455a-8eb0-7831f5f39382.pdf",
+      "source_url": "https://realizehemp.com/cdn/shop/files/100GBB020625-_Live_Resin_Gummies_Blueberry_ecd859e5-9f86-455a-8eb0-7831f5f39382.pdf?v=14948015637096964231",
+      "note": "Linked from official COA page; not linked from a current gummy PDP"
+    },
+    {
+      "path": "coa/coa_002_100GBO020825-_Live_Resin_Gummies_Blood_Orange_48478a57-1c8f-44d0-8df3-c9de865211a3.pdf",
+      "source_url": "https://realizehemp.com/cdn/shop/files/100GBO020825-_Live_Resin_Gummies_Blood_Orange_48478a57-1c8f-44d0-8df3-c9de865211a3.pdf?v=12139973496403045474",
+      "note": "Linked from official COA page; not linked from a current gummy PDP"
+    },
+    {
+      "path": "coa/coa_003_100GDF021225-_Live_Resin_Gummies_Dragon_Fruit_c6267d3c-7c5c-433d-801f-fda6060741ff.pdf",
+      "source_url": "https://realizehemp.com/cdn/shop/files/100GDF021225-_Live_Resin_Gummies_Dragon_Fruit_c6267d3c-7c5c-433d-801f-fda6060741ff.pdf?v=8464922390075231550",
+      "note": "Linked from official COA page; not linked from a current gummy PDP"
+    },
+    {
+      "path": "coa/coa_004_100GPEA020425-_Live_Resin_Gummies_Peach_3f063022-5038-4528-b477-e523a723589b.pdf",
+      "source_url": "https://realizehemp.com/cdn/shop/files/100GPEA020425-_Live_Resin_Gummies_Peach_3f063022-5038-4528-b477-e523a723589b.pdf?v=13932004676670131144",
+      "note": "Linked from official COA page; not linked from a current gummy PDP"
+    },
+    {
+      "path": "coa/coa_005_100GSK021025-_Live_Resin_Gummies_Strawberry_Kiwi.pdf",
+      "source_url": "https://realizehemp.com/cdn/shop/files/100GSK021025-_Live_Resin_Gummies_Strawberry_Kiwi.pdf?v=10427124301767783360",
+      "note": "Linked from official COA page; not linked from a current gummy PDP"
+    },
+    {
+      "path": "coa/coa_006_100GWA020225-_Live_Resin_Gummies_Watermelon_ede55309-e35f-45b9-824a-210969bdf494.pdf",
+      "source_url": "https://realizehemp.com/cdn/shop/files/100GWA020225-_Live_Resin_Gummies_Watermelon_ede55309-e35f-45b9-824a-210969bdf494.pdf?v=633072867490478867",
+      "note": "Linked from official COA page; not linked from a current gummy PDP"
+    },
+    {
+      "path": "coa/coa_007_200GALRG021525-_Live_Resin_Gummies_Green_Apple_d33446b2-3ccb-41e6-ab30-56763ef2614c.pdf",
+      "source_url": "https://realizehemp.com/cdn/shop/files/200GALRG021525-_Live_Resin_Gummies_Green_Apple_d33446b2-3ccb-41e6-ab30-56763ef2614c.pdf?v=11014905004415956575",
+      "note": "Linked from official COA page; not linked from a current gummy PDP"
+    },
+    {
+      "path": "coa/coa_008_200GRL022425-_Live_Resin_Gummies_Raspberry_Lemonade_97e26300-e8e2-4fc4-b24b-5e1b841cd304.pdf",
+      "source_url": "https://realizehemp.com/cdn/shop/files/200GRL022425-_Live_Resin_Gummies_Raspberry_Lemonade_97e26300-e8e2-4fc4-b24b-5e1b841cd304.pdf?v=6474319785435210936",
+      "note": "Linked from official COA page; not linked from a current gummy PDP"
+    },
+    {
+      "path": "coa/coa_009_200GST022425-_Live_Resin_Gummies_Strawberry_27bc9c0b-4083-45d8-910f-34593dc12975.pdf",
+      "source_url": "https://realizehemp.com/cdn/shop/files/200GST022425-_Live_Resin_Gummies_Strawberry_27bc9c0b-4083-45d8-910f-34593dc12975.pdf?v=7038055423390852510",
+      "note": "Linked from official COA page; not linked from a current gummy PDP"
+    },
+    {
+      "path": "coa/coa_010_200PXLRG022125-_Live_Resin_Gummies_Pineapple_1bf9617b-44a4-415f-aaae-a8270c22eaa5.pdf",
+      "source_url": "https://realizehemp.com/cdn/shop/files/200PXLRG022125-_Live_Resin_Gummies_Pineapple_1bf9617b-44a4-415f-aaae-a8270c22eaa5.pdf?v=8953682769720354650",
+      "note": "Linked from official COA page; not linked from a current gummy PDP"
+    },
+    {
+      "path": "coa/coa_029_BTBB061525-_BIG_TIME_Blueberry_1b471a6f-1c71-4b47-bc58-fc3e134f9b1d.pdf",
+      "source_url": "https://realizehemp.com/cdn/shop/files/BTBB061525-_BIG_TIME_Blueberry_1b471a6f-1c71-4b47-bc58-fc3e134f9b1d.pdf?v=7806672503036135802",
+      "note": "Linked from official COA page; not linked from a current gummy PDP"
+    },
+    {
+      "path": "coa/coa_030_BTBR021825-_Live_Resin_Gummies_Bedtime_b941dd44-352b-48a5-934d-e56aed44c369.pdf",
+      "source_url": "https://realizehemp.com/cdn/shop/files/BTBR021825-_Live_Resin_Gummies_Bedtime_b941dd44-352b-48a5-934d-e56aed44c369.pdf?v=2955903465717043533",
+      "note": "Linked from official COA page; not linked from a current gummy PDP"
+    },
+    {
+      "path": "coa/coa_032_BTPX061525-_BIG_TIME_Pineapple_3295b9bd-551a-42bb-9b44-f3110584a1d3.pdf",
+      "source_url": "https://realizehemp.com/cdn/shop/files/BTPX061525-_BIG_TIME_Pineapple_3295b9bd-551a-42bb-9b44-f3110584a1d3.pdf?v=6336933291504934058",
+      "note": "Linked from official COA page; not linked from a current gummy PDP"
+    },
+    {
+      "path": "coa/coa_034_BTRL061525-_BIG_TIME_Raspberry_Lemonade_48806c1b-98fa-4739-97de-ce78d195bfd4.pdf",
+      "source_url": "https://realizehemp.com/cdn/shop/files/BTRL061525-_BIG_TIME_Raspberry_Lemonade_48806c1b-98fa-4739-97de-ce78d195bfd4.pdf?v=17633182988255953481",
+      "note": "Linked from official COA page; not linked from a current gummy PDP"
+    },
+    {
+      "path": "coa/coa_036_BTSK061525-_BIG_TIME_Strawberry_Kiwi_8e84cf89-0b94-4b98-9e1a-b2a75c72b08d.pdf",
+      "source_url": "https://realizehemp.com/cdn/shop/files/BTSK061525-_BIG_TIME_Strawberry_Kiwi_8e84cf89-0b94-4b98-9e1a-b2a75c72b08d.pdf?v=1749184764699764696",
+      "note": "Linked from official COA page; not linked from a current gummy PDP"
+    },
+    {
+      "path": "coa/coa_037_DF50BB100125-_DYE_FREE_FITTY_Blueberry.pdf",
+      "source_url": "https://realizehemp.com/cdn/shop/files/DF50BB100125-_DYE_FREE_FITTY_Blueberry.pdf?v=13002565329584933771",
+      "note": "Linked from official COA page; not linked from a current gummy PDP"
+    },
+    {
+      "path": "coa/coa_038_DF50PX100125-_DYE_FREE_FITTY_Pineapple.pdf",
+      "source_url": "https://realizehemp.com/cdn/shop/files/DF50PX100125-_DYE_FREE_FITTY_Pineapple.pdf?v=6584713508422288831",
+      "note": "Linked from official COA page; not linked from a current gummy PDP"
+    },
+    {
+      "path": "coa/coa_039_DF50RL100125-_DYE_FREE_FITTY_Raspberry_Lemonade.pdf",
+      "source_url": "https://realizehemp.com/cdn/shop/files/DF50RL100125-_DYE_FREE_FITTY_Raspberry_Lemonade.pdf?v=10163402312809436708",
+      "note": "Linked from official COA page; not linked from a current gummy PDP"
+    },
+    {
+      "path": "coa/coa_040_DF50SK100125-_DYE_FREE_FITTY_Strawberry_Kiwi.pdf",
+      "source_url": "https://realizehemp.com/cdn/shop/files/DF50SK100125-_DYE_FREE_FITTY_Strawberry_Kiwi.pdf?v=6764985124719260679",
+      "note": "Linked from official COA page; not linked from a current gummy PDP"
+    }
+  ],
+  "notes": [
+    "Gallery sources came from public Shopify product JSON; image size/crop parameters were omitted where present.",
+    "Gallery includes packaging fronts/backs, callout or lifestyle graphics, and nutrition/facts artwork when present in the PDP gallery.",
+    "COA directory includes every PDF linked from the 20 gummy PDPs plus additional gummy-related PDFs linked on the official COA page, including dye-free FITTY COAs.",
+    "Gift card and Tripsy BOOM BOOM mushroom products were excluded; no vapes or pre-rolls included.",
+    "No EasyLockdown/password wall encountered; no purchase or account creation performed."
+  ],
+  "unique_pdp_coa_pdf_count": 35,
+  "official_coa_page_gummy_link_count": 29,
+  "downloaded_coa_pdf_count": 54,
+  "additional_unlisted_line": "Dye-free FITTY appears on COA page only; no dye-free gummy PDP was present in current catalog/collection."
+}

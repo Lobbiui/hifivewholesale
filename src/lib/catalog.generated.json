@@ -1,0 +1,804 @@
+[
+  {
+    "id": "chewbies-broadway-berry-jam",
+    "name": "Broadway Berry Jam",
+    "brand": "Chewbies",
+    "category": "Gummies",
+    "strength": "15 mg Delta-9 · 150 mg bag",
+    "flavor": "Broadway Berry Jam",
+    "format": "10-count bag",
+    "description": "A colorful, shelf-ready Chewbies Delta-9 gummy formulated as a mid-dose 15 mg piece in a 150 mg bag.",
+    "price": null,
+    "casePrice": null,
+    "color": "#f4dc34",
+    "accent": "#ef526f",
+    "badge": "New catalog",
+    "images": [
+      "/catalog/chewbies/products/broadway-berry-jam/Chewbies_15mg_Mid_Dose_Bag_Broadway_Berry_Jam__84196.1777921629.png"
+    ],
+    "coa": [
+      "/catalog/chewbies/products/broadway-berry-jam/COA_15mg_Broadway_Berry_Jam.pdf"
+    ],
+    "brandLogo": "/catalog/chewbies/logos/chewbies_logo.png",
+    "sourceUrl": "https://chewbies.com/broadway-berry-jam/"
+  },
+  {
+    "id": "chewbies-fl-ga-lime",
+    "name": "FL-GA Lime",
+    "brand": "Chewbies",
+    "category": "Gummies",
+    "strength": "15 mg Delta-9 · 150 mg bag",
+    "flavor": "FL-GA Lime",
+    "format": "10-count bag",
+    "description": "A colorful, shelf-ready Chewbies Delta-9 gummy formulated as a mid-dose 15 mg piece in a 150 mg bag.",
+    "price": null,
+    "casePrice": null,
+    "color": "#f4dc34",
+    "accent": "#ef526f",
+    "images": [
+      "/catalog/chewbies/products/fl-ga-lime/New_Chewbies_Renders_New_FL-GA_Lime_15mg__63385.1782153025.png",
+      "/catalog/chewbies/products/fl-ga-lime/New_Chewbies_Renders_New_FL-GA_Lime__55476.1782153025.png"
+    ],
+    "coa": [
+      "/catalog/chewbies/products/fl-ga-lime/COA_15mg_FL_GA_Lime.pdf"
+    ],
+    "brandLogo": "/catalog/chewbies/logos/chewbies_logo.png",
+    "sourceUrl": "https://chewbies.com/fl-ga-lime/"
+  },
+  {
+    "id": "chewbies-knoxville-orangeade",
+    "name": "Knoxville Orangeade",
+    "brand": "Chewbies",
+    "category": "Gummies",
+    "strength": "15 mg Delta-9 · 150 mg bag",
+    "flavor": "Knoxville Orangeade",
+    "format": "10-count bag",
+    "description": "A colorful, shelf-ready Chewbies Delta-9 gummy formulated as a mid-dose 15 mg piece in a 150 mg bag.",
+    "price": null,
+    "casePrice": null,
+    "color": "#f4dc34",
+    "accent": "#ef526f",
+    "images": [
+      "/catalog/chewbies/products/knoxville-orangeade/Chewbies_15mg_Mid_Dose_Bag_Knoxville_Orangeade__84757.1777921672.png"
+    ],
+    "coa": [
+      "/catalog/chewbies/products/knoxville-orangeade/COA_15mg_Knoxville_Orangeade.pdf"
+    ],
+    "brandLogo": "/catalog/chewbies/logos/chewbies_logo.png",
+    "sourceUrl": "https://chewbies.com/knoxville-orangeade/"
+  },
+  {
+    "id": "chewbies-raspberry-mojito-delta-9-gummies",
+    "name": "Raspberry Mojito",
+    "brand": "Chewbies",
+    "category": "Gummies",
+    "strength": "15 mg Delta-9 · 150 mg bag",
+    "flavor": "Raspberry Mojito",
+    "format": "10-count bag",
+    "description": "A colorful, shelf-ready Chewbies Delta-9 gummy formulated as a mid-dose 15 mg piece in a 150 mg bag.",
+    "price": null,
+    "casePrice": null,
+    "color": "#f4dc34",
+    "accent": "#ef526f",
+    "images": [
+      "/catalog/chewbies/products/raspberry-mojito-delta-9-gummies/Chewbies_Raspberry_Mojito_4__42230.1758644577.jpg",
+      "/catalog/chewbies/products/raspberry-mojito-delta-9-gummies/Chewbies_Raspberry_Mojito_6__25483.1758644577.jpg",
+      "/catalog/chewbies/products/raspberry-mojito-delta-9-gummies/Chewbies_Thumbnail_Raspberry_Mojito__47044.1758644577.png"
+    ],
+    "coa": [
+      "/catalog/chewbies/products/raspberry-mojito-delta-9-gummies/COA_15mg_Raspberry_Mojito.pdf"
+    ],
+    "brandLogo": "/catalog/chewbies/logos/chewbies_logo.png",
+    "sourceUrl": "https://chewbies.com/raspberry-mojito-delta-9-gummies/"
+  },
+  {
+    "id": "chewbies-rocket-pop-delta-9-thc-gummies",
+    "name": "Rocket Pop",
+    "brand": "Chewbies",
+    "category": "Gummies",
+    "strength": "15 mg Delta-9 · 150 mg bag",
+    "flavor": "Rocket Pop",
+    "format": "10-count bag",
+    "description": "A colorful, shelf-ready Chewbies Delta-9 gummy formulated as a mid-dose 15 mg piece in a 150 mg bag.",
+    "price": null,
+    "casePrice": null,
+    "color": "#f4dc34",
+    "accent": "#ef526f",
+    "images": [
+      "/catalog/chewbies/products/rocket-pop-delta-9-thc-gummies/25mg_Rocket_Pop_1__14628.1758642799.jpg",
+      "/catalog/chewbies/products/rocket-pop-delta-9-thc-gummies/25mg_Rocket_Pop_3__90772.1758642798.jpg",
+      "/catalog/chewbies/products/rocket-pop-delta-9-thc-gummies/Chewbies_Rocket_Pop_3.5__78985.1746736689.jpg",
+      "/catalog/chewbies/products/rocket-pop-delta-9-thc-gummies/Chewbies_Rocket_Pop_9__06048.1758642798.jpg",
+      "/catalog/chewbies/products/rocket-pop-delta-9-thc-gummies/Chewbies_Thumbnail_Rocket_Pop__52009.1758642798.png"
+    ],
+    "coa": [
+      "/catalog/chewbies/products/rocket-pop-delta-9-thc-gummies/COA_15mg_Rocket_Pop.pdf"
+    ],
+    "brandLogo": "/catalog/chewbies/logos/chewbies_logo.png",
+    "sourceUrl": "https://chewbies.com/rocket-pop-delta-9-thc-gummies/"
+  },
+  {
+    "id": "chewbies-sour-cherry-lemonade-delta-9-gummies",
+    "name": "Sour Cherry Lemonade",
+    "brand": "Chewbies",
+    "category": "Gummies",
+    "strength": "15 mg Delta-9 · 150 mg bag",
+    "flavor": "Sour Cherry Lemonade",
+    "format": "10-count bag",
+    "description": "A colorful, shelf-ready Chewbies Delta-9 gummy formulated as a mid-dose 15 mg piece in a 150 mg bag.",
+    "price": null,
+    "casePrice": null,
+    "color": "#f4dc34",
+    "accent": "#ef526f",
+    "images": [
+      "/catalog/chewbies/products/sour-cherry-lemonade-delta-9-gummies/Chewbies_Sour_Cherry_Leomoade_3__66845.1758643568.jpg",
+      "/catalog/chewbies/products/sour-cherry-lemonade-delta-9-gummies/Chewbies_Thumbnail_Sour_Cherry_Lemonade__71365.1758643568.png",
+      "/catalog/chewbies/products/sour-cherry-lemonade-delta-9-gummies/New_Chewbies_Renders_New_Sour_Cherry_lemonade___23370.1782141854.png"
+    ],
+    "coa": [
+      "/catalog/chewbies/products/sour-cherry-lemonade-delta-9-gummies/COA_15mg_Sour_Cherry_Lemonade.pdf"
+    ],
+    "brandLogo": "/catalog/chewbies/logos/chewbies_logo.png",
+    "sourceUrl": "https://chewbies.com/sour-cherry-lemonade-delta-9-gummies/"
+  },
+  {
+    "id": "ntrl-creamies-blue-razz",
+    "name": "Creamies — Blue Razz",
+    "brand": "NTRL",
+    "category": "Gummies",
+    "strength": "15 mg Delta-9 · 300 mg jar",
+    "flavor": "Blue Razz",
+    "format": "20-count jar",
+    "description": "NTRL Creamies pair a smooth, candy-inspired flavor profile with 15 mg of Delta-9 per piece in a retail-ready jar.",
+    "price": null,
+    "casePrice": null,
+    "color": "#f4f0e7",
+    "accent": "#ff7b38",
+    "badge": "Full flavor set",
+    "images": [
+      "/catalog/ntrl-creamy/products/01-blue-razz.jpg"
+    ],
+    "coa": [
+      "/catalog/ntrl-creamy/coa/creamies-blue-razz-d9-15mg.pdf"
+    ],
+    "brandLogo": "/catalog/ntrl-creamy/logos/ntrl-color-horiz.png",
+    "sourceUrl": "https://ntrl.co/ntrl-creamy-collection-d9-15mg-300mg-20ct-jar/"
+  },
+  {
+    "id": "ntrl-creamies-cherry",
+    "name": "Creamies — Cherry",
+    "brand": "NTRL",
+    "category": "Gummies",
+    "strength": "15 mg Delta-9 · 300 mg jar",
+    "flavor": "Cherry",
+    "format": "20-count jar",
+    "description": "NTRL Creamies pair a smooth, candy-inspired flavor profile with 15 mg of Delta-9 per piece in a retail-ready jar.",
+    "price": null,
+    "casePrice": null,
+    "color": "#f4f0e7",
+    "accent": "#ff7b38",
+    "images": [
+      "/catalog/ntrl-creamy/products/02-cherry.jpg"
+    ],
+    "coa": [
+      "/catalog/ntrl-creamy/coa/creamies-cherry-d9-15mg.pdf"
+    ],
+    "brandLogo": "/catalog/ntrl-creamy/logos/ntrl-color-horiz.png",
+    "sourceUrl": "https://ntrl.co/ntrl-creamy-collection-d9-15mg-300mg-20ct-jar/"
+  },
+  {
+    "id": "ntrl-creamies-grape",
+    "name": "Creamies — Grape",
+    "brand": "NTRL",
+    "category": "Gummies",
+    "strength": "15 mg Delta-9 · 300 mg jar",
+    "flavor": "Grape",
+    "format": "20-count jar",
+    "description": "NTRL Creamies pair a smooth, candy-inspired flavor profile with 15 mg of Delta-9 per piece in a retail-ready jar.",
+    "price": null,
+    "casePrice": null,
+    "color": "#f4f0e7",
+    "accent": "#ff7b38",
+    "images": [
+      "/catalog/ntrl-creamy/products/03-grape.jpg"
+    ],
+    "coa": [
+      "/catalog/ntrl-creamy/coa/creamies-grape-d9-15mg.pdf"
+    ],
+    "brandLogo": "/catalog/ntrl-creamy/logos/ntrl-color-horiz.png",
+    "sourceUrl": "https://ntrl.co/ntrl-creamy-collection-d9-15mg-300mg-20ct-jar/"
+  },
+  {
+    "id": "ntrl-creamies-green-apple",
+    "name": "Creamies — Green Apple",
+    "brand": "NTRL",
+    "category": "Gummies",
+    "strength": "15 mg Delta-9 · 300 mg jar",
+    "flavor": "Green Apple",
+    "format": "20-count jar",
+    "description": "NTRL Creamies pair a smooth, candy-inspired flavor profile with 15 mg of Delta-9 per piece in a retail-ready jar.",
+    "price": null,
+    "casePrice": null,
+    "color": "#f4f0e7",
+    "accent": "#ff7b38",
+    "images": [
+      "/catalog/ntrl-creamy/products/04-green-apple.jpg"
+    ],
+    "coa": [
+      "/catalog/ntrl-creamy/coa/creamies-green-apple-d9-15mg.pdf"
+    ],
+    "brandLogo": "/catalog/ntrl-creamy/logos/ntrl-color-horiz.png",
+    "sourceUrl": "https://ntrl.co/ntrl-creamy-collection-d9-15mg-300mg-20ct-jar/"
+  },
+  {
+    "id": "ntrl-creamies-mango",
+    "name": "Creamies — Mango",
+    "brand": "NTRL",
+    "category": "Gummies",
+    "strength": "15 mg Delta-9 · 300 mg jar",
+    "flavor": "Mango",
+    "format": "20-count jar",
+    "description": "NTRL Creamies pair a smooth, candy-inspired flavor profile with 15 mg of Delta-9 per piece in a retail-ready jar.",
+    "price": null,
+    "casePrice": null,
+    "color": "#f4f0e7",
+    "accent": "#ff7b38",
+    "images": [
+      "/catalog/ntrl-creamy/products/05-mango.jpg"
+    ],
+    "coa": [
+      "/catalog/ntrl-creamy/coa/creamies-mango-d9-15mg.pdf"
+    ],
+    "brandLogo": "/catalog/ntrl-creamy/logos/ntrl-color-horiz.png",
+    "sourceUrl": "https://ntrl.co/ntrl-creamy-collection-d9-15mg-300mg-20ct-jar/"
+  },
+  {
+    "id": "ntrl-creamies-orange",
+    "name": "Creamies — Orange",
+    "brand": "NTRL",
+    "category": "Gummies",
+    "strength": "15 mg Delta-9 · 300 mg jar",
+    "flavor": "Orange",
+    "format": "20-count jar",
+    "description": "NTRL Creamies pair a smooth, candy-inspired flavor profile with 15 mg of Delta-9 per piece in a retail-ready jar.",
+    "price": null,
+    "casePrice": null,
+    "color": "#f4f0e7",
+    "accent": "#ff7b38",
+    "images": [
+      "/catalog/ntrl-creamy/products/06-orange.jpg"
+    ],
+    "coa": [
+      "/catalog/ntrl-creamy/coa/creamies-orange-d9-15mg.pdf"
+    ],
+    "brandLogo": "/catalog/ntrl-creamy/logos/ntrl-color-horiz.png",
+    "sourceUrl": "https://ntrl.co/ntrl-creamy-collection-d9-15mg-300mg-20ct-jar/"
+  },
+  {
+    "id": "ntrl-creamies-strawnana",
+    "name": "Creamies — Strawnana",
+    "brand": "NTRL",
+    "category": "Gummies",
+    "strength": "15 mg Delta-9 · 300 mg jar",
+    "flavor": "Strawnana",
+    "format": "20-count jar",
+    "description": "NTRL Creamies pair a smooth, candy-inspired flavor profile with 15 mg of Delta-9 per piece in a retail-ready jar.",
+    "price": null,
+    "casePrice": null,
+    "color": "#f4f0e7",
+    "accent": "#ff7b38",
+    "images": [
+      "/catalog/ntrl-creamy/products/07-strawnana.jpg"
+    ],
+    "coa": [
+      "/catalog/ntrl-creamy/coa/creamies-strawnana-d9-15mg.pdf"
+    ],
+    "brandLogo": "/catalog/ntrl-creamy/logos/ntrl-color-horiz.png",
+    "sourceUrl": "https://ntrl.co/ntrl-creamy-collection-d9-15mg-300mg-20ct-jar/"
+  },
+  {
+    "id": "realize-realize-live-resin-gummies-pineapple-express-pineapple-express",
+    "name": "Realize Live Resin Gummies, Pineapple - Pineapple Express",
+    "brand": "Realize Hemp",
+    "category": "Gummies",
+    "strength": "Live Resin",
+    "flavor": "Pineapple",
+    "format": "Live Resin · Pineapple Express",
+    "description": "Pineapple gummies from the Realize Hemp Live Resin collection, featuring the Pineapple Express profile.",
+    "price": null,
+    "casePrice": null,
+    "color": "#e6f0d5",
+    "accent": "#5d8f45",
+    "badge": "Featured brand",
+    "images": [
+      "/catalog/realize/products/realize-live-resin-gummies-pineapple-express-pineapple-express/01_realize_web_gummies_200mg_march2025_pineapplecopy_35d9ad72-6652-46f8-a72e-123a936d513e.jpg",
+      "/catalog/realize/products/realize-live-resin-gummies-pineapple-express-pineapple-express/02_realize_web_gummies_callouts_april2026_pineapple.jpg",
+      "/catalog/realize/products/realize-live-resin-gummies-pineapple-express-pineapple-express/03_realize_web_gummies_200mg_march2025_pineapple_b_badef491-0ce8-408a-aafb-97cc16adb55e.jpg"
+    ],
+    "coa": [
+      "/catalog/realize/coa/coa_015_2503EXL1022.4111_-_Realize_Hemp_-_PINEAPPLE-REALIZE_LIVE_RESIN_GUMMIES_200_MG.pdf",
+      "/catalog/realize/coa/coa_046_GPE240328_Realize_PINEAPPLEPINEAPPLE_EXPRESS_Potency__Standard_Cannabinoid_Analysis.pdf"
+    ],
+    "brandLogo": "/catalog/realize/logos/realize-logo-black.png",
+    "sourceUrl": "https://realizehemp.com/collections/realize-edibles/products/realize-live-resin-gummies-pineapple-express-pineapple-express"
+  },
+  {
+    "id": "realize-realize-live-resin-gummies-green-apple-sour-diesel",
+    "name": "Realize Live Resin Gummies, Green Apple - Sour Diesel",
+    "brand": "Realize Hemp",
+    "category": "Gummies",
+    "strength": "Live Resin",
+    "flavor": "Green Apple",
+    "format": "Live Resin · Sour Diesel",
+    "description": "Green Apple gummies from the Realize Hemp Live Resin collection, featuring the Sour Diesel profile.",
+    "price": null,
+    "casePrice": null,
+    "color": "#e6f0d5",
+    "accent": "#5d8f45",
+    "images": [
+      "/catalog/realize/products/realize-live-resin-gummies-green-apple-sour-diesel/01_realize_web_gummies_200mg_march2025_apple_ac29e549-e4b7-45bd-a2b5-8737d3811572.jpg",
+      "/catalog/realize/products/realize-live-resin-gummies-green-apple-sour-diesel/02_realize_web_gummies_callouts_april2026_greenApple.jpg",
+      "/catalog/realize/products/realize-live-resin-gummies-green-apple-sour-diesel/03_realize_web_gummies_200mg_march2025_apple_b_9fd057e9-0062-4945-bb39-f6f4f3a1d2e9.jpg"
+    ],
+    "coa": [
+      "/catalog/realize/coa/coa_020_2503EXL1092.4443_-_Realize_Hemp_-_GREEN_APPLE-_REALIZE_LIVE_RESIN_GUMMIES_200MG.pdf",
+      "/catalog/realize/coa/coa_044_GGA240328_Realize_GREEN_APPLESOUR_DIESEL_Potency__Standard_Cannabinoid_Analysis.pdf"
+    ],
+    "brandLogo": "/catalog/realize/logos/realize-logo-black.png",
+    "sourceUrl": "https://realizehemp.com/collections/realize-edibles/products/realize-live-resin-gummies-green-apple-sour-diesel"
+  },
+  {
+    "id": "realize-realize-live-resin-gummies-black-raspberry-northern-lights",
+    "name": "Realize Live Resin Gummies, Black Raspberry - Northern Lights",
+    "brand": "Realize Hemp",
+    "category": "Gummies",
+    "strength": "Live Resin",
+    "flavor": "Black Raspberry",
+    "format": "Live Resin · Northern Lights",
+    "description": "Black Raspberry gummies from the Realize Hemp Live Resin collection, featuring the Northern Lights profile.",
+    "price": null,
+    "casePrice": null,
+    "color": "#e6f0d5",
+    "accent": "#5d8f45",
+    "images": [
+      "/catalog/realize/products/realize-live-resin-gummies-black-raspberry-northern-lights/01_realize_web_gummies_200mg_march2025_blackRasp_dea5dbe7-4471-42ec-9071-0af414b1db52.jpg",
+      "/catalog/realize/products/realize-live-resin-gummies-black-raspberry-northern-lights/02_realize_web_gummies_callouts_april2026_blackRasp.jpg",
+      "/catalog/realize/products/realize-live-resin-gummies-black-raspberry-northern-lights/03_realize_web_gummies_200mg_march2025_blackRasp_b_775d6511-03a3-4346-ac0a-868c853a0c29.jpg"
+    ],
+    "coa": [
+      "/catalog/realize/coa/coa_022_2503EXL1092.4445_-_Realize_Hemp_-_BLACK_RASPBERRY-REALIZE_LIVE_RESIN_GUMMIES_200MG.pdf",
+      "/catalog/realize/coa/coa_043_GBR240328_Realize_BLACK_RASPBERRYNORTHERN_LIGHTS_Potency__Standard_Cannabinoid_Analysis.pdf",
+      "/catalog/realize/coa/coa_051_Realize_BEDTIME_BLACK_RASPBERRY_Northern_Lights_Potency__Standard_Cannabinoid_Analysis_2.pdf"
+    ],
+    "brandLogo": "/catalog/realize/logos/realize-logo-black.png",
+    "sourceUrl": "https://realizehemp.com/collections/realize-edibles/products/realize-live-resin-gummies-black-raspberry-northern-lights"
+  },
+  {
+    "id": "realize-realize-bedtime-gummies-black-raspberry-northern-lights",
+    "name": "Realize Bedtime Gummies, Black Raspberry - Northern Lights + CBN",
+    "brand": "Realize Hemp",
+    "category": "Gummies",
+    "strength": "Bedtime",
+    "flavor": "Black Raspberry",
+    "format": "Bedtime · Northern Lights + CBN",
+    "description": "Black Raspberry gummies from the Realize Hemp Bedtime collection, featuring the Northern Lights + CBN profile.",
+    "price": null,
+    "casePrice": null,
+    "color": "#e7ead8",
+    "accent": "#536c36",
+    "images": [
+      "/catalog/realize/products/realize-bedtime-gummies-black-raspberry-northern-lights/01_realize_web_gummies_150mg_march2025_bedtime_054ac8a8-3e91-46e5-a8c5-92c1814b59cd.jpg",
+      "/catalog/realize/products/realize-bedtime-gummies-black-raspberry-northern-lights/02_realize_web_gummies_callouts_april2026_bedtime.jpg",
+      "/catalog/realize/products/realize-bedtime-gummies-black-raspberry-northern-lights/03_realize_web_gummies_150mg_march2025_bedtime_b_486351b6-29ed-413e-9492-071beac0f1a5.jpg"
+    ],
+    "coa": [
+      "/catalog/realize/coa/coa_021_2503EXL1092.4444_-_Realize_Hemp_-_BEDTIME_BLACK_RASPBERRY-REALIZE_LIVE_RESIN_GUMMIES_150MG_THC_CBN.pdf",
+      "/catalog/realize/coa/coa_051_Realize_BEDTIME_BLACK_RASPBERRY_Northern_Lights_Potency__Standard_Cannabinoid_Analysis_2.pdf"
+    ],
+    "brandLogo": "/catalog/realize/logos/realize-logo-black.png",
+    "sourceUrl": "https://realizehemp.com/collections/realize-edibles/products/realize-bedtime-gummies-black-raspberry-northern-lights"
+  },
+  {
+    "id": "realize-realize-live-resin-gummies-strawberry-cereal-milk",
+    "name": "Realize Live Resin Gummies, Strawberry - Cereal Milk",
+    "brand": "Realize Hemp",
+    "category": "Gummies",
+    "strength": "Live Resin",
+    "flavor": "Strawberry",
+    "format": "Live Resin · Cereal Milk",
+    "description": "Strawberry gummies from the Realize Hemp Live Resin collection, featuring the Cereal Milk profile.",
+    "price": null,
+    "casePrice": null,
+    "color": "#e6f0d5",
+    "accent": "#5d8f45",
+    "images": [
+      "/catalog/realize/products/realize-live-resin-gummies-strawberry-cereal-milk/01_realize_web_gummies_200mg_march2025_strawberrycopy.jpg",
+      "/catalog/realize/products/realize-live-resin-gummies-strawberry-cereal-milk/02_realize_web_gummies_callouts_april2026_strawberry.jpg",
+      "/catalog/realize/products/realize-live-resin-gummies-strawberry-cereal-milk/03_realize_web_gummies_200mg_march2025_strawberry_b.jpg"
+    ],
+    "coa": [
+      "/catalog/realize/coa/coa_012_2503EXL1022.4108_-_Realize_Hemp_-_Strawberry-Realize_Live_Resin_Gummies_200_mg.pdf",
+      "/catalog/realize/coa/coa_048_GST230402_Realize_Strawberry_Live_Resin_Gummies_Cereal_Milk_Potency__Standard_Cannabinoid_Analysis.pdf"
+    ],
+    "brandLogo": "/catalog/realize/logos/realize-logo-black.png",
+    "sourceUrl": "https://realizehemp.com/collections/realize-edibles/products/realize-live-resin-gummies-strawberry-cereal-milk"
+  },
+  {
+    "id": "realize-limited-edition-realize-live-resin-gummies-raspberry-lemonade-wedding-cake",
+    "name": "Realize Live Resin Gummies, Raspberry Lemonade - Wedding Cake",
+    "brand": "Realize Hemp",
+    "category": "Gummies",
+    "strength": "Live Resin",
+    "flavor": "Raspberry Lemonade",
+    "format": "Live Resin · Wedding Cake",
+    "description": "Raspberry Lemonade gummies from the Realize Hemp Live Resin collection, featuring the Wedding Cake profile.",
+    "price": null,
+    "casePrice": null,
+    "color": "#e6f0d5",
+    "accent": "#5d8f45",
+    "images": [
+      "/catalog/realize/products/limited-edition-realize-live-resin-gummies-raspberry-lemonade-wedding-cake/01_realize_web_gummies_200mg_march2025_raspLemon_cf3e5fb5-4b47-4791-9f04-e4baf80310e4.jpg",
+      "/catalog/realize/products/limited-edition-realize-live-resin-gummies-raspberry-lemonade-wedding-cake/02_realize_web_gummies_callouts_april2026_raspLemon.jpg",
+      "/catalog/realize/products/limited-edition-realize-live-resin-gummies-raspberry-lemonade-wedding-cake/03_realize_web_gummies_200mg_march2025_raspLemon_b_e3b2b558-3d9b-475c-93b9-18ae793f2b22.jpg"
+    ],
+    "coa": [
+      "/catalog/realize/coa/coa_019_2503EXL1022.4115_-_Realize_Hemp_-_RASPBERRY_LEMONADE-REALIZE_LIVE_RESIN_GUMMIES_200_MG.pdf",
+      "/catalog/realize/coa/coa_047_GRL230404Realize_Raspberry_LemonadeWedding_Cake_Gummies_Potency__Standard_Cannabinoid_Analysis.pdf"
+    ],
+    "brandLogo": "/catalog/realize/logos/realize-logo-black.png",
+    "sourceUrl": "https://realizehemp.com/collections/realize-edibles/products/limited-edition-realize-live-resin-gummies-raspberry-lemonade-wedding-cake"
+  },
+  {
+    "id": "realize-pow-pow-live-resin-gummies-peach-mimosa",
+    "name": "Realize Live Resin Gummies, Peach - Mimosa",
+    "brand": "Realize Hemp",
+    "category": "Gummies",
+    "strength": "Live Resin",
+    "flavor": "Peach",
+    "format": "Live Resin · Mimosa",
+    "description": "Peach gummies from the Realize Hemp Live Resin collection, featuring the Mimosa profile.",
+    "price": null,
+    "casePrice": null,
+    "color": "#e6f0d5",
+    "accent": "#5d8f45",
+    "images": [
+      "/catalog/realize/products/pow-pow-live-resin-gummies-peach-mimosa/01_realize_web_gummies_100mg_march2025_peach_35f36d20-d4a4-4714-a6c4-78925fed3c11.jpg",
+      "/catalog/realize/products/pow-pow-live-resin-gummies-peach-mimosa/02_realize_web_gummies_callouts_april2026_peach.jpg",
+      "/catalog/realize/products/pow-pow-live-resin-gummies-peach-mimosa/03_realize_web_gummies_100mg_march2025_peach_b_18b4ef8b-48ea-4c2a-9e56-03b62eb2e7ae.jpg"
+    ],
+    "coa": [
+      "/catalog/realize/coa/coa_014_2503EXL1022.4110_-_Realize_Hemp_-_PEACH-REALIZE_LIVE_RESIN_GUMMIES_100_MG.pdf",
+      "/catalog/realize/coa/coa_045_GPE230316_Realize_Peach1_Potency__Standard_Cannabinoid_Analysis.pdf",
+      "/catalog/realize/coa/coa_053_Realize_Peach_Live_Resin_Gummies_Potency__Standard_Cannabinoid_Analysis.pdf"
+    ],
+    "brandLogo": "/catalog/realize/logos/realize-logo-black.png",
+    "sourceUrl": "https://realizehemp.com/collections/realize-edibles/products/pow-pow-live-resin-gummies-peach-mimosa"
+  },
+  {
+    "id": "realize-pow-pow-live-resin-gummies-watermelon-gelato",
+    "name": "Realize Live Resin Gummies, Watermelon - Gelato",
+    "brand": "Realize Hemp",
+    "category": "Gummies",
+    "strength": "Live Resin",
+    "flavor": "Watermelon",
+    "format": "Live Resin · Gelato",
+    "description": "Watermelon gummies from the Realize Hemp Live Resin collection, featuring the Gelato profile.",
+    "price": null,
+    "casePrice": null,
+    "color": "#e6f0d5",
+    "accent": "#5d8f45",
+    "images": [
+      "/catalog/realize/products/pow-pow-live-resin-gummies-watermelon-gelato/01_realize_web_gummies_100mg_march2025_watermelon_ce2018e2-2857-49f1-aaaf-5718fc371d88.jpg",
+      "/catalog/realize/products/pow-pow-live-resin-gummies-watermelon-gelato/02_realize_web_gummies_callouts_april2026_watermelon.jpg",
+      "/catalog/realize/products/pow-pow-live-resin-gummies-watermelon-gelato/03_realize_web_gummies_100mg_march2025_watermelon_b_d3c60603-56e1-4684-82fd-7d2986d52b13.jpg"
+    ],
+    "coa": [
+      "/catalog/realize/coa/coa_013_2503EXL1022.4109_-_Realize_Hemp_-_WATERMELON-REALIZE_LIVE_RESIN_GUMMIES_100_MG.pdf",
+      "/catalog/realize/coa/coa_049_GWA230312_Realize_Watermelon1_Potency__Standard_Cannabinoid_Analysis.pdf",
+      "/catalog/realize/coa/coa_054_W-G22C21.pdf"
+    ],
+    "brandLogo": "/catalog/realize/logos/realize-logo-black.png",
+    "sourceUrl": "https://realizehemp.com/collections/realize-edibles/products/pow-pow-live-resin-gummies-watermelon-gelato"
+  },
+  {
+    "id": "realize-pow-pow-live-resin-gummies-blueberry-grandaddy-purple",
+    "name": "Realize Live Resin Gummies, Blueberry - Grandaddy Purple",
+    "brand": "Realize Hemp",
+    "category": "Gummies",
+    "strength": "Live Resin",
+    "flavor": "Blueberry",
+    "format": "Live Resin · Grandaddy Purple",
+    "description": "Blueberry gummies from the Realize Hemp Live Resin collection, featuring the Grandaddy Purple profile.",
+    "price": null,
+    "casePrice": null,
+    "color": "#e6f0d5",
+    "accent": "#5d8f45",
+    "images": [
+      "/catalog/realize/products/pow-pow-live-resin-gummies-blueberry-grandaddy-purple/01_realize_web_gummies_100mg_march2025_blueberry_9093cf75-840a-4de7-bc7c-90ea6025a715.jpg",
+      "/catalog/realize/products/pow-pow-live-resin-gummies-blueberry-grandaddy-purple/02_realize_web_gummies_callouts_april2026_blueberry.jpg",
+      "/catalog/realize/products/pow-pow-live-resin-gummies-blueberry-grandaddy-purple/03_realize_web_gummies_100mg_march2025_blueberry_b_0efd8970-fe89-40ac-8375-4961c1f1ccaf.jpg"
+    ],
+    "coa": [
+      "/catalog/realize/coa/coa_018_2503EXL1022.4114_-_Realize_Hemp_-_BLUEBERRY-REALIZE_LIVE_RESIN_GUMMIES_100_MG.pdf",
+      "/catalog/realize/coa/coa_041_GBB230314_Realize_Blueberry1_Potency__Standard_Cannabinoid_Analysis.pdf",
+      "/catalog/realize/coa/coa_052_Realize_Blueberry_Live_Resin_Gummies_Potency__Standard_Cannabinoid_Analysis.pdf"
+    ],
+    "brandLogo": "/catalog/realize/logos/realize-logo-black.png",
+    "sourceUrl": "https://realizehemp.com/collections/realize-edibles/products/pow-pow-live-resin-gummies-blueberry-grandaddy-purple"
+  },
+  {
+    "id": "realize-pow-pow-live-resin-gummies",
+    "name": "Realize Live Resin Gummies, Blood Orange - OG Kush",
+    "brand": "Realize Hemp",
+    "category": "Gummies",
+    "strength": "Live Resin",
+    "flavor": "Blood Orange",
+    "format": "Live Resin · OG Kush",
+    "description": "Blood Orange gummies from the Realize Hemp Live Resin collection, featuring the OG Kush profile.",
+    "price": null,
+    "casePrice": null,
+    "color": "#e6f0d5",
+    "accent": "#5d8f45",
+    "images": [
+      "/catalog/realize/products/pow-pow-live-resin-gummies/01_realize_web_gummies_100mg_march2025_orange_546db326-218d-4fae-967d-e9e57f5a049f.jpg",
+      "/catalog/realize/products/pow-pow-live-resin-gummies/02_realize_web_gummies_callouts_april2026_orange.jpg",
+      "/catalog/realize/products/pow-pow-live-resin-gummies/03_realize_web_gummies_100mg_march2025_orange_b_073df96c-7e63-44c4-bce0-66f296f87e97.jpg"
+    ],
+    "coa": [
+      "/catalog/realize/coa/coa_016_2503EXL1022.4112_-_Realize_Hemp_-_BLOOD_ORANGE-REALIZE_LIVE_RESIN_GUMMIES_100_MG.pdf",
+      "/catalog/realize/coa/coa_042_GBO230310_Realize_Blood_Orange1_Potency__Standard_Cannabinoid_Analysis.pdf",
+      "/catalog/realize/coa/coa_050_O-G22C21.pdf"
+    ],
+    "brandLogo": "/catalog/realize/logos/realize-logo-black.png",
+    "sourceUrl": "https://realizehemp.com/collections/realize-edibles/products/pow-pow-live-resin-gummies"
+  },
+  {
+    "id": "realize-realize-x-apotheca-live-resin-gummies-dragon-fruit-gorilla-glue",
+    "name": "Realize x Apotheca Live Resin Gummies, Dragon Fruit - Gorilla Glue",
+    "brand": "Realize Hemp",
+    "category": "Gummies",
+    "strength": "Live Resin (x Apotheca)",
+    "flavor": "Dragon Fruit",
+    "format": "Live Resin (x Apotheca) · Gorilla Glue",
+    "description": "Dragon Fruit gummies from the Realize Hemp Live Resin (x Apotheca) collection, featuring the Gorilla Glue profile.",
+    "price": null,
+    "casePrice": null,
+    "color": "#eadcf2",
+    "accent": "#713aa4",
+    "images": [
+      "/catalog/realize/products/realize-x-apotheca-live-resin-gummies-dragon-fruit-gorilla-glue/01_WhatsAppImage2025-03-21at15.02.27.jpg",
+      "/catalog/realize/products/realize-x-apotheca-live-resin-gummies-dragon-fruit-gorilla-glue/02_realize_web_gummies_callouts_april2026_dragonfruit.jpg",
+      "/catalog/realize/products/realize-x-apotheca-live-resin-gummies-dragon-fruit-gorilla-glue/03_WhatsAppImage2025-03-21at15.02.28.jpg"
+    ],
+    "coa": [
+      "/catalog/realize/coa/coa_023_2503EXL1210.4915_-_Realize_Hemp_-_DRAGON_FRUIT-REALIZE_LIVE_RESIN_GUMMY_100_MG.pdf"
+    ],
+    "brandLogo": "/catalog/realize/logos/realize-logo-black.png",
+    "sourceUrl": "https://realizehemp.com/collections/realize-edibles/products/realize-x-apotheca-live-resin-gummies-dragon-fruit-gorilla-glue"
+  },
+  {
+    "id": "realize-realize-big-time-gummies-pineapple-pineapple-express",
+    "name": "Realize BIG TIME Gummies, Pineapple - Pineapple Express",
+    "brand": "Realize Hemp",
+    "category": "Gummies",
+    "strength": "BIG TIME",
+    "flavor": "Pineapple",
+    "format": "BIG TIME · Pineapple Express",
+    "description": "Pineapple gummies from the Realize Hemp BIG TIME collection, featuring the Pineapple Express profile.",
+    "price": null,
+    "casePrice": null,
+    "color": "#f0e6f5",
+    "accent": "#8a4cbe",
+    "images": [
+      "/catalog/realize/products/realize-big-time-gummies-pineapple-pineapple-express/01_realize_web_bigTime_pineapple.jpg",
+      "/catalog/realize/products/realize-big-time-gummies-pineapple-pineapple-express/02_realize_web_bigTime_callouts_april2026_pineapple.jpg",
+      "/catalog/realize/products/realize-big-time-gummies-pineapple-pineapple-express/03_realize_web_bigTime_pineappleHomepage.jpg",
+      "/catalog/realize/products/realize-big-time-gummies-pineapple-pineapple-express/04_realize_web_bigTime_pineapple_b.jpg"
+    ],
+    "coa": [
+      "/catalog/realize/coa/coa_031_BTPX061525-_BIG_TIME_Pineapple.pdf"
+    ],
+    "brandLogo": "/catalog/realize/logos/realize-logo-black.png",
+    "sourceUrl": "https://realizehemp.com/collections/realize-edibles/products/realize-big-time-gummies-pineapple-pineapple-express"
+  },
+  {
+    "id": "realize-realize-big-time-gummies-raspberry-lemonade-wedding-cake",
+    "name": "Realize BIG TIME Gummies, Raspberry Lemonade - Wedding Cake",
+    "brand": "Realize Hemp",
+    "category": "Gummies",
+    "strength": "BIG TIME",
+    "flavor": "Raspberry Lemonade",
+    "format": "BIG TIME · Wedding Cake",
+    "description": "Raspberry Lemonade gummies from the Realize Hemp BIG TIME collection, featuring the Wedding Cake profile.",
+    "price": null,
+    "casePrice": null,
+    "color": "#f0e6f5",
+    "accent": "#8a4cbe",
+    "images": [
+      "/catalog/realize/products/realize-big-time-gummies-raspberry-lemonade-wedding-cake/01_realize_web_bigTime_raspLemonade.jpg",
+      "/catalog/realize/products/realize-big-time-gummies-raspberry-lemonade-wedding-cake/02_realize_web_bigTime_callouts_april2026_raspLemon.jpg",
+      "/catalog/realize/products/realize-big-time-gummies-raspberry-lemonade-wedding-cake/03_realize_web_bigTime_raspLemonadeHomepage.jpg",
+      "/catalog/realize/products/realize-big-time-gummies-raspberry-lemonade-wedding-cake/04_realize_web_bigTime_raspLemonade_b.jpg"
+    ],
+    "coa": [
+      "/catalog/realize/coa/coa_033_BTRL061525-_BIG_TIME_Raspberry_Lemonade.pdf"
+    ],
+    "brandLogo": "/catalog/realize/logos/realize-logo-black.png",
+    "sourceUrl": "https://realizehemp.com/collections/realize-edibles/products/realize-big-time-gummies-raspberry-lemonade-wedding-cake"
+  },
+  {
+    "id": "realize-realize-big-time-gummies-strawberry-kiwi-strawberry-kiwi",
+    "name": "Realize BIG TIME Gummies, Strawberry Kiwi - Strawberry Kiwi",
+    "brand": "Realize Hemp",
+    "category": "Gummies",
+    "strength": "BIG TIME",
+    "flavor": "Strawberry Kiwi",
+    "format": "BIG TIME · Strawberry Kiwi",
+    "description": "Strawberry Kiwi gummies from the Realize Hemp BIG TIME collection, featuring the Strawberry Kiwi profile.",
+    "price": null,
+    "casePrice": null,
+    "color": "#f0e6f5",
+    "accent": "#8a4cbe",
+    "images": [
+      "/catalog/realize/products/realize-big-time-gummies-strawberry-kiwi-strawberry-kiwi/01_realize_web_bigTime_strawKiwi.jpg",
+      "/catalog/realize/products/realize-big-time-gummies-strawberry-kiwi-strawberry-kiwi/02_realize_web_bigTime_callouts_april2026_strawKiwi.jpg",
+      "/catalog/realize/products/realize-big-time-gummies-strawberry-kiwi-strawberry-kiwi/03_realize_web_bigTime_strawKiwiHomepage.jpg",
+      "/catalog/realize/products/realize-big-time-gummies-strawberry-kiwi-strawberry-kiwi/04_realize_web_bigTime_strawKiwi_b.jpg"
+    ],
+    "coa": [
+      "/catalog/realize/coa/coa_035_BTSK061525-_BIG_TIME_Strawberry_Kiwi.pdf"
+    ],
+    "brandLogo": "/catalog/realize/logos/realize-logo-black.png",
+    "sourceUrl": "https://realizehemp.com/collections/realize-edibles/products/realize-big-time-gummies-strawberry-kiwi-strawberry-kiwi"
+  },
+  {
+    "id": "realize-realize-big-time-gummies-blueberry-grandaddy-purple",
+    "name": "Realize BIG TIME Gummies, Blueberry - Grandaddy Purple",
+    "brand": "Realize Hemp",
+    "category": "Gummies",
+    "strength": "BIG TIME",
+    "flavor": "Blueberry",
+    "format": "BIG TIME · Grandaddy Purple",
+    "description": "Blueberry gummies from the Realize Hemp BIG TIME collection, featuring the Grandaddy Purple profile.",
+    "price": null,
+    "casePrice": null,
+    "color": "#f0e6f5",
+    "accent": "#8a4cbe",
+    "images": [
+      "/catalog/realize/products/realize-big-time-gummies-blueberry-grandaddy-purple/01_realize_web_bigTime_blueberry.jpg",
+      "/catalog/realize/products/realize-big-time-gummies-blueberry-grandaddy-purple/02_realize_web_bigTime_callouts_april2026_blueberry.jpg",
+      "/catalog/realize/products/realize-big-time-gummies-blueberry-grandaddy-purple/03_realize_web_bigTime_blueberryHomepage.jpg",
+      "/catalog/realize/products/realize-big-time-gummies-blueberry-grandaddy-purple/04_realize_web_bigTime_blueberry_b.jpg"
+    ],
+    "coa": [
+      "/catalog/realize/coa/coa_028_BTBB061525-_BIG_TIME_Blueberry.pdf"
+    ],
+    "brandLogo": "/catalog/realize/logos/realize-logo-black.png",
+    "sourceUrl": "https://realizehemp.com/collections/realize-edibles/products/realize-big-time-gummies-blueberry-grandaddy-purple"
+  },
+  {
+    "id": "realize-realize-fitty-gummies-pineapple-pineapple-express",
+    "name": "Realize FITTY Gummies, Pineapple - Pineapple Express",
+    "brand": "Realize Hemp",
+    "category": "Gummies",
+    "strength": "FITTY",
+    "flavor": "Pineapple",
+    "format": "FITTY · Pineapple Express",
+    "description": "Pineapple gummies from the Realize Hemp FITTY collection, featuring the Pineapple Express profile.",
+    "price": null,
+    "casePrice": null,
+    "color": "#f6ede6",
+    "accent": "#f05068",
+    "images": [
+      "/catalog/realize/products/realize-fitty-gummies-pineapple-pineapple-express/01_realize_web_fitty_july2025_pineapple.jpg",
+      "/catalog/realize/products/realize-fitty-gummies-pineapple-pineapple-express/02_realize_web_fitty_callouts_april2026_pineapple.jpg",
+      "/catalog/realize/products/realize-fitty-gummies-pineapple-pineapple-express/03_realize_web_fitty_july2025_pineappleHomepage.jpg",
+      "/catalog/realize/products/realize-fitty-gummies-pineapple-pineapple-express/04_realize_web_fitty_july2025_pineapple_b.jpg"
+    ],
+    "coa": [
+      "/catalog/realize/coa/coa_025_50PX061525-_FITTY_Pineapple.pdf"
+    ],
+    "brandLogo": "/catalog/realize/logos/realize-logo-black.png",
+    "sourceUrl": "https://realizehemp.com/collections/realize-edibles/products/realize-fitty-gummies-pineapple-pineapple-express"
+  },
+  {
+    "id": "realize-realize-fitty-gummies-raspberry-lemonade-wedding-cake",
+    "name": "Realize FITTY Gummies, Raspberry Lemonade - Wedding Cake",
+    "brand": "Realize Hemp",
+    "category": "Gummies",
+    "strength": "FITTY",
+    "flavor": "Raspberry Lemonade",
+    "format": "FITTY · Wedding Cake",
+    "description": "Raspberry Lemonade gummies from the Realize Hemp FITTY collection, featuring the Wedding Cake profile.",
+    "price": null,
+    "casePrice": null,
+    "color": "#f6ede6",
+    "accent": "#f05068",
+    "images": [
+      "/catalog/realize/products/realize-fitty-gummies-raspberry-lemonade-wedding-cake/01_realize_web_fitty_july2025_raspLemon.jpg",
+      "/catalog/realize/products/realize-fitty-gummies-raspberry-lemonade-wedding-cake/02_realize_web_fitty_callouts_april2026_raspLemon.jpg",
+      "/catalog/realize/products/realize-fitty-gummies-raspberry-lemonade-wedding-cake/03_realize_web_fitty_july2025_raspLemonHomepage.jpg",
+      "/catalog/realize/products/realize-fitty-gummies-raspberry-lemonade-wedding-cake/04_realize_web_fitty_july2025_raspLemon_b.jpg"
+    ],
+    "coa": [
+      "/catalog/realize/coa/coa_026_50RL061525-_FITTY_Raspberry_Lemonade.pdf"
+    ],
+    "brandLogo": "/catalog/realize/logos/realize-logo-black.png",
+    "sourceUrl": "https://realizehemp.com/collections/realize-edibles/products/realize-fitty-gummies-raspberry-lemonade-wedding-cake"
+  },
+  {
+    "id": "realize-realize-fitty-gummies-strawberry-kiwi-strawberry-kiwi",
+    "name": "Realize FITTY Gummies, Strawberry Kiwi - Strawberry Kiwi",
+    "brand": "Realize Hemp",
+    "category": "Gummies",
+    "strength": "FITTY",
+    "flavor": "Strawberry Kiwi",
+    "format": "FITTY · Strawberry Kiwi",
+    "description": "Strawberry Kiwi gummies from the Realize Hemp FITTY collection, featuring the Strawberry Kiwi profile.",
+    "price": null,
+    "casePrice": null,
+    "color": "#f6ede6",
+    "accent": "#f05068",
+    "images": [
+      "/catalog/realize/products/realize-fitty-gummies-strawberry-kiwi-strawberry-kiwi/01_realize_web_fitty_july2025_strawKiwi.jpg",
+      "/catalog/realize/products/realize-fitty-gummies-strawberry-kiwi-strawberry-kiwi/02_realize_web_fitty_callouts_april2026_strawKiwi.jpg",
+      "/catalog/realize/products/realize-fitty-gummies-strawberry-kiwi-strawberry-kiwi/03_realize_web_fitty_july2025_strawKiwiHomepage.jpg",
+      "/catalog/realize/products/realize-fitty-gummies-strawberry-kiwi-strawberry-kiwi/04_realize_web_fitty_july2025_strawKiwi_b.jpg"
+    ],
+    "coa": [
+      "/catalog/realize/coa/coa_027_50SK061525-_FITTY_Strawberry_Kiwi.pdf"
+    ],
+    "brandLogo": "/catalog/realize/logos/realize-logo-black.png",
+    "sourceUrl": "https://realizehemp.com/collections/realize-edibles/products/realize-fitty-gummies-strawberry-kiwi-strawberry-kiwi"
+  },
+  {
+    "id": "realize-realize-fitty-gummies-blueberry-grandaddy-purple",
+    "name": "Realize FITTY Gummies, Blueberry - Grandaddy Purple",
+    "brand": "Realize Hemp",
+    "category": "Gummies",
+    "strength": "FITTY",
+    "flavor": "Blueberry",
+    "format": "FITTY · Grandaddy Purple",
+    "description": "Blueberry gummies from the Realize Hemp FITTY collection, featuring the Grandaddy Purple profile.",
+    "price": null,
+    "casePrice": null,
+    "color": "#f6ede6",
+    "accent": "#f05068",
+    "images": [
+      "/catalog/realize/products/realize-fitty-gummies-blueberry-grandaddy-purple/01_realize_web_fitty_july2025_blueberry.jpg",
+      "/catalog/realize/products/realize-fitty-gummies-blueberry-grandaddy-purple/02_realize_web_fitty_callouts_april2026_blueberry.jpg",
+      "/catalog/realize/products/realize-fitty-gummies-blueberry-grandaddy-purple/03_realize_web_fitty_july2025_blueberryHomepage.jpg",
+      "/catalog/realize/products/realize-fitty-gummies-blueberry-grandaddy-purple/04_realize_web_fitty_july2025_blueberry_b.jpg"
+    ],
+    "coa": [
+      "/catalog/realize/coa/coa_024_50BB061525-_FITTY_Blueberry.pdf"
+    ],
+    "brandLogo": "/catalog/realize/logos/realize-logo-black.png",
+    "sourceUrl": "https://realizehemp.com/collections/realize-edibles/products/realize-fitty-gummies-blueberry-grandaddy-purple"
+  },
+  {
+    "id": "realize-realize-live-resin-gummies-strawberry-kiwi-strawberry-kiwi",
+    "name": "Realize x Apotheca Live Resin Gummies, Strawberry Kiwi - Strawberry Kiwi",
+    "brand": "Realize Hemp",
+    "category": "Gummies",
+    "strength": "Live Resin (x Apotheca)",
+    "flavor": "Strawberry Kiwi",
+    "format": "Live Resin (x Apotheca) · Strawberry Kiwi",
+    "description": "Strawberry Kiwi gummies from the Realize Hemp Live Resin (x Apotheca) collection, featuring the Strawberry Kiwi profile.",
+    "price": null,
+    "casePrice": null,
+    "color": "#eadcf2",
+    "accent": "#713aa4",
+    "images": [
+      "/catalog/realize/products/realize-live-resin-gummies-strawberry-kiwi-strawberry-kiwi/01_realize_web_gummies_100mg_march2025_strawKiwi.jpg",
+      "/catalog/realize/products/realize-live-resin-gummies-strawberry-kiwi-strawberry-kiwi/02_realize_web_gummies_callouts_april2026_strawKiwi.jpg",
+      "/catalog/realize/products/realize-live-resin-gummies-strawberry-kiwi-strawberry-kiwi/03_realize_web_gummies_100mg_march2025_strawKiwi_b.jpg"
+    ],
+    "coa": [
+      "/catalog/realize/coa/coa_011_240808U001-001_CoA.pdf",
+      "/catalog/realize/coa/coa_017_2503EXL1022.4113_-_Realize_Hemp_-_STRAWBERRY_KIWI-REALIZE_LIVE_RESIN_GUMMY_100_MG.pdf"
+    ],
+    "brandLogo": "/catalog/realize/logos/realize-logo-black.png",
+    "sourceUrl": "https://realizehemp.com/collections/realize-edibles/products/realize-live-resin-gummies-strawberry-kiwi-strawberry-kiwi"
+  }
+]

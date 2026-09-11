@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+    <head>
+        <title>Chewbies - Not Found</title>
+        <link rel="dns-prefetch preconnect" href="https://cdn11.bigcommerce.com/s-xncnqmg8ze" crossorigin><link rel="dns-prefetch preconnect" href="https://fonts.googleapis.com/" crossorigin><link rel="dns-prefetch preconnect" href="https://fonts.gstatic.com/" crossorigin>
+        <meta name="keywords" content="Chewbies Gummies, Delta-9, edibles, indica gummies, sativa gummies, thc edibles, hemp derived edibles"><meta name="description" content="Chewbies delivers effective &amp; delicious Delta-9 THC gummies in low, mid, and high doses. Enjoy dozens of flavors crafted for every tolerance. Shop now."><meta name='platform' content='bigcommerce.stencil' />
+        
+         
+
+        <link href="https://cdn11.bigcommerce.com/s-xncnqmg8ze/product_images/Chewbies%20Logo%20Web%20Browers%20Icon.png?t=1747168700" rel="shortcut icon">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <script nonce="">
+            document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
+        </script>
+
+        <script nonce="">
+    function browserSupportsAllFeatures() {
+        return window.Promise
+            && window.fetch
+            && window.URL
+            && window.URLSearchParams
+            && window.WeakMap
+            // object-fit support
+            && ('objectFit' in document.documentElement.style);
+    }
+
+    function loadScript(src) {
+        var js = document.createElement('script');
+        js.src = src;
+        js.onerror = function () {
+            console.error('Failed to load polyfill script ' + src);
+        };
+        document.head.appendChild(js);
+    }
+
+    if (!browserSupportsAllFeatures()) {
+        loadScript('https://cdn11.bigcommerce.com/s-xncnqmg8ze/stencil/849e4f80-3238-013e-8676-52311d5784e6/dist/theme-bundle.polyfills.js');
+    }
+</script>
+        <script nonce="">window.consentManagerTranslations = `{"locale":"en","locales":{"consent_manager.data_collection_warning":"en","consent_manager.accept_all_cookies":"en","consent_manager.gdpr_settings":"en","consent_manager.data_collection_preferences":"en","consent_manager.manage_data_collection_preferences":"en","consent_manager.use_data_by_cookies":"en","consent_manager.data_categories_table":"en","consent_manager.allow":"en","consent_manager.accept":"en","consent_manager.deny":"en","consent_manager.dismiss":"en","consent_manager.reject_all":"en","consent_manager.category":"en","consent_manager.purpose":"en","consent_manager.functional_category":"en","consent_manager.functional_purpose":"en","consent_manager.analytics_category":"en","consent_manager.analytics_purpose":"en","consent_manager.targeting_category":"en","consent_manager.advertising_category":"en","consent_manager.advertising_purpose":"en","consent_manager.essential_category":"en","consent_manager.esential_purpose":"en","consent_manager.yes":"en","consent_manager.no":"en","consent_manager.not_available":"en","consent_manager.cancel":"en","consent_manager.save":"en","consent_manager.back_to_preferences":"en","consent_manager.close_without_changes":"en","consent_manager.unsaved_changes":"en","consent_manager.by_using":"en","consent_manager.agree_on_data_collection":"en","consent_manager.change_preferences":"en","consent_manager.cancel_dialog_title":"en","consent_manager.privacy_policy":"en","consent_manager.allow_category_tracking":"en","consent_manager.disallow_category_tracking":"en"},"translations":{"consent_manager.data_collection_warning":"We use cookies (and other similar technologies) to collect data to improve your shopping experience.","consent_manager.accept_all_cookies":"Accept All Cookies","consent_manager.gdpr_settings":"Settings","consent_manager.data_collection_preferences":"Website Data Collection Preferences","consent_manager.manage_data_collection_preferences":"Manage Website Data Collection Preferences","consent_manager.use_data_by_cookies":" uses data collected by cookies and JavaScript libraries to improve your shopping experience.","consent_manager.data_categories_table":"The table below outlines how we use this data by category. To opt out of a category of data collection, select 'No' and save your preferences.","consent_manager.allow":"Allow","consent_manager.accept":"Accept","consent_manager.deny":"Deny","consent_manager.dismiss":"Dismiss","consent_manager.reject_all":"Reject all","consent_manager.category":"Category","consent_manager.purpose":"Purpose","consent_manager.functional_category":"Functional","consent_manager.functional_purpose":"Enables enhanced functionality, such as videos and live chat. If you do not allow these, then some or all of these functions may not work properly.","consent_manager.analytics_category":"Analytics","consent_manager.analytics_purpose":"Provide statistical information on site usage, e.g., web analytics so we can improve this website over time.","consent_manager.targeting_category":"Targeting","consent_manager.advertising_category":"Advertising","consent_manager.advertising_purpose":"Used to create profiles or personalize content to enhance your shopping experience.","consent_manager.essential_category":"Essential","consent_manager.esential_purpose":"Essential for the site and any requested services to work, but do not perform any additional or secondary function.","consent_manager.yes":"Yes","consent_manager.no":"No","consent_manager.not_available":"N/A","consent_manager.cancel":"Cancel","consent_manager.save":"Save","consent_manager.back_to_preferences":"Back to Preferences","consent_manager.close_without_changes":"You have unsaved changes to your data collection preferences. Are you sure you want to close without saving?","consent_manager.unsaved_changes":"You have unsaved changes","consent_manager.by_using":"By using our website, you're agreeing to our","consent_manager.agree_on_data_collection":"By using our website, you're agreeing to the collection of data as described in our ","consent_manager.change_preferences":"You can change your preferences at any time","consent_manager.cancel_dialog_title":"Are you sure you want to cancel?","consent_manager.privacy_policy":"Privacy Policy","consent_manager.allow_category_tracking":"Allow [CATEGORY_NAME] tracking","consent_manager.disallow_category_tracking":"Disallow [CATEGORY_NAME] tracking"}}`;</script>
+
+        <script nonce="">
+            window.lazySizesConfig = window.lazySizesConfig || {};
+            window.lazySizesConfig.loadMode = 1;
+        </script>
+        <script nonce="" async src="https://cdn11.bigcommerce.com/s-xncnqmg8ze/stencil/849e4f80-3238-013e-8676-52311d5784e6/dist/theme-bundle.head_async.js"></script>
+        
+        <link href="https://fonts.googleapis.com/css?family=Roboto:400%7CMontserrat:500&display=block" rel="stylesheet">
+        
+        <script nonce="" async src="https://cdn11.bigcommerce.com/s-xncnqmg8ze/stencil/849e4f80-3238-013e-8676-52311d5784e6/dist/theme-bundle.font.js"></script>
+
+        <link data-stencil-stylesheet href="https://cdn11.bigcommerce.com/s-xncnqmg8ze/stencil/849e4f80-3238-013e-8676-52311d5784e6/css/theme-55926d20-8113-013e-c89a-6a0502259f27.css" rel="stylesheet">
+
+        <!-- Start Tracking Code for analytics_siteverification -->
+
+<meta name="google-site-verification" content="zyF6NW_a5fZxLd1g5u1PeQMwxiTM5B-JYbDsB8AKTbo" />
+<noscript><meta http-equiv="refresh" content="0;url=https://agechecker.net/noscript"></noscript>
+<script>
+(function(w,d) {
+  var config = {
+    key: "o56IRAocaF4v5e0XK0YKmuFnv6VMe5if",
+    element: ["#bottom_payment_button", "#checkout-payment-continue"],
+    path: "/checkout"
+  };
+ 
+  w.AgeCheckerConfig=config;if((w.location.pathname+w.location.search).indexOf(config.path)) return;
+  var h=d.getElementsByTagName("head")[0];var a=d.createElement("script");a.src="https://cdn.agechecker.net/static/popup/v1/popup.js";a.crossOrigin="anonymous";
+  a.onerror=function(e){w.location.href="https://agechecker.net/loaderror";};h.insertBefore(a,h.firstChild);
+})(window, document);
+</script>
+
+<!-- End Tracking Code for analytics_siteverification -->
+
+
+<script type="text/javascript">
+var BCData = {};
+</script>
+<script src='https://backorder-cdn-v3.grit.software/main-bundle.js' defer  ></script>
+<script>
+	
+ 	
+	
+	
+	var { product: boProduct, token: boToken, page_type: boPageType } = JSON.parse("{\"token\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9.eyJjaWQiOlsxXSwiY29ycyI6WyJodHRwczovL3N0b3JlLXhuY25xbWc4emUubXliaWdjb21tZXJjZS5jb20iXSwiZWF0IjoxNzg4NTIxMDM0LCJpYXQiOjE3ODgzNDgyMzQsImlzcyI6IkJDIiwic2lkIjoxMDAzMjIwMzAyLCJzdWIiOiJCQyIsInN1Yl90eXBlIjowLCJ0b2tlbl90eXBlIjoxfQ.JZATiK1XY1PxYZZ9tI248-cPDR2Flu-0u8j63rh5WCqsqv2lRCjw4PwKHY4uc5gwdoSsaqnYve2Sqchu4iH67A\",\"page_type\":\"404\"}");
+	window.backorder_theme_data = {
+		token: boToken,
+		product: boProduct,
+		page_type: boPageType
+	};
+</script><script>
+ window.storefrontSetting = "{\"channel_id\":1,\"enable\":true,\"tier_id\":\"tier-backorder-plus\",\"global\":{\"callback_global\":\"\",\"custom_css\":\"\",\"low_stock_level\":\"\",\"back_in_stock_date_format\":\"MMM DD, YYYY\",\"show_backorder_products_from_guests\":true,\"mixed_cart_alert\":{\"enable\":true,\"description\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"{buying_qty} added to cart, {backorder_qty} will be in Backorder. Please double check your cart before checkout.\"}]},\"buying_over_threshold_alert\":{\"enable\":true,\"description\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"You are trying to buy {buying_qty} {item_name}, but only {threshold} will be added to the cart, since we only have {threshold} available for Backorder.\"}]},\"out_of_stock_message\":{\"enable\":true,\"description\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"We don't have enough stock on hand for the quantity you selected. Please try again.\"}]},\"order_note\":{\"enable\":false,\"list_all_backordered_products\":false,\"description\":\"\",\"list_all_backordered_products_message\":\"\"},\"cart_item_message\":{\"enable\":true,\"description\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"You have {backorder_qty} in Backorder.\"}],\"callback_render\":\"function render(cartItemEl, cartMsgEl) {\\n  // Check if cartMsgEl is exist\\n  const el = cartItemEl.querySelector('.bo-cart-message')\\n  \\n  if(!el) {\\n    const targetEl = cartItemEl.querySelector('.cart-item-block.cart-item-title')\\n    \\n    if(!targetEl) return\\n\\n\\t\\ttargetEl.appendChild(cartMsgEl)\\n    \\n  } else {\\n    el.replaceWith(cartMsgEl)\\n  }\\n}\"},\"use_custom_request_interceptor\":false,\"custom_metafield_keys\":[]},\"page\":[{\"id\":\"default\",\"callback_page\":\"\",\"callback_get_cart_item_id\":\"\",\"callback_get_product_id\":\"function getId(productEl) {\\n  return Number(productEl.getAttribute('data-entity-id'))\\n}\",\"custom_css\":\"\",\"inventory_description\":{\"enable\":true,\"in_stock_description\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"{stock} in stock.\"}],\"backorder_description\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Out of stock, only {salable_qty} available for backorder.\"}],\"low_stock_description\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"{stock} in stock. Backorder available.\"}],\"callback_render\":\"function render(productEl, inventoryDescEl) {\\n  \\t// Check if inventoryDescEl is exist\\n\\t\\tconst el = productEl.querySelector('.bo-inventory-description')\\n\\n\\t\\tif (!el) {\\n\\t\\t\\tconst targetEl = productEl.querySelector('.add-to-cart-buttons')\\n\\n\\t\\t\\tif (!targetEl) return\\n\\n\\t\\t\\ttargetEl.parentNode?.insertBefore(inventoryDescEl, targetEl)\\n\\t\\t} else {\\n\\t\\t\\tel.replaceWith(inventoryDescEl)\\n\\t\\t}\\n}\"},\"shipping_description\":{\"enable\":true,\"description\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"This product is on BackOrder and will be shipped later.\"}],\"callback_render\":\"function render(productEl, shippingDescEl) {\\n  \\t// Check if shippingDescEl is exist\\n  \\tconst el = productEl.querySelector('.bo-shipping-description')\\n\\n    if (!el) {\\n      const targetEl = productEl.querySelector('.productView-options')\\n      if (!targetEl) return\\n\\n      targetEl.parentNode?.insertBefore(shippingDescEl, targetEl.nextSibling)\\n    } else {\\n      el.replaceWith(shippingDescEl)\\n    }\\n}\"},\"stock_label\":{\"enable\":true,\"position\":\"top-right\",\"callback_render\":\"function render(productEl, stockLabelEl) {\\n    productEl.appendChild(stockLabelEl)\\n}\",\"in_stock\":{\"label\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"In stock\"}],\"text_color\":\"#ffffffff\",\"background_color\":\"#12d23aff\"},\"out_of_stock\":{\"label\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Out of stock\"}],\"text_color\":\"#ffffffff\",\"background_color\":\"#d21236ff\"},\"backorder\":{\"label\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Backorder\"}],\"text_color\":\"#ffffffff\",\"background_color\":\"#b21dcce6\"},\"offset_x\":20,\"offset_y\":20},\"add_to_cart_btn\":{\"backorder_text\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Backorder\"}],\"out_of_stock_text\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Out of stock\"}],\"add_to_cart_text\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Add to cart\"}],\"add_to_cart_with_options_text\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Choose options\"}],\"background_color\":\"\",\"text_color\":\"\",\"callback_render\":\"function renderText(buttonEl, text) {\\n  if (buttonEl.tagName === 'INPUT') {\\n\\t\\tbuttonEl.setAttribute('value', text)\\n\\t} else {\\n\\t\\tconst children = buttonEl.children\\n\\t\\tif (!children.length) {\\n\\t\\t\\treturn (buttonEl.textContent = text)\\n\\t\\t}\\n\\t\\tArray.from(children).forEach((child) =\\u003e {\\n\\t\\t\\tconst deepChildren = child.children\\n\\t\\t\\tif (deepChildren.length) {\\n\\t\\t\\t\\trenderText(child, text)\\n\\t\\t\\t} else {\\n\\t\\t\\t\\tchild.textContent = text\\n\\t\\t\\t}\\n\\t\\t})\\n\\t}\\n}\"},\"selectors\":{\"product_view\":\".productView.productView--quickView\",\"product_card\":\"article.card\",\"product_form\":\"form[data-cart-item-add]\",\"add_to_cart_button\":\"#form-action-addToCart, a[data-event-type=\\\"product-click\\\"][data-button-type=\\\"add-cart\\\"]\",\"quick_view\":\"#modal-content\",\"quick_search\":\"#quickSearch .quickSearchResults\",\"cart_item\":\"\"}},{\"id\":\"category\",\"callback_page\":\"\",\"callback_get_cart_item_id\":\"\",\"callback_get_product_id\":\"function getId(productEl) {\\n  return Number(productEl.getAttribute('data-entity-id'))\\n}\",\"custom_css\":\"\",\"inventory_description\":{\"enable\":true,\"in_stock_description\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"{stock} in stock.\"}],\"backorder_description\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Out of stock, only {salable_qty} available for backorder.\"}],\"low_stock_description\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"{stock} in stock. Backorder available.\"}],\"callback_render\":\"function render(productEl, inventoryDescEl) {\\n  \\t// Check if inventoryDescEl is exist\\n\\t\\tconst el = productEl.querySelector('.bo-inventory-description')\\n\\n\\t\\tif (!el) {\\n\\t\\t\\tconst targetEl = productEl.querySelector('.add-to-cart-buttons')\\n\\n\\t\\t\\tif (!targetEl) return\\n\\n\\t\\t\\ttargetEl.parentNode?.insertBefore(inventoryDescEl, targetEl)\\n\\t\\t} else {\\n\\t\\t\\tel.replaceWith(inventoryDescEl)\\n\\t\\t}\\n}\"},\"shipping_description\":{\"enable\":true,\"description\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"This product is on BackOrder and will be shipped later.\"}],\"callback_render\":\"function render(productEl, shippingDescEl) {\\n  \\t// Check if shippingDescEl is exist\\n  \\tconst el = productEl.querySelector('.bo-shipping-description')\\n\\n    if (!el) {\\n      const targetEl = productEl.querySelector('.productView-options')\\n      if (!targetEl) return\\n\\n      targetEl.parentNode?.insertBefore(shippingDescEl, targetEl.nextSibling)\\n    } else {\\n      el.replaceWith(shippingDescEl)\\n    }\\n}\"},\"stock_label\":{\"enable\":true,\"position\":\"top-right\",\"callback_render\":\"function render(productEl, stockLabelEl) {\\n    productEl.appendChild(stockLabelEl)\\n}\",\"in_stock\":{\"label\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"In stock\"}],\"text_color\":\"#ffffffff\",\"background_color\":\"#12d23aff\"},\"out_of_stock\":{\"label\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Out of stock\"}],\"text_color\":\"#ffffffff\",\"background_color\":\"#d21236ff\"},\"backorder\":{\"label\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Backorder\"}],\"text_color\":\"#ffffffff\",\"background_color\":\"#b21dcce6\"},\"offset_x\":20,\"offset_y\":20},\"add_to_cart_btn\":{\"backorder_text\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Backorder\"}],\"out_of_stock_text\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Out of stock\"}],\"add_to_cart_text\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Add to cart\"}],\"add_to_cart_with_options_text\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Choose options\"}],\"background_color\":\"\",\"text_color\":\"\",\"callback_render\":\"function renderText(buttonEl, text) {\\n  if (buttonEl.tagName === 'INPUT') {\\n\\t\\tbuttonEl.setAttribute('value', text)\\n\\t} else {\\n\\t\\tconst children = buttonEl.children\\n\\t\\tif (!children.length) {\\n\\t\\t\\treturn (buttonEl.textContent = text)\\n\\t\\t}\\n\\t\\tArray.from(children).forEach((child) =\\u003e {\\n\\t\\t\\tconst deepChildren = child.children\\n\\t\\t\\tif (deepChildren.length) {\\n\\t\\t\\t\\trenderText(child, text)\\n\\t\\t\\t} else {\\n\\t\\t\\t\\tchild.textContent = text\\n\\t\\t\\t}\\n\\t\\t})\\n\\t}\\n}\"},\"selectors\":{\"product_view\":\".productView.productView--quickView\",\"product_card\":\"article.card\",\"product_form\":\"form[data-cart-item-add]\",\"add_to_cart_button\":\"#form-action-addToCart, a[data-event-type=\\\"product-click\\\"][data-button-type=\\\"add-cart\\\"]\",\"quick_view\":\"#modal-content\",\"quick_search\":\"#quickSearch .quickSearchResults\",\"cart_item\":\"\"}},{\"id\":\"product\",\"callback_page\":\"\",\"callback_get_cart_item_id\":\"\",\"callback_get_product_id\":\"function getId(productEl) {\\n  return Number(productEl.getAttribute('data-entity-id'))\\n}\",\"custom_css\":\"\",\"inventory_description\":{\"enable\":true,\"in_stock_description\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"{stock} in stock.\"}],\"backorder_description\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Out of stock, only {salable_qty} available for backorder.\"}],\"low_stock_description\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"{stock} in stock. Backorder available.\"}],\"callback_render\":\"function render(productEl, inventoryDescEl) {\\n  \\t// Check if inventoryDescEl is exist\\n\\t\\tconst el = productEl.querySelector('.bo-inventory-description')\\n\\n\\t\\tif (!el) {\\n\\t\\t\\tconst targetEl = productEl.querySelector('.add-to-cart-buttons')\\n\\n\\t\\t\\tif (!targetEl) return\\n\\n\\t\\t\\ttargetEl.parentNode?.insertBefore(inventoryDescEl, targetEl)\\n\\t\\t} else {\\n\\t\\t\\tel.replaceWith(inventoryDescEl)\\n\\t\\t}\\n}\"},\"shipping_description\":{\"enable\":true,\"description\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"This product is on BackOrder and will be shipped later.\"}],\"callback_render\":\"function render(productEl, shippingDescEl) {\\n  \\t// Check if shippingDescEl is exist\\n  \\tconst el = productEl.querySelector('.bo-shipping-description')\\n\\n    if (!el) {\\n      const targetEl = productEl.querySelector('.productView-options')\\n      if (!targetEl) return\\n\\n      targetEl.parentNode?.insertBefore(shippingDescEl, targetEl.nextSibling)\\n    } else {\\n      el.replaceWith(shippingDescEl)\\n    }\\n}\"},\"stock_label\":{\"enable\":true,\"position\":\"top-right\",\"callback_render\":\"function render(productEl, stockLabelEl) {\\n    productEl.appendChild(stockLabelEl)\\n}\",\"in_stock\":{\"label\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"In stock\"}],\"text_color\":\"#ffffffff\",\"background_color\":\"#12d23aff\"},\"out_of_stock\":{\"label\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Out of stock\"}],\"text_color\":\"#ffffffff\",\"background_color\":\"#d21236ff\"},\"backorder\":{\"label\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Backorder\"}],\"text_color\":\"#ffffffff\",\"background_color\":\"#b21dcce6\"},\"offset_x\":20,\"offset_y\":20},\"add_to_cart_btn\":{\"backorder_text\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Backorder\"}],\"out_of_stock_text\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Out of stock\"}],\"add_to_cart_text\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Add to cart\"}],\"add_to_cart_with_options_text\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Choose options\"}],\"background_color\":\"\",\"text_color\":\"\",\"callback_render\":\"function renderText(buttonEl, text) {\\n  if (buttonEl.tagName === 'INPUT') {\\n\\t\\tbuttonEl.setAttribute('value', text)\\n\\t} else {\\n\\t\\tconst children = buttonEl.children\\n\\t\\tif (!children.length) {\\n\\t\\t\\treturn (buttonEl.textContent = text)\\n\\t\\t}\\n\\t\\tArray.from(children).forEach((child) =\\u003e {\\n\\t\\t\\tconst deepChildren = child.children\\n\\t\\t\\tif (deepChildren.length) {\\n\\t\\t\\t\\trenderText(child, text)\\n\\t\\t\\t} else {\\n\\t\\t\\t\\tchild.textContent = text\\n\\t\\t\\t}\\n\\t\\t})\\n\\t}\\n}\"},\"selectors\":{\"product_view\":\".productView[data-entity-id], .productView.productView--quickView\",\"product_card\":\"article.card\",\"product_form\":\"form[data-cart-item-add]\",\"add_to_cart_button\":\"#form-action-addToCart, a[data-event-type=\\\"product-click\\\"][data-button-type=\\\"add-cart\\\"]\",\"quick_view\":\"#modal-content\",\"quick_search\":\"#quickSearch .quickSearchResults\",\"cart_item\":\"\"}},{\"id\":\"compare\",\"callback_page\":\"\",\"callback_get_cart_item_id\":\"\",\"callback_get_product_id\":\"function getId(productEl) {\\n  return Number(productEl.querySelector('a[data-product-id]').getAttribute('data-product-id'))\\n}\",\"custom_css\":\"\",\"inventory_description\":{\"enable\":false,\"in_stock_description\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"{stock} in stock.\"}],\"backorder_description\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Out of stock, only {salable_qty} available for backorder.\"}],\"low_stock_description\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"{stock} in stock. Backorder available.\"}],\"callback_render\":\"\"},\"shipping_description\":{\"enable\":false,\"description\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"This product is on BackOrder and will be shipped later.\"}],\"callback_render\":\"\"},\"stock_label\":{\"enable\":false,\"position\":\"top-right\",\"callback_render\":\"\",\"in_stock\":{\"label\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"In stock\"}],\"text_color\":\"#ffffffff\",\"background_color\":\"#12d23aff\"},\"out_of_stock\":{\"label\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Out of stock\"}],\"text_color\":\"#ffffffff\",\"background_color\":\"#d21236ff\"},\"backorder\":{\"label\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Backorder\"}],\"text_color\":\"#ffffffff\",\"background_color\":\"#b21dcce6\"},\"offset_x\":20,\"offset_y\":20},\"add_to_cart_btn\":{\"backorder_text\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Backorder\"}],\"out_of_stock_text\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Out of stock\"}],\"add_to_cart_text\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Add to cart\"}],\"add_to_cart_with_options_text\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Choose options\"}],\"background_color\":\"\",\"text_color\":\"\",\"callback_render\":\"function renderText(buttonEl, text) {\\n  if (buttonEl.tagName === 'INPUT') {\\n\\t\\tbuttonEl.setAttribute('value', text)\\n\\t} else {\\n\\t\\tconst children = buttonEl.children\\n\\t\\tif (!children.length) {\\n\\t\\t\\treturn (buttonEl.textContent = text)\\n\\t\\t}\\n\\t\\tArray.from(children).forEach((child) =\\u003e {\\n\\t\\t\\tconst deepChildren = child.children\\n\\t\\t\\tif (deepChildren.length) {\\n\\t\\t\\t\\trenderText(child, text)\\n\\t\\t\\t} else {\\n\\t\\t\\t\\tchild.textContent = text\\n\\t\\t\\t}\\n\\t\\t})\\n\\t}\\n}\"},\"selectors\":{\"product_view\":\"\",\"product_card\":\"table.compareTable tbody tr td.compareTable-action\",\"product_form\":\"\",\"add_to_cart_button\":\"a[data-product-id]\",\"quick_view\":\"\",\"quick_search\":\"\",\"cart_item\":\"\"}},{\"id\":\"search\",\"callback_page\":\"\",\"callback_get_cart_item_id\":\"\",\"callback_get_product_id\":\"function getId(productEl) {\\n  return Number(productEl.getAttribute('data-entity-id'))\\n}\",\"custom_css\":\"\",\"inventory_description\":{\"enable\":true,\"in_stock_description\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"{stock} in stock.\"}],\"backorder_description\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Out of stock, only {salable_qty} available for backorder.\"}],\"low_stock_description\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"{stock} in stock. Backorder available.\"}],\"callback_render\":\"function render(productEl, inventoryDescEl) {\\n  \\t// Check if inventoryDescEl is exist\\n\\t\\tconst el = productEl.querySelector('.bo-inventory-description')\\n\\n\\t\\tif (!el) {\\n\\t\\t\\tconst targetEl = productEl.querySelector('.add-to-cart-buttons')\\n\\n\\t\\t\\tif (!targetEl) return\\n\\n\\t\\t\\ttargetEl.parentNode?.insertBefore(inventoryDescEl, targetEl)\\n\\t\\t} else {\\n\\t\\t\\tel.replaceWith(inventoryDescEl)\\n\\t\\t}\\n}\"},\"shipping_description\":{\"enable\":true,\"description\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"This product is on BackOrder and will be shipped later.\"}],\"callback_render\":\"function render(productEl, shippingDescEl) {\\n  \\t// Check if shippingDescEl is exist\\n  \\tconst el = productEl.querySelector('.bo-shipping-description')\\n\\n    if (!el) {\\n      const targetEl = productEl.querySelector('.productView-options')\\n      if (!targetEl) return\\n\\n      targetEl.parentNode?.insertBefore(shippingDescEl, targetEl.nextSibling)\\n    } else {\\n      el.replaceWith(shippingDescEl)\\n    }\\n}\"},\"stock_label\":{\"enable\":true,\"position\":\"top-right\",\"callback_render\":\"\",\"in_stock\":{\"label\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"In stock\"}],\"text_color\":\"#ffffffff\",\"background_color\":\"#12d23aff\"},\"out_of_stock\":{\"label\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Out of stock\"}],\"text_color\":\"#ffffffff\",\"background_color\":\"#d21236ff\"},\"backorder\":{\"label\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Backorder\"}],\"text_color\":\"#ffffffff\",\"background_color\":\"#b21dcce6\"},\"offset_x\":20,\"offset_y\":20},\"add_to_cart_btn\":{\"backorder_text\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Backorder\"}],\"out_of_stock_text\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Out of stock\"}],\"add_to_cart_text\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Add to cart\"}],\"add_to_cart_with_options_text\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Choose options\"}],\"background_color\":\"\",\"text_color\":\"\",\"callback_render\":\"function renderText(buttonEl, text) {\\n  if (buttonEl.tagName === 'INPUT') {\\n\\t\\tbuttonEl.setAttribute('value', text)\\n\\t} else {\\n\\t\\tconst children = buttonEl.children\\n\\t\\tif (!children.length) {\\n\\t\\t\\treturn (buttonEl.textContent = text)\\n\\t\\t}\\n\\t\\tArray.from(children).forEach((child) =\\u003e {\\n\\t\\t\\tconst deepChildren = child.children\\n\\t\\t\\tif (deepChildren.length) {\\n\\t\\t\\t\\trenderText(child, text)\\n\\t\\t\\t} else {\\n\\t\\t\\t\\tchild.textContent = text\\n\\t\\t\\t}\\n\\t\\t})\\n\\t}\\n}\"},\"selectors\":{\"product_view\":\".productView.productView--quickView\",\"product_card\":\"article.card\",\"product_form\":\"form[data-cart-item-add]\",\"add_to_cart_button\":\"#form-action-addToCart, a[data-event-type=\\\"product-click\\\"][data-button-type=\\\"add-cart\\\"]\",\"quick_view\":\"#modal-content\",\"quick_search\":\"#quickSearch .quickSearchResults\",\"cart_item\":\"\"}},{\"id\":\"checkout\",\"callback_page\":\"\",\"callback_get_cart_item_id\":\"\",\"callback_get_product_id\":\"\",\"custom_css\":\"\",\"inventory_description\":{\"enable\":false,\"in_stock_description\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"{stock} in stock.\"}],\"backorder_description\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Out of stock, only {salable_qty} available for backorder.\"}],\"low_stock_description\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"{stock} in stock. Backorder available.\"}],\"callback_render\":\"\"},\"shipping_description\":{\"enable\":false,\"description\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"This product is on BackOrder and will be shipped later.\"}],\"callback_render\":\"\"},\"stock_label\":{\"enable\":false,\"position\":\"top-right\",\"callback_render\":\"\",\"in_stock\":{\"label\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"In stock\"}],\"text_color\":\"#ffffffff\",\"background_color\":\"#12d23aff\"},\"out_of_stock\":{\"label\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Out of stock\"}],\"text_color\":\"#ffffffff\",\"background_color\":\"#d21236ff\"},\"backorder\":{\"label\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Backorder\"}],\"text_color\":\"#ffffffff\",\"background_color\":\"#b21dcce6\"},\"offset_x\":20,\"offset_y\":20},\"add_to_cart_btn\":{\"backorder_text\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Backorder\"}],\"out_of_stock_text\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Out of stock\"}],\"add_to_cart_text\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Add to cart\"}],\"add_to_cart_with_options_text\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Choose options\"}],\"background_color\":\"\",\"text_color\":\"\",\"callback_render\":\"\"},\"selectors\":{\"product_view\":\"\",\"product_card\":\"\",\"product_form\":\"\",\"add_to_cart_button\":\"\",\"quick_view\":\"\",\"quick_search\":\"\",\"cart_item\":\"\"}},{\"id\":\"cart\",\"callback_page\":\"\",\"callback_get_cart_item_id\":\"function getId(cartItemEl) {\\n  return cartItemEl.querySelector('[data-cart-itemid]')?.getAttribute('data-cart-itemid')\\n}\",\"callback_get_product_id\":\"\",\"custom_css\":\"\",\"inventory_description\":{\"enable\":false,\"in_stock_description\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"{stock} in stock.\"}],\"backorder_description\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Out of stock, only {salable_qty} available for backorder.\"}],\"low_stock_description\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"{stock} in stock. Backorder available.\"}],\"callback_render\":\"\"},\"shipping_description\":{\"enable\":false,\"description\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"This product is on BackOrder and will be shipped later.\"}],\"callback_render\":\"\"},\"stock_label\":{\"enable\":false,\"position\":\"top-right\",\"callback_render\":\"\",\"in_stock\":{\"label\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"In stock\"}],\"text_color\":\"#ffffffff\",\"background_color\":\"#12d23aff\"},\"out_of_stock\":{\"label\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Out of stock\"}],\"text_color\":\"#ffffffff\",\"background_color\":\"#d21236ff\"},\"backorder\":{\"label\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Backorder\"}],\"text_color\":\"#ffffffff\",\"background_color\":\"#b21dcce6\"},\"offset_x\":20,\"offset_y\":20},\"add_to_cart_btn\":{\"backorder_text\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Backorder\"}],\"out_of_stock_text\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Out of stock\"}],\"add_to_cart_text\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Add to cart\"}],\"add_to_cart_with_options_text\":[{\"lang\":\"en\",\"is_default\":true,\"value\":\"Choose options\"}],\"background_color\":\"\",\"text_color\":\"\",\"callback_render\":\"\"},\"selectors\":{\"product_view\":\"\",\"product_card\":\"\",\"product_form\":\"\",\"add_to_cart_button\":\"\",\"quick_view\":\"\",\"quick_search\":\"\",\"cart_item\":\"table.cart tbody.cart-list tr.cart-item\"}}],\"using_backorder_storefront_api\":false}" 
+</script>
+<script nonce="">
+(function () {
+    var xmlHttp = new XMLHttpRequest();
+    
+    xmlHttp.open('POST', 'https://bes.gcp.data.bigcommerce.com/nobot');
+    xmlHttp.setRequestHeader('Content-Type', 'application/json');
+    xmlHttp.send('{"store_id":"1003220302","timezone_offset":"-5.0","timestamp":"2026-09-02T11:23:54.70767200Z","visit_id":"3accb036-d34f-4fa8-94b4-7c77de0def18","channel_id":1}');
+})();
+</script>
+
+    </head>
+    <body>
+        <svg data-src="https://cdn11.bigcommerce.com/s-xncnqmg8ze/stencil/849e4f80-3238-013e-8676-52311d5784e6/img/icon-sprite.svg" class="icons-svg-sprite"></svg>
+
+        <a href="#main-content" class="skip-to-main-link">Skip to main content</a>
+<header class="header" role="banner">
+    <a href="#" class="mobileMenu-toggle" data-mobile-menu-toggle="menu">
+        <span class="mobileMenu-toggleIcon">Toggle menu</span>
+    </a>
+    <nav class="navUser">
+        
+
+    <ul class="navUser-section navUser-section--alt">
+        <li class="navUser-item">
+            <a class="navUser-action navUser-item--compare"
+               href="https://chewbies.com/compare"
+               data-compare-nav
+               aria-label="Compare"
+            >
+                Compare <span class="countPill countPill--positive countPill--alt"></span>
+            </a>
+        </li>
+        <li class="navUser-item">
+            <button class="navUser-action navUser-action--quickSearch"
+               type="button"
+               id="quick-search-expand"
+               data-search="quickSearch"
+               aria-controls="quickSearch"
+               aria-label="Search"
+            >
+                Search
+            </button>
+        </li>
+        <li class="navUser-item navUser-item--account">
+                <a class="navUser-action"
+                   href="https://chewbies.com/login.php"
+                   aria-label="Sign in"
+                >
+                    Sign in
+                </a>
+                    <span class="navUser-or">or</span>
+                    <a class="navUser-action"
+                       href="https://chewbies.com/login.php?action&#x3D;create_account"
+                       aria-label="Register"
+                    >
+                        Register
+                    </a>
+        </li>
+        <li class="navUser-item navUser-item--cart">
+            <a class="navUser-action"
+               data-cart-preview
+               data-dropdown="cart-preview-dropdown"
+               data-options="align:right"
+               href="https://chewbies.com/cart.php"
+               aria-label="Cart with 0 items"
+            >
+                <span class="navUser-item-cartLabel">Cart</span>
+                <span class="countPill cart-quantity"></span>
+            </a>
+
+            <div class="dropdown-menu" id="cart-preview-dropdown" data-dropdown-content aria-hidden="true"></div>
+        </li>
+    </ul>
+    <div class="dropdown dropdown--quickSearch" id="quickSearch" aria-hidden="true" data-prevent-quick-search-close>
+        <div class="container">
+    <form class="form" data-url="https://chewbies.com/search.php" data-quick-search-form>
+        <fieldset class="form-fieldset">
+            <div class="form-field">
+                <label class="is-srOnly" for="nav-quick-search">Search</label>
+                <input class="form-input"
+                       data-search-quick
+                       name="nav-quick-search"
+                       id="nav-quick-search"
+                       data-error-message="Search field cannot be empty."
+                       placeholder="Search the store"
+                       autocomplete="off"
+                >
+            </div>
+        </fieldset>
+    </form>
+    <section class="quickSearchResults" data-bind="html: results"></section>
+    <p role="status"
+       aria-live="polite"
+       class="aria-description--hidden"
+       data-search-aria-message-predefined-text="product results for"
+    ></p>
+</div>
+    </div>
+</nav>
+
+        <div class="header-logo header-logo--center">
+            <a href="https://chewbies.com/" class="header-logo__link" data-header-logo-link>
+        <img class="header-logo-image-unknown-size"
+             src="https://cdn11.bigcommerce.com/s-xncnqmg8ze/images/stencil/original/chewbies_logo_png_1747168672__21632.original.png"
+             alt="Chewbies"
+             title="Chewbies">
+</a>
+        </div>
+    <div class="navPages-container" id="menu" data-menu>
+        <nav class="navPages">
+    <div class="navPages-quickSearch">
+        <div class="container">
+    <form class="form" data-url="https://chewbies.com/search.php" data-quick-search-form>
+        <fieldset class="form-fieldset">
+            <div class="form-field">
+                <label class="is-srOnly" for="nav-menu-quick-search">Search</label>
+                <input class="form-input"
+                       data-search-quick
+                       name="nav-menu-quick-search"
+                       id="nav-menu-quick-search"
+                       data-error-message="Search field cannot be empty."
+                       placeholder="Search the store"
+                       autocomplete="off"
+                >
+            </div>
+        </fieldset>
+    </form>
+    <section class="quickSearchResults" data-bind="html: results"></section>
+    <p role="status"
+       aria-live="polite"
+       class="aria-description--hidden"
+       data-search-aria-message-predefined-text="product results for"
+    ></p>
+</div>
+    </div>
+    <ul class="navPages-list">
+            <li class="navPages-item">
+                <a class="navPages-action"
+   href="https://chewbies.com/shop-all/"
+   aria-label="Shop All"
+>
+    Shop All
+</a>
+            </li>
+            <li class="navPages-item">
+                <a class="navPages-action"
+   href="https://chewbies.com/low-dose/"
+   aria-label="Low Dose"
+>
+    Low Dose
+</a>
+            </li>
+            <li class="navPages-item">
+                <a class="navPages-action"
+   href="https://chewbies.com/mid-dose/"
+   aria-label="Mid Dose"
+>
+    Mid Dose
+</a>
+            </li>
+            <li class="navPages-item">
+                <a class="navPages-action"
+   href="https://chewbies.com/high-dose/"
+   aria-label="High Dose"
+>
+    High Dose
+</a>
+            </li>
+            <li class="navPages-item">
+                <a class="navPages-action"
+   href="https://chewbies.com/indica/"
+   aria-label="Indica"
+>
+    Indica
+</a>
+            </li>
+            <li class="navPages-item">
+                <a class="navPages-action"
+   href="https://chewbies.com/sativa/"
+   aria-label="Sativa"
+>
+    Sativa
+</a>
+            </li>
+                 <li class="navPages-item navPages-item-page">
+                     <a class="navPages-action"
+                        href="https://chewbies.com/chewbies-coas-warnings/"
+                        aria-label="CHEWBIES COAS &amp; WARNINGS"
+                     >
+                         CHEWBIES COAS &amp; WARNINGS
+                     </a>
+                 </li>
+                 <li class="navPages-item navPages-item-page">
+                     <a class="navPages-action"
+                        href="https://chewbies.com/about-us"
+                        aria-label="About Us"
+                     >
+                         About Us
+                     </a>
+                 </li>
+                 <li class="navPages-item navPages-item-page">
+                     <a class="navPages-action"
+                        href="https://chewbies.com/email-sign-up/"
+                        aria-label="Email Sign Up"
+                     >
+                         Email Sign Up
+                     </a>
+                 </li>
+                 <li class="navPages-item navPages-item-page">
+                     <a class="navPages-action"
+                        href="https://chewbies.com/eventslist"
+                        aria-label="Events"
+                     >
+                         Events
+                     </a>
+                 </li>
+                 <li class="navPages-item navPages-item-page">
+                     <a class="navPages-action"
+                        href="https://chewbies.com/wholesaleus"
+                        aria-label="Wholesale Chewbies"
+                     >
+                         Wholesale Chewbies
+                     </a>
+                 </li>
+                 <li class="navPages-item navPages-item-page">
+                     <a class="navPages-action"
+                        href="https://chewbies.com/shipping-returns/"
+                        aria-label="Shipping &amp; Returns"
+                     >
+                         Shipping &amp; Returns
+                     </a>
+                 </li>
+                 <li class="navPages-item navPages-item-page">
+                     <a class="navPages-action"
+                        href="https://chewbies.com/contact-us/"
+                        aria-label="Contact Us"
+                     >
+                         Contact Us
+                     </a>
+                 </li>
+                 <li class="navPages-item navPages-item-page">
+                     <a class="navPages-action"
+                        href="https://chewbies.com/blog/"
+                        aria-label="Blog"
+                     >
+                         Blog
+                     </a>
+                 </li>
+    </ul>
+    <ul class="navPages-list navPages-list--user">
+            <li class="navPages-item">
+                <a class="navPages-action"
+                   href="https://chewbies.com/login.php"
+                   aria-label="Sign in"
+                >
+                    Sign in
+                </a>
+                    or
+                    <a class="navPages-action"
+                       href="https://chewbies.com/login.php?action&#x3D;create_account"
+                       aria-label="Register"
+                    >
+                        Register
+                    </a>
+            </li>
+    </ul>
+</nav>
+    </div>
+    <div data-content-region="header_navigation_bottom--global"><div data-layout-id="ec0d2c8c-85b9-464b-b3ac-bb03c0795d6e">       <div data-sub-layout-container="0dd49f3e-6744-4bc5-bd49-b45ac9181018" data-layout-name="Layout">
+    <style data-container-styling="0dd49f3e-6744-4bc5-bd49-b45ac9181018">
+        [data-sub-layout-container="0dd49f3e-6744-4bc5-bd49-b45ac9181018"] {
+            box-sizing: border-box;
+            display: flex;
+            flex-wrap: wrap;
+            z-index: 0;
+            position: relative;
+            height: ;
+            padding-top: 0px;
+            padding-right: 0px;
+            padding-bottom: 0px;
+            padding-left: 0px;
+            margin-top: 0px;
+            margin-right: 0px;
+            margin-bottom: 0px;
+            margin-left: 0px;
+            border-width: 0px;
+            border-style: solid;
+            border-color: #333333;
+        }
+
+        [data-sub-layout-container="0dd49f3e-6744-4bc5-bd49-b45ac9181018"]:after {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background-size: cover;
+            z-index: auto;
+        }
+    </style>
+
+    <div data-sub-layout="b1719c1a-d7e8-4e74-b78f-284a75d7578f">
+        <style data-column-styling="b1719c1a-d7e8-4e74-b78f-284a75d7578f">
+            [data-sub-layout="b1719c1a-d7e8-4e74-b78f-284a75d7578f"] {
+                display: flex;
+                flex-direction: column;
+                box-sizing: border-box;
+                flex-basis: 100%;
+                max-width: 100%;
+                z-index: 0;
+                position: relative;
+                height: ;
+                padding-top: 0px;
+                padding-right: 10.5px;
+                padding-bottom: 0px;
+                padding-left: 10.5px;
+                margin-top: 0px;
+                margin-right: 0px;
+                margin-bottom: 0px;
+                margin-left: 0px;
+                border-width: 0px;
+                border-style: solid;
+                border-color: #333333;
+                justify-content: center;
+            }
+            [data-sub-layout="b1719c1a-d7e8-4e74-b78f-284a75d7578f"]:after {
+                display: block;
+                position: absolute;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: 0;
+                background-size: cover;
+                z-index: auto;
+            }
+            @media only screen and (max-width: 700px) {
+                [data-sub-layout="b1719c1a-d7e8-4e74-b78f-284a75d7578f"] {
+                    flex-basis: 100%;
+                    max-width: 100%;
+                }
+            }
+        </style>
+        <div data-widget-id="f077ef48-a465-484f-88bf-ed7431f54fc9" data-placement-id="9ebd6d3b-6217-4d3f-bb54-7c878982b565" data-placement-status="ACTIVE"><!-- Elfsight Age Verification | Untitled Age Verification -->
+<script src="https://static.elfsight.com/platform/platform.js" async=""></script>
+<div class="elfsight-app-b90c90d3-ead0-4c50-adc4-3c37b0655087" data-elfsight-app-lazy=""></div>
+</div>
+    </div>
+</div>
+
+</div></div>
+</header>
+<div data-content-region="header_bottom--global"><div data-layout-id="acf8e3eb-0590-4f21-949f-e54e2290d737">       <div data-sub-layout-container="a5731dfd-0933-48f1-93b4-15b233976895" data-layout-name="Layout">
+    <style data-container-styling="a5731dfd-0933-48f1-93b4-15b233976895">
+        [data-sub-layout-container="a5731dfd-0933-48f1-93b4-15b233976895"] {
+            box-sizing: border-box;
+            display: flex;
+            flex-wrap: wrap;
+            z-index: 0;
+            position: relative;
+            height: ;
+            padding-top: 0px;
+            padding-right: 0px;
+            padding-bottom: 0px;
+            padding-left: 0px;
+            margin-top: 0px;
+            margin-right: 0px;
+            margin-bottom: 0px;
+            margin-left: 0px;
+            border-width: 0px;
+            border-style: solid;
+            border-color: #333333;
+        }
+
+        [data-sub-layout-container="a5731dfd-0933-48f1-93b4-15b233976895"]:after {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background-size: cover;
+            z-index: auto;
+        }
+    </style>
+
+    <div data-sub-layout="cd5062a1-bd2d-4e2b-93c7-382b881c7c21">
+        <style data-column-styling="cd5062a1-bd2d-4e2b-93c7-382b881c7c21">
+            [data-sub-layout="cd5062a1-bd2d-4e2b-93c7-382b881c7c21"] {
+                display: flex;
+                flex-direction: column;
+                box-sizing: border-box;
+                flex-basis: 100%;
+                max-width: 100%;
+                z-index: 0;
+                position: relative;
+                height: ;
+                padding-top: 0px;
+                padding-right: 10.5px;
+                padding-bottom: 0px;
+                padding-left: 10.5px;
+                margin-top: 0px;
+                margin-right: 0px;
+                margin-bottom: 0px;
+                margin-left: 0px;
+                border-width: 0px;
+                border-style: solid;
+                border-color: #333333;
+                justify-content: center;
+            }
+            [data-sub-layout="cd5062a1-bd2d-4e2b-93c7-382b881c7c21"]:after {
+                display: block;
+                position: absolute;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: 0;
+                background-size: cover;
+                z-index: auto;
+            }
+            @media only screen and (max-width: 700px) {
+                [data-sub-layout="cd5062a1-bd2d-4e2b-93c7-382b881c7c21"] {
+                    flex-basis: 100%;
+                    max-width: 100%;
+                }
+            }
+        </style>
+        <div data-widget-id="4eb5133a-64c2-4f4e-81a6-71cca4bd61d2" data-placement-id="69243a53-dc61-4b15-a034-1c1b4312e779" data-placement-status="ACTIVE"><!-- Elfsight Age Verification | 21+ Age Verification -->
+<script src="https://static.elfsight.com/platform/platform.js" async=""></script>
+<div class="elfsight-app-db7c3b25-9a2b-442c-bae1-13464273b7b5" data-elfsight-app-lazy=""></div>
+</div>
+    </div>
+</div>
+
+</div></div>
+<div data-content-region="header_bottom"></div>
+        <div class="body" id="main-content" data-currency-code="USD">
+     
+    <div class="container">
+        
+<nav aria-label="Breadcrumb">
+    <ol class="breadcrumbs">
+                <li class="breadcrumb ">
+                    <a class="breadcrumb-label"
+                       href="https://chewbies.com/"
+                       
+                    >
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li class="breadcrumb is-active">
+                    <a class="breadcrumb-label"
+                       href="/content/labtests/SA-260406-79362%20TPFN%20LLC%20Rocket%20Pop%2015mg.pdf"
+                       aria-current="page"
+                    >
+                        <span>Error</span>
+                    </a>
+                </li>
+    </ol>
+</nav>
+
+<script type="application/ld+json"  nonce="">
+{
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement":
+    [
+        {
+            "@type": "ListItem",
+            "position": 1,
+            "item": {
+                "@id": "https:\u002f\u002fchewbies.com\u002f",
+                "name": "Home"
+            }
+        },
+        {
+            "@type": "ListItem",
+            "position": 2,
+            "item": {
+                "@id": "\u002fcontent\u002flabtests\u002fSA-260406-79362%20TPFN%20LLC%20Rocket%20Pop%2015mg.pdf",
+                "name": "Error"
+            }
+        }
+    ]
+}
+</script>
+
+<main class="page">
+    <section class="page-content page-content--centered">
+        <h1 class="page-heading">404 Error - Page not found</h1>
+        <p class="u-textAlignCenter">
+            Uh oh, looks like the page you are looking for has moved or no longer exists.
+        </p>
+
+        <form class="form"  action="https://chewbies.com/search.php">
+    <fieldset class="form-fieldset">
+        <div class="form-field">
+            <label class="form-label is-srOnly" for="search_query_adv">Search Keyword:</label>
+            <div class="form-prefixPostfix wrap">
+                <input class="form-input" id="search_query_adv" name="search_query_adv" value="">
+                <input class="button button--primary form-prefixPostfix-button--postfix" type="submit" value="Search">
+            </div>
+        </div>
+    </fieldset>
+</form>
+    </section>
+</main>
+
+
+    </div>
+    <div id="modal" class="modal" data-reveal data-prevent-quick-search-close>
+    <button class="modal-close"
+        type="button"
+        title="Close"
+        
+>
+    <span class="aria-description--hidden">Close</span>
+    <span aria-hidden="true">&#215;</span>
+</button>
+    <div id="modal-content" class="modal-content"></div>
+    <div class="loadingOverlay"></div>
+</div>
+    <div id="alert-modal" class="modal modal--alert modal--small" data-reveal data-prevent-quick-search-close>
+    <div class="alert-icon error-icon">
+        <span class="icon-content">
+            <span class="line line-left"></span>
+            <span class="line line-right"></span>
+        </span>
+    </div>
+
+    <div class="alert-icon warning-icon">
+        <div class="icon-content">!</div>
+    </div>
+
+    <div class="modal-content"></div>
+
+    <div class="button-container">
+        <button type="button" class="confirm button" data-reveal-close>OK</button>
+        <button type="button" class="cancel button" data-reveal-close>Cancel</button>
+    </div>
+</div>
+</div>
+        <footer class="footer" role="contentinfo">
+    <h2 class="footer-title-sr-only">Footer Start</h2>
+    <div class="container">
+        <section class="footer-info">
+            <article class="footer-info-col footer-info-col--small" data-section-type="footer-webPages">
+                <h3 class="footer-info-heading">Navigate</h3>
+                <ul class="footer-info-list">
+                        <li>
+                            <a href="https://chewbies.com/chewbies-coas-warnings/">CHEWBIES COAS &amp; WARNINGS</a>
+                        </li>
+                        <li>
+                            <a href="https://chewbies.com/about-us">About Us</a>
+                        </li>
+                        <li>
+                            <a href="https://chewbies.com/email-sign-up/">Email Sign Up</a>
+                        </li>
+                        <li>
+                            <a href="https://chewbies.com/eventslist">Events</a>
+                        </li>
+                        <li>
+                            <a href="https://chewbies.com/wholesaleus">Wholesale Chewbies</a>
+                        </li>
+                        <li>
+                            <a href="https://chewbies.com/shipping-returns/">Shipping &amp; Returns</a>
+                        </li>
+                        <li>
+                            <a href="https://chewbies.com/contact-us/">Contact Us</a>
+                        </li>
+                        <li>
+                            <a href="https://chewbies.com/blog/">Blog</a>
+                        </li>
+                    <li>
+                        <a href="https://chewbies.com/sitemap.php">Sitemap</a>
+                    </li>
+                </ul>
+            </article>
+
+            <article class="footer-info-col footer-info-col--small" data-section-type="footer-categories">
+                <h3 class="footer-info-heading">Categories</h3>
+                <ul class="footer-info-list">
+                        <li>
+                            <a href="https://chewbies.com/shop-all/">Shop All</a>
+                        </li>
+                        <li>
+                            <a href="https://chewbies.com/low-dose/">Low Dose</a>
+                        </li>
+                        <li>
+                            <a href="https://chewbies.com/mid-dose/">Mid Dose</a>
+                        </li>
+                        <li>
+                            <a href="https://chewbies.com/high-dose/">High Dose</a>
+                        </li>
+                        <li>
+                            <a href="https://chewbies.com/indica/">Indica</a>
+                        </li>
+                        <li>
+                            <a href="https://chewbies.com/sativa/">Sativa</a>
+                        </li>
+                </ul>
+            </article>
+
+            <article class="footer-info-col footer-info-col--small" data-section-type="footer-brands">
+                <h3 class="footer-info-heading">Popular Brands</h3>
+                <ul class="footer-info-list">
+                        <li>
+                            <a href="https://chewbies.com/brands/chewbies.html">chewbies</a>
+                        </li>
+                    <li><a href="https://chewbies.com/brands/">View All</a></li>
+                </ul>
+            </article>
+
+            <article class="footer-info-col footer-info-col--small" data-section-type="storeInfo">
+                <h3 class="footer-info-heading">Info</h3>
+                <address>Greenville, SC 29607<br>
+</address>
+                    <strong>Call us at +1-800-210-9475</strong>
+            </article>
+
+            <article class="footer-info-col" data-section-type="newsletterSubscription">
+                    <h3 class="footer-info-heading">Subscribe to our newsletter</h3>
+<p>Get the latest updates on new products and upcoming sales</p>
+
+<form class="form" action="https://chewbies.com/subscribe.php" method="post">
+    <fieldset class="form-fieldset">
+        <input type="hidden" name="action" value="subscribe">
+        <input type="hidden" name="nl_first_name" value="bc">
+        <input type="hidden" name="check" value="1">
+        <div class="form-field">
+            <label class="form-label is-srOnly" for="nl_email">Email Address</label>
+            <div class="form-prefixPostfix wrap">
+                <input class="form-input"
+                       id="nl_email"
+                       name="nl_email"
+                       type="email"
+                       value=""
+                       placeholder="Your email address"
+                       aria-describedby="alertBox-message-text"
+                       aria-required="true"
+                       autocomplete="email"
+                       required
+                >
+                <input class="button button--primary form-prefixPostfix-button--postfix"
+                       type="submit"
+                       value="Subscribe"
+                >
+            </div>
+        </div>
+    </fieldset>
+</form>
+                            </article>
+        </section>
+            <div class="footer-copyright">
+                <p class="powered-by">&copy; 2026 Chewbies </p>
+            </div>
+    </div>
+    <div data-content-region="ssl_site_seal--global"><div data-layout-id="06133670-0b00-424e-b12a-c796d9c33140">       <div data-sub-layout-container="8034d3b8-c500-4a48-b8d3-d63d2c95a43c" data-layout-name="Layout">
+    <style data-container-styling="8034d3b8-c500-4a48-b8d3-d63d2c95a43c">
+        [data-sub-layout-container="8034d3b8-c500-4a48-b8d3-d63d2c95a43c"] {
+            box-sizing: border-box;
+            display: flex;
+            flex-wrap: wrap;
+            z-index: 0;
+            position: relative;
+            height: ;
+            padding-top: 0px;
+            padding-right: 0px;
+            padding-bottom: 0px;
+            padding-left: 0px;
+            margin-top: 0px;
+            margin-right: 0px;
+            margin-bottom: 0px;
+            margin-left: 0px;
+            border-width: 0px;
+            border-style: solid;
+            border-color: #333333;
+        }
+
+        [data-sub-layout-container="8034d3b8-c500-4a48-b8d3-d63d2c95a43c"]:after {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background-size: cover;
+            z-index: auto;
+        }
+    </style>
+
+    <div data-sub-layout="831b70ce-457c-48fd-a869-8eca29d5f4cb">
+        <style data-column-styling="831b70ce-457c-48fd-a869-8eca29d5f4cb">
+            [data-sub-layout="831b70ce-457c-48fd-a869-8eca29d5f4cb"] {
+                display: flex;
+                flex-direction: column;
+                box-sizing: border-box;
+                flex-basis: 100%;
+                max-width: 100%;
+                z-index: 0;
+                position: relative;
+                height: ;
+                padding-top: 0px;
+                padding-right: 10.5px;
+                padding-bottom: 0px;
+                padding-left: 10.5px;
+                margin-top: 0px;
+                margin-right: 0px;
+                margin-bottom: 0px;
+                margin-left: 0px;
+                border-width: 0px;
+                border-style: solid;
+                border-color: #333333;
+                justify-content: center;
+            }
+            [data-sub-layout="831b70ce-457c-48fd-a869-8eca29d5f4cb"]:after {
+                display: block;
+                position: absolute;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: 0;
+                background-size: cover;
+                z-index: auto;
+            }
+            @media only screen and (max-width: 700px) {
+                [data-sub-layout="831b70ce-457c-48fd-a869-8eca29d5f4cb"] {
+                    flex-basis: 100%;
+                    max-width: 100%;
+                }
+            }
+        </style>
+    </div>
+</div>
+
+</div></div>
+</footer>
+
+        <script nonce="">window.__webpack_public_path__ = "https://cdn11.bigcommerce.com/s-xncnqmg8ze/stencil/849e4f80-3238-013e-8676-52311d5784e6/dist/";</script>
+        <script nonce="">
+            function onThemeBundleMain() {
+                window.stencilBootstrap("404", "{\"token\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9.eyJjaWQiOlsxXSwiY29ycyI6WyJodHRwczovL3N0b3JlLXhuY25xbWc4emUubXliaWdjb21tZXJjZS5jb20iXSwiZWF0IjoxNzg4NTIxMDM0LCJpYXQiOjE3ODgzNDgyMzQsImlzcyI6IkJDIiwic2lkIjoxMDAzMjIwMzAyLCJzdWIiOiJCQyIsInN1Yl90eXBlIjowLCJ0b2tlbl90eXBlIjoxfQ.JZATiK1XY1PxYZZ9tI248-cPDR2Flu-0u8j63rh5WCqsqv2lRCjw4PwKHY4uc5gwdoSsaqnYve2Sqchu4iH67A\",\"page_type\":\"404\",\"zoomSize\":\"1080x1080\",\"productSize\":\"500x659\",\"genericError\":\"Oops! Something went wrong.\",\"urls\":{\"home\":\"https://chewbies.com/\",\"brands\":\"https://chewbies.com/brands/\",\"search\":\"https://chewbies.com/search.php\",\"compare\":\"https://chewbies.com/compare\",\"sitemap\":\"https://chewbies.com/sitemap.php\",\"contact_us_submit\":\"https://chewbies.com/pages.php?action=sendContactForm\",\"subscribe\":{\"action\":\"https://chewbies.com/subscribe.php\"},\"checkout\":{\"single_address\":\"https://chewbies.com/checkout\",\"multiple_address\":\"https://chewbies.com/checkout.php?action=multiple\"},\"account\":{\"orders\":{\"all\":\"https://chewbies.com/account.php?action=order_status\",\"completed\":\"https://chewbies.com/account.php?action=view_orders\",\"save_new_return\":\"https://chewbies.com/account.php?action=save_new_return\"},\"returns\":\"https://chewbies.com/account.php?action=view_returns\",\"addresses\":\"https://chewbies.com/account.php?action=address_book\",\"inbox\":\"https://chewbies.com/account.php?action=inbox\",\"send_message\":\"https://chewbies.com/account.php?action=send_message\",\"add_address\":\"https://chewbies.com/account.php?action=add_shipping_address\",\"update_action\":\"https://chewbies.com/account.php?action=update_account\",\"details\":\"https://chewbies.com/account.php?action=account_details\",\"recent_items\":\"https://chewbies.com/account.php?action=recent_items\",\"index\":\"https://chewbies.com/account.php\",\"wishlists\":{\"all\":\"https://chewbies.com/wishlist.php\",\"add\":\"https://chewbies.com/wishlist.php?action=addwishlist\",\"edit\":\"https://chewbies.com/wishlist.php?action=editwishlist\",\"delete\":\"https://chewbies.com/wishlist.php?action=deletewishlist\"}},\"auth\":{\"login\":\"https://chewbies.com/login.php\",\"check_login\":\"https://chewbies.com/login.php?action=check_login\",\"create_account\":\"https://chewbies.com/login.php?action=create_account\",\"save_new_account\":\"https://chewbies.com/login.php?action=save_new_account\",\"forgot_password\":\"https://chewbies.com/login.php?action=reset_password\",\"send_password_email\":\"https://chewbies.com/login.php?action=send_password_email\",\"save_new_password\":\"https://chewbies.com/login.php?action=save_new_password\",\"logout\":\"https://chewbies.com/login.php?action=logout\"},\"cart\":\"https://chewbies.com/cart.php\",\"product\":{\"post_review\":\"https://chewbies.com/postreview.php\"},\"gift_certificate\":{\"purchase\":\"https://chewbies.com/giftcertificates.php\",\"redeem\":\"https://chewbies.com/giftcertificates.php?action=redeem\",\"balance\":\"https://chewbies.com/giftcertificates.php?action=balance\"},\"rss\":{\"products\":[]}},\"secureBaseUrl\":\"https://chewbies.com\",\"cartId\":null,\"template\":\"pages/errors/404\",\"validationDictionaryJSON\":\"{\\\"locale\\\":\\\"en\\\",\\\"locales\\\":{\\\"validation_messages.valid_email\\\":\\\"en\\\",\\\"validation_messages.password\\\":\\\"en\\\",\\\"validation_messages.password_match\\\":\\\"en\\\",\\\"validation_messages.invalid_password\\\":\\\"en\\\",\\\"validation_messages.field_not_blank\\\":\\\"en\\\",\\\"validation_messages.certificate_amount\\\":\\\"en\\\",\\\"validation_messages.certificate_amount_range\\\":\\\"en\\\",\\\"validation_messages.price_min_evaluation\\\":\\\"en\\\",\\\"validation_messages.price_max_evaluation\\\":\\\"en\\\",\\\"validation_messages.price_min_not_entered\\\":\\\"en\\\",\\\"validation_messages.price_max_not_entered\\\":\\\"en\\\",\\\"validation_messages.price_invalid_value\\\":\\\"en\\\",\\\"validation_messages.invalid_gift_certificate\\\":\\\"en\\\"},\\\"translations\\\":{\\\"validation_messages.valid_email\\\":\\\"You must enter a valid email.\\\",\\\"validation_messages.password\\\":\\\"You must enter a password.\\\",\\\"validation_messages.password_match\\\":\\\"Your passwords do not match.\\\",\\\"validation_messages.invalid_password\\\":\\\"Passwords must be at least 7 characters and contain both alphabetic and numeric characters.\\\",\\\"validation_messages.field_not_blank\\\":\\\" field cannot be blank.\\\",\\\"validation_messages.certificate_amount\\\":\\\"You must enter a gift certificate amount.\\\",\\\"validation_messages.certificate_amount_range\\\":\\\"You must enter a certificate amount between [MIN] and [MAX]\\\",\\\"validation_messages.price_min_evaluation\\\":\\\"Min. price must be less than max. price.\\\",\\\"validation_messages.price_max_evaluation\\\":\\\"Min. price must be less than max. price.\\\",\\\"validation_messages.price_min_not_entered\\\":\\\"Min. price is required.\\\",\\\"validation_messages.price_max_not_entered\\\":\\\"Max. price is required.\\\",\\\"validation_messages.price_invalid_value\\\":\\\"Input must be greater than 0.\\\",\\\"validation_messages.invalid_gift_certificate\\\":\\\"Please enter your valid certificate code.\\\"}}\",\"validationFallbackDictionaryJSON\":\"{\\\"locale\\\":\\\"en\\\",\\\"locales\\\":{\\\"validation_fallback_messages.valid_email\\\":\\\"en\\\",\\\"validation_fallback_messages.password\\\":\\\"en\\\",\\\"validation_fallback_messages.password_match\\\":\\\"en\\\",\\\"validation_fallback_messages.invalid_password\\\":\\\"en\\\",\\\"validation_fallback_messages.field_not_blank\\\":\\\"en\\\",\\\"validation_fallback_messages.certificate_amount\\\":\\\"en\\\",\\\"validation_fallback_messages.certificate_amount_range\\\":\\\"en\\\",\\\"validation_fallback_messages.price_min_evaluation\\\":\\\"en\\\",\\\"validation_fallback_messages.price_max_evaluation\\\":\\\"en\\\",\\\"validation_fallback_messages.price_min_not_entered\\\":\\\"en\\\",\\\"validation_fallback_messages.price_max_not_entered\\\":\\\"en\\\",\\\"validation_fallback_messages.price_invalid_value\\\":\\\"en\\\",\\\"validation_fallback_messages.invalid_gift_certificate\\\":\\\"en\\\"},\\\"translations\\\":{\\\"validation_fallback_messages.valid_email\\\":\\\"You must enter a valid email.\\\",\\\"validation_fallback_messages.password\\\":\\\"You must enter a password.\\\",\\\"validation_fallback_messages.password_match\\\":\\\"Your passwords do not match.\\\",\\\"validation_fallback_messages.invalid_password\\\":\\\"Passwords must be at least 7 characters and contain both alphabetic and numeric characters.\\\",\\\"validation_fallback_messages.field_not_blank\\\":\\\" field cannot be blank.\\\",\\\"validation_fallback_messages.certificate_amount\\\":\\\"You must enter a gift certificate amount.\\\",\\\"validation_fallback_messages.certificate_amount_range\\\":\\\"You must enter a certificate amount between [MIN] and [MAX]\\\",\\\"validation_fallback_messages.price_min_evaluation\\\":\\\"Min. price must be less than max. price.\\\",\\\"validation_fallback_messages.price_max_evaluation\\\":\\\"Min. price must be less than max. price.\\\",\\\"validation_fallback_messages.price_min_not_entered\\\":\\\"Min. price is required.\\\",\\\"validation_fallback_messages.price_max_not_entered\\\":\\\"Max. price is required.\\\",\\\"validation_fallback_messages.price_invalid_value\\\":\\\"Input must be greater than 0.\\\",\\\"validation_fallback_messages.invalid_gift_certificate\\\":\\\"Please enter your valid certificate code.\\\"}}\",\"validationDefaultDictionaryJSON\":\"{\\\"locale\\\":\\\"en\\\",\\\"locales\\\":{\\\"validation_default_messages.valid_email\\\":\\\"en\\\",\\\"validation_default_messages.password\\\":\\\"en\\\",\\\"validation_default_messages.password_match\\\":\\\"en\\\",\\\"validation_default_messages.invalid_password\\\":\\\"en\\\",\\\"validation_default_messages.field_not_blank\\\":\\\"en\\\",\\\"validation_default_messages.certificate_amount\\\":\\\"en\\\",\\\"validation_default_messages.certificate_amount_range\\\":\\\"en\\\",\\\"validation_default_messages.price_min_evaluation\\\":\\\"en\\\",\\\"validation_default_messages.price_max_evaluation\\\":\\\"en\\\",\\\"validation_default_messages.price_min_not_entered\\\":\\\"en\\\",\\\"validation_default_messages.price_max_not_entered\\\":\\\"en\\\",\\\"validation_default_messages.price_invalid_value\\\":\\\"en\\\",\\\"validation_default_messages.invalid_gift_certificate\\\":\\\"en\\\"},\\\"translations\\\":{\\\"validation_default_messages.valid_email\\\":\\\"You must enter a valid email.\\\",\\\"validation_default_messages.password\\\":\\\"You must enter a password.\\\",\\\"validation_default_messages.password_match\\\":\\\"Your passwords do not match.\\\",\\\"validation_default_messages.invalid_password\\\":\\\"Passwords must be at least 7 characters and contain both alphabetic and numeric characters.\\\",\\\"validation_default_messages.field_not_blank\\\":\\\"The field cannot be blank.\\\",\\\"validation_default_messages.certificate_amount\\\":\\\"You must enter a gift certificate amount.\\\",\\\"validation_default_messages.certificate_amount_range\\\":\\\"You must enter a certificate amount between [MIN] and [MAX]\\\",\\\"validation_default_messages.price_min_evaluation\\\":\\\"Min. price must be less than max. price.\\\",\\\"validation_default_messages.price_max_evaluation\\\":\\\"Min. price must be less than max. price.\\\",\\\"validation_default_messages.price_min_not_entered\\\":\\\"Min. price is required.\\\",\\\"validation_default_messages.price_max_not_entered\\\":\\\"Max. price is required.\\\",\\\"validation_default_messages.price_invalid_value\\\":\\\"Input must be greater than 0.\\\",\\\"validation_default_messages.invalid_gift_certificate\\\":\\\"Please enter your valid certificate code.\\\"}}\",\"carouselArrowAndDotAriaLabel\":\"Go to slide [SLIDE_NUMBER] of [SLIDES_QUANTITY]\",\"carouselActiveDotAriaLabel\":\"active\",\"carouselContentAnnounceMessage\":\"You are currently on slide [SLIDE_NUMBER] of [SLIDES_QUANTITY]\",\"giftWrappingRemoveMessage\":\"Are you sure you want to remove the gift wrapping from this item?\"}").load();
+
+                function browserSupportsFormData() {
+                    return typeof FormData !== 'undefined' 
+                        && !!FormData.prototype.keys;
+                }
+                function loadFormDataPolyfillScript(src) {
+                    var formDataPolyfillScript = document.createElement('script');
+                    formDataPolyfillScript.src = src;
+                    formDataPolyfillScript.onerror = function () {
+                        console.error('Failed to load formData polyfill script ' + src);
+                    };
+                    document.body.appendChild(formDataPolyfillScript);
+                }
+
+                if (!browserSupportsFormData()) {
+                    loadFormDataPolyfillScript('https://cdn11.bigcommerce.com/s-xncnqmg8ze/stencil/849e4f80-3238-013e-8676-52311d5784e6/dist/theme-bundle.polyfill_form_data.js');
+                }
+            }
+        </script>
+        <script id="theme-bundle-main" nonce="" async defer src="https://cdn11.bigcommerce.com/s-xncnqmg8ze/stencil/849e4f80-3238-013e-8676-52311d5784e6/dist/theme-bundle.main.js"></script>
+        <script nonce="">
+            const scriptElement = document.getElementById('theme-bundle-main');
+
+            if (scriptElement) {
+                addEventListener('load', onThemeBundleMain);
+            } else {
+                console.error('Could not find script element with id "theme-bundle-main"');
+            }
+        </script>
+
+        <script type="text/javascript" src="https://cdn11.bigcommerce.com/shared/js/csrf-protection-header-5eeddd5de78d98d146ef4fd71b2aedce4161903e.js"></script>
+<script type="text/javascript" src="https://cdn11.bigcommerce.com/r-56d4cf9cab5ce4cff27e3f1101b77b423cd1289d/javascript/visitor_stencil.js"></script>
+<script src='https://na.shgcdn3.com/collector.js' async ></script><script src='https://static.klaviyo.com/onsite/js/Tvh88y/klaviyo.js?company_id=Tvh88y' async ></script>      <script>
+        (function() {
+          window.shogunVariables = {};
+          window.shogunVariables.orderId = '';
+        })();
+      </script>
+
+    </body>
+</html>

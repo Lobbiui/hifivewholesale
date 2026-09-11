@@ -1,0 +1,193 @@
+{
+  "brand": "Chewbies",
+  "line": "150mg pack (15mg Delta-9 x 10ct, mid dose)",
+  "source_site": "https://chewbies.com/",
+  "products": [
+    {
+      "name": "Broadway Berry Jam",
+      "slug": "broadway-berry-jam",
+      "url": "https://chewbies.com/broadway-berry-jam/",
+      "variant": "15mg Delta-9 THC (MID DOSE) / 150mg per bag",
+      "file_count": 2,
+      "files": [
+        {
+          "file": "/workspace/chewbies-assets/150mg/products/broadway-berry-jam/COA_15mg_Broadway_Berry_Jam.pdf",
+          "source_url": "https://store-xncnqmg8ze.mybigcommerce.com/content/labtests/SA-260406-79358%20TPFN%20LLC%2015mg%20Broadway%20Berry%20Jam.pdf",
+          "bytes": 941023,
+          "type": "coa_pdf"
+        },
+        {
+          "file": "/workspace/chewbies-assets/150mg/products/broadway-berry-jam/Chewbies_15mg_Mid_Dose_Bag_Broadway_Berry_Jam__84196.1777921629.png",
+          "source_url": "https://cdn11.bigcommerce.com/s-xncnqmg8ze/images/stencil/original/products/177/541/Chewbies_15mg_Mid_Dose_Bag_Broadway_Berry_Jam__84196.1777921629.png",
+          "bytes": 222205,
+          "type": "image"
+        }
+      ]
+    },
+    {
+      "name": "FL-GA Lime",
+      "slug": "fl-ga-lime",
+      "url": "https://chewbies.com/fl-ga-lime/",
+      "variant": "15mg Delta-9 THC (MID DOSE) / 150mg per bag",
+      "file_count": 3,
+      "files": [
+        {
+          "file": "/workspace/chewbies-assets/150mg/products/fl-ga-lime/COA_15mg_FL_GA_Lime.pdf",
+          "source_url": "https://store-xncnqmg8ze.mybigcommerce.com/content/labtests/SA-260406-79360%20TPFN%20LLC%2015mg%20FL%20GA%20Lime.pdf",
+          "bytes": 626159,
+          "type": "coa_pdf"
+        },
+        {
+          "file": "/workspace/chewbies-assets/150mg/products/fl-ga-lime/New_Chewbies_Renders_New_FL-GA_Lime_15mg__63385.1782153025.png",
+          "source_url": "https://cdn11.bigcommerce.com/s-xncnqmg8ze/images/stencil/original/products/178/552/New_Chewbies_Renders_New_FL-GA_Lime_15mg__63385.1782153025.png",
+          "bytes": 536989,
+          "type": "image"
+        },
+        {
+          "file": "/workspace/chewbies-assets/150mg/products/fl-ga-lime/New_Chewbies_Renders_New_FL-GA_Lime__55476.1782153025.png",
+          "source_url": "https://cdn11.bigcommerce.com/s-xncnqmg8ze/images/stencil/original/products/178/553/New_Chewbies_Renders_New_FL-GA_Lime__55476.1782153025.png",
+          "bytes": 901049,
+          "type": "image"
+        }
+      ]
+    },
+    {
+      "name": "Knoxville Orangeade",
+      "slug": "knoxville-orangeade",
+      "url": "https://chewbies.com/knoxville-orangeade/",
+      "variant": "15mg Delta-9 THC (MID DOSE) / 150mg per bag",
+      "file_count": 2,
+      "files": [
+        {
+          "file": "/workspace/chewbies-assets/150mg/products/knoxville-orangeade/COA_15mg_Knoxville_Orangeade.pdf",
+          "source_url": "https://store-xncnqmg8ze.mybigcommerce.com/content/labtests/SA-260506-81012%20TPFN%20LLC%20Knoxville%20Orangeade.pdf",
+          "bytes": 633249,
+          "type": "coa_pdf"
+        },
+        {
+          "file": "/workspace/chewbies-assets/150mg/products/knoxville-orangeade/Chewbies_15mg_Mid_Dose_Bag_Knoxville_Orangeade__84757.1777921672.png",
+          "source_url": "https://cdn11.bigcommerce.com/s-xncnqmg8ze/images/stencil/original/products/176/542/Chewbies_15mg_Mid_Dose_Bag_Knoxville_Orangeade__84757.1777921672.png",
+          "bytes": 218091,
+          "type": "image"
+        }
+      ]
+    },
+    {
+      "name": "Raspberry Mojito",
+      "slug": "raspberry-mojito-delta-9-gummies",
+      "url": "https://chewbies.com/raspberry-mojito-delta-9-gummies/",
+      "variant": "15mg Delta-9 THC (MID DOSE) / 150mg per bag",
+      "file_count": 4,
+      "files": [
+        {
+          "file": "/workspace/chewbies-assets/150mg/products/raspberry-mojito-delta-9-gummies/COA_15mg_Raspberry_Mojito.pdf",
+          "source_url": "https://store-xncnqmg8ze.mybigcommerce.com/content/labtests/SA-260406-79361%20TPFN%20LLC%2015mg%20Raspberry%20Mojito.pdf",
+          "bytes": 623409,
+          "type": "coa_pdf"
+        },
+        {
+          "file": "/workspace/chewbies-assets/150mg/products/raspberry-mojito-delta-9-gummies/Chewbies_Raspberry_Mojito_4__42230.1758644577.jpg",
+          "source_url": "https://cdn11.bigcommerce.com/s-xncnqmg8ze/images/stencil/original/products/116/479/Chewbies_Raspberry_Mojito_4__42230.1758644577.jpg",
+          "bytes": 159920,
+          "type": "image"
+        },
+        {
+          "file": "/workspace/chewbies-assets/150mg/products/raspberry-mojito-delta-9-gummies/Chewbies_Raspberry_Mojito_6__25483.1758644577.jpg",
+          "source_url": "https://cdn11.bigcommerce.com/s-xncnqmg8ze/images/stencil/original/products/116/478/Chewbies_Raspberry_Mojito_6__25483.1758644577.jpg",
+          "bytes": 221962,
+          "type": "image"
+        },
+        {
+          "file": "/workspace/chewbies-assets/150mg/products/raspberry-mojito-delta-9-gummies/Chewbies_Thumbnail_Raspberry_Mojito__47044.1758644577.png",
+          "source_url": "https://cdn11.bigcommerce.com/s-xncnqmg8ze/images/stencil/original/products/116/477/Chewbies_Thumbnail_Raspberry_Mojito__47044.1758644577.png",
+          "bytes": 367287,
+          "type": "image"
+        }
+      ]
+    },
+    {
+      "name": "Rocket Pop",
+      "slug": "rocket-pop-delta-9-thc-gummies",
+      "url": "https://chewbies.com/rocket-pop-delta-9-thc-gummies/",
+      "variant": "15mg Delta-9 THC (MID DOSE) / 150mg per bag",
+      "file_count": 6,
+      "files": [
+        {
+          "file": "/workspace/chewbies-assets/150mg/products/rocket-pop-delta-9-thc-gummies/25mg_Rocket_Pop_1__14628.1758642799.jpg",
+          "source_url": "https://cdn11.bigcommerce.com/s-xncnqmg8ze/images/stencil/original/products/125/509/25mg_Rocket_Pop_1__14628.1758642799.jpg",
+          "bytes": 112547,
+          "type": "image"
+        },
+        {
+          "file": "/workspace/chewbies-assets/150mg/products/rocket-pop-delta-9-thc-gummies/25mg_Rocket_Pop_3__90772.1758642798.jpg",
+          "source_url": "https://cdn11.bigcommerce.com/s-xncnqmg8ze/images/stencil/original/products/125/508/25mg_Rocket_Pop_3__90772.1758642798.jpg",
+          "bytes": 179375,
+          "type": "image"
+        },
+        {
+          "file": "/workspace/chewbies-assets/150mg/products/rocket-pop-delta-9-thc-gummies/COA_15mg_Rocket_Pop.pdf",
+          "source_url": "https://store-xncnqmg8ze.mybigcommerce.com/content/labtests/SA-260406-79362%20TPFN%20LLC%20Rocket%20Pop%2015mg.pdf",
+          "bytes": 72879,
+          "type": "coa_pdf"
+        },
+        {
+          "file": "/workspace/chewbies-assets/150mg/products/rocket-pop-delta-9-thc-gummies/Chewbies_Rocket_Pop_3.5__78985.1746736689.jpg",
+          "source_url": "https://cdn11.bigcommerce.com/s-xncnqmg8ze/images/stencil/original/products/125/408/Chewbies_Rocket_Pop_3.5__78985.1746736689.jpg",
+          "bytes": 370317,
+          "type": "image"
+        },
+        {
+          "file": "/workspace/chewbies-assets/150mg/products/rocket-pop-delta-9-thc-gummies/Chewbies_Rocket_Pop_9__06048.1758642798.jpg",
+          "source_url": "https://cdn11.bigcommerce.com/s-xncnqmg8ze/images/stencil/original/products/125/399/Chewbies_Rocket_Pop_9__06048.1758642798.jpg",
+          "bytes": 101617,
+          "type": "image"
+        },
+        {
+          "file": "/workspace/chewbies-assets/150mg/products/rocket-pop-delta-9-thc-gummies/Chewbies_Thumbnail_Rocket_Pop__52009.1758642798.png",
+          "source_url": "https://cdn11.bigcommerce.com/s-xncnqmg8ze/images/stencil/original/products/125/446/Chewbies_Thumbnail_Rocket_Pop__52009.1758642798.png",
+          "bytes": 347143,
+          "type": "image"
+        }
+      ]
+    },
+    {
+      "name": "Sour Cherry Lemonade",
+      "slug": "sour-cherry-lemonade-delta-9-gummies",
+      "url": "https://chewbies.com/sour-cherry-lemonade-delta-9-gummies/",
+      "variant": "15mg Delta-9 THC (MID DOSE) / 150mg per bag",
+      "file_count": 4,
+      "files": [
+        {
+          "file": "/workspace/chewbies-assets/150mg/products/sour-cherry-lemonade-delta-9-gummies/COA_15mg_Sour_Cherry_Lemonade.pdf",
+          "source_url": "https://store-xncnqmg8ze.mybigcommerce.com/content/labtests/SA-260406-79359%20TPFN%20LLC%2015mg%20Sour%20Cherry%20Lemonade.pdf",
+          "bytes": 626641,
+          "type": "coa_pdf"
+        },
+        {
+          "file": "/workspace/chewbies-assets/150mg/products/sour-cherry-lemonade-delta-9-gummies/Chewbies_Sour_Cherry_Leomoade_3__66845.1758643568.jpg",
+          "source_url": "https://cdn11.bigcommerce.com/s-xncnqmg8ze/images/stencil/original/products/123/453/Chewbies_Sour_Cherry_Leomoade_3__66845.1758643568.jpg",
+          "bytes": 186172,
+          "type": "image"
+        },
+        {
+          "file": "/workspace/chewbies-assets/150mg/products/sour-cherry-lemonade-delta-9-gummies/Chewbies_Thumbnail_Sour_Cherry_Lemonade__71365.1758643568.png",
+          "source_url": "https://cdn11.bigcommerce.com/s-xncnqmg8ze/images/stencil/original/products/123/452/Chewbies_Thumbnail_Sour_Cherry_Lemonade__71365.1758643568.png",
+          "bytes": 309327,
+          "type": "image"
+        },
+        {
+          "file": "/workspace/chewbies-assets/150mg/products/sour-cherry-lemonade-delta-9-gummies/New_Chewbies_Renders_New_Sour_Cherry_lemonade___23370.1782141854.png",
+          "source_url": "https://cdn11.bigcommerce.com/s-xncnqmg8ze/images/stencil/original/products/123/547/New_Chewbies_Renders_New_Sour_Cherry_lemonade___23370.1782141854.png",
+          "bytes": 878194,
+          "type": "image"
+        }
+      ]
+    }
+  ],
+  "logos": [
+    {
+      "file": "/workspace/chewbies-assets/150mg/logos/chewbies_logo.png",
+      "source_url": "https://cdn11.bigcommerce.com/s-xncnqmg8ze/images/stencil/original/chewbies_logo_png_1747168672__21632.original.png"
+    }
+  ]
+}

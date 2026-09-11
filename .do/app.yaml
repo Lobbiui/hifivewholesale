@@ -11,7 +11,14 @@ services:
     run_command: npm start
     http_port: 3000
     instance_count: 1
-    instance_size_slug: apps-s-1vcpu-0.5gb
+    instance_size_slug: apps-s-1vcpu-1gb
+    envs:
+      - key: DATABASE_URL
+        scope: RUN_TIME
+        value: ${hifive-db.DATABASE_PRIVATE_URL}
+      - key: DATABASE_CA_CERT
+        scope: RUN_TIME
+        value: ${hifive-db.CA_CERT}
     health_check:
       http_path: /
 ingress:
@@ -21,3 +28,11 @@ ingress:
       match:
         path:
           prefix: /
+databases:
+  - name: hifive-db
+    engine: PG
+    version: "18"
+    production: true
+    cluster_name: hifive-wholesale-db
+    db_name: defaultdb
+    db_user: doadmin

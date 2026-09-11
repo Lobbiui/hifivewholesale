@@ -2,71 +2,85 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ArrowRight, BadgeCheck, Building2, LockKeyhole, PackageCheck, ShieldCheck } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-export type AccessApplication = {
-  id: string;
-  company: string;
-  contact: string;
-  email: string;
-  phone: string;
-  resaleId: string;
-  territory: string;
-  status: "Pending" | "Approved" | "Declined";
-  submitted: string;
-};
+export type { AccessApplication } from "@/lib/wholesale-preview";
 
-const ACCESS_KEY = "hifive-wholesale-access";
-const APPLICATIONS_KEY = "hifive-access-applications";
-
-export function WholesaleAccessGate({ children }: { children: React.ReactNode }) {
-  const [ready, setReady] = useState(false);
-  const [approved, setApproved] = useState(false);
+export function WholesaleAccessGate() {
+  const router = useRouter();
   const [mode, setMode] = useState<"login" | "apply">("login");
   const [message, setMessage] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
-  useEffect(() => {
-    const timer = window.setTimeout(() => {
-      setApproved(sessionStorage.getItem(ACCESS_KEY) === "approved");
-      setReady(true);
-    }, 0);
-    return () => window.clearTimeout(timer);
-  }, []);
-
-  if (!ready) return null;
-  if (approved) return children;
-
-  const login = (form: FormData) => {
-    const email = String(form.get("email") || "").toLowerCase();
-    const code = String(form.get("code") || "");
-    const applications = JSON.parse(localStorage.getItem(APPLICATIONS_KEY) || "[]") as AccessApplication[];
-    const approvedApplicant = applications.some((item) => item.email.toLowerCase() === email && item.status === "Approved");
-    if ((email === "buyer@hifivesupply.com" && code === "HIFIVE-DEMO") || approvedApplicant) {
-      sessionStorage.setItem(ACCESS_KEY, "approved");
-      setApproved(true);
-      return;
+  const login = async (form: FormData) => {
+    setSubmitting(true);
+    setMessage("");
+    try {
+      const response = await fetch("/api/buyer/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: String(form.get("email") || ""), password: String(form.get("password") || "") }),
+      });
+      const result = await response.json() as { message?: string };
+      if (!response.ok) {
+        setMessage(result.message || "Buyer sign-in failed.");
+        return;
+      }
+      const requested = new URLSearchParams(window.location.search).get("returnTo");
+      router.replace(requested?.startsWith("/") && !requested.startsWith("//") ? requested : "/");
+      router.refresh();
+    } catch {
+      setMessage("The buyer sign-in service is temporarily unavailable.");
+    } finally {
+      setSubmitting(false);
     }
-    setMessage("This account is not approved yet. Submit an access request or contact the wholesale desk.");
   };
 
-  const apply = (form: FormData) => {
+  const apply = async (form: FormData) => {
     const email = String(form.get("email") || "");
-    const current = JSON.parse(localStorage.getItem(APPLICATIONS_KEY) || "[]") as AccessApplication[];
-    const application: AccessApplication = {
-      id: `WA-${Date.now().toString().slice(-6)}`,
+    setSubmitting(true);
+    setMessage("");
+    const payload = {
       company: String(form.get("company") || ""),
       contact: String(form.get("contact") || ""),
       email,
       phone: String(form.get("phone") || ""),
       resaleId: String(form.get("resaleId") || ""),
       territory: String(form.get("territory") || ""),
-      status: "Pending",
-      submitted: new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
+      businessType: String(form.get("businessType") || ""),
+      website: String(form.get("website") || ""),
+      certified: form.get("certified") === "on",
     };
-    localStorage.setItem(APPLICATIONS_KEY, JSON.stringify([application, ...current.filter((item) => item.email !== email)]));
-    setMessage("Application received. Hi-Five must approve the account before catalog access is enabled.");
+
+    let response: Response;
+    try {
+      response = await fetch("/api/access-applications", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+    } catch {
+      setMessage("We could not submit the application right now. Please try again shortly.");
+      setSubmitting(false);
+      return;
+    }
+
+    const result = await response.json() as {
+      ok: boolean;
+      message?: string;
+      application?: { id: string; submitted: string; status: "Pending" | "Approved" };
+    };
+    if (!response.ok || !result.application) {
+      setMessage(result.message || "Please review the application and try again.");
+      setSubmitting(false);
+      return;
+    }
+
+    setMessage(result.application.status === "Approved" ? "This business is already approved. Sign in with the buyer account password." : "Business application received. An admin must verify and approve it before catalog access or purchasing is enabled.");
     setMode("login");
+    setSubmitting(false);
   };
 
   return <main className="wholesale-gate">
@@ -83,12 +97,13 @@ export function WholesaleAccessGate({ children }: { children: React.ReactNode })
         {message && <div className="gate-message">{message}</div>}
         {mode === "login" ? <form action={login}>
           <label>Approved business email<input name="email" type="email" defaultValue="buyer@hifivesupply.com" required /></label>
-          <label>Access code<input name="code" defaultValue="HIFIVE-DEMO" required /></label>
-          <button className="button primary full">Enter buyer portal <ArrowRight/></button>
+          <label>Password<input name="password" type="password" defaultValue="HiFiveBuyer!2026" required /></label>
+          <button className="button primary full" disabled={submitting}>{submitting ? "Signing in…" : "Enter buyer portal"} {!submitting && <ArrowRight/>}</button>
           <small className="demo-note"><BadgeCheck/>Client preview credentials are prefilled.</small>
         </form> : <form action={apply}>
-          <div className="field-grid"><label>Business name<input name="company" required /></label><label>Contact name<input name="contact" required /></label><label>Business email<input name="email" type="email" required /></label><label>Phone<input name="phone" type="tel" required /></label><label>Resale certificate / ID<input name="resaleId" required /></label><label>Primary territory<input name="territory" required /></label></div>
-          <button className="button primary full">Submit for approval <ArrowRight/></button>
+          <div className="field-grid"><label>Legal business name<input name="company" required /></label><label>Contact name<input name="contact" required /></label><label>Business email<input name="email" type="email" required /></label><label>Business phone<input name="phone" type="tel" required /></label><label>Resale certificate / tax ID<input name="resaleId" required /></label><label>Primary territory<input name="territory" required /></label><label>Business type<select name="businessType" required defaultValue=""><option value="" disabled>Select business type</option><option>Retail store</option><option>Multi-location retailer</option><option>Distributor</option><option>Online retailer</option></select></label><label>Business website<input name="website" type="url" placeholder="https://" /></label></div>
+          <label className="business-certification"><input name="certified" type="checkbox" required/><span>I certify that I represent a legitimate business purchasing products for resale and that the information supplied may be verified by Hi-Five.</span></label>
+          <button className="button primary full" disabled={submitting}>{submitting ? "Submitting…" : "Submit for approval"} {!submitting && <ArrowRight/>}</button>
         </form>}
         <div className="brand-entry"><Building2/><div><b>Are you a brand?</b><p>Introduce your products to the Hi-Five wholesale buying team.</p></div><Link href="/brands">Brand partnerships <ArrowRight/></Link></div>
         <div className="gate-legal"><Link href="/terms">Terms</Link><Link href="/contact">Contact wholesale</Link></div>
@@ -96,4 +111,3 @@ export function WholesaleAccessGate({ children }: { children: React.ReactNode })
     </section>
   </main>;
 }
-
