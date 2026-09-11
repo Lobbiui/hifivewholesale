@@ -32,7 +32,17 @@ export function hashSessionToken(token: string) {
 export function hasValidRequestOrigin(request: Request) {
   const origin = request.headers.get("origin");
   if (!origin) return process.env.NODE_ENV !== "production";
-  return origin === new URL(request.url).origin;
+  try {
+    const originUrl = new URL(origin);
+    const requestUrl = new URL(request.url);
+    const forwardedHost = request.headers.get("x-forwarded-host")?.split(",")[0]?.trim();
+    const host = request.headers.get("host")?.trim();
+    const allowedHosts = new Set([requestUrl.host, forwardedHost, host].filter(Boolean));
+    const secureProtocol = process.env.NODE_ENV !== "production" || originUrl.protocol === "https:";
+    return secureProtocol && allowedHosts.has(originUrl.host);
+  } catch {
+    return false;
+  }
 }
 
 export async function createAdminSession(userId: string, request: Request, response: NextResponse) {
