@@ -82,6 +82,7 @@ export function WholesaleAccessGate() {
     setMode("login");
     setSubmitting(false);
   };
+  const resetPassword=async()=>{const email=window.prompt("Approved business email");if(!email)return;const response=await fetch("/api/auth/password-reset",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email})});const result=await response.json() as {message?:string};setMessage(result.message||"Password reset request received.")};
 
   return <main className="wholesale-gate">
     <section className="gate-visual">
@@ -96,10 +97,11 @@ export function WholesaleAccessGate() {
         <div className="gate-tabs"><button className={mode === "login" ? "active" : ""} onClick={() => { setMode("login"); setMessage(""); }}>Sign in</button><button className={mode === "apply" ? "active" : ""} onClick={() => { setMode("apply"); setMessage(""); }}>Apply</button></div>
         {message && <div className="gate-message">{message}</div>}
         {mode === "login" ? <form action={login}>
-          <label>Approved business email<input name="email" type="email" defaultValue="buyer@hifivesupply.com" required /></label>
-          <label>Password<input name="password" type="password" defaultValue="HiFiveBuyer!2026" required /></label>
+          <label>Approved business email<input name="email" type="email" autoComplete="email" required /></label>
+          <label>Password<input name="password" type="password" autoComplete="current-password" required /></label>
           <button className="button primary full" disabled={submitting}>{submitting ? "Signing in…" : "Enter buyer portal"} {!submitting && <ArrowRight/>}</button>
-          <small className="demo-note"><BadgeCheck/>Client preview credentials are prefilled.</small>
+          <button type="button" className="link-button" onClick={()=>void resetPassword()}>Forgot password?</button>
+          <small className="demo-note"><BadgeCheck/>Access is limited to administrator-approved businesses.</small>
         </form> : <form action={apply}>
           <div className="field-grid"><label>Legal business name<input name="company" required /></label><label>Contact name<input name="contact" required /></label><label>Business email<input name="email" type="email" required /></label><label>Business phone<input name="phone" type="tel" required /></label><label>Resale certificate / tax ID<input name="resaleId" required /></label><label>Primary territory<input name="territory" required /></label><label>Business type<select name="businessType" required defaultValue=""><option value="" disabled>Select business type</option><option>Retail store</option><option>Multi-location retailer</option><option>Distributor</option><option>Online retailer</option></select></label><label>Business website<input name="website" type="url" placeholder="https://" /></label></div>
           <label className="business-certification"><input name="certified" type="checkbox" required/><span>I certify that I represent a legitimate business purchasing products for resale and that the information supplied may be verified by Hi-Five.</span></label>

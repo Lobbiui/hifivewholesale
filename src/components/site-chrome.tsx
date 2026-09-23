@@ -3,7 +3,6 @@
 import { usePathname } from "next/navigation";
 import { Footer } from "./footer";
 import { Header } from "./header";
-import { AgeGate } from "./age-gate";
 import { ChatWidget } from "./chat-widget";
 
 export function SiteChrome({ children }: { children: React.ReactNode }) {
@@ -13,5 +12,5 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
   const publicRoute = pathname.startsWith("/brands") || pathname.startsWith("/terms") || pathname.startsWith("/contact");
   if (admin || access) return children;
   if (publicRoute) return <><Header />{children}<Footer /><ChatWidget /></>;
-  return <><Header /><AgeGate />{children}<Footer /><ChatWidget /></>;
+  return <><Header />{children}<Footer /><ChatWidget /></>;
 }

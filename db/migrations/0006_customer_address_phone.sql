@@ -1,0 +1,1 @@
+ALTER TABLE customer_addresses ADD COLUMN IF NOT EXISTS phone TEXT NOT NULL DEFAULT '';

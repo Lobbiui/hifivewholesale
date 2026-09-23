@@ -1,87 +1,12 @@
 "use client";
-
-import { FormEvent, useEffect, useMemo, useState } from "react";
-import { ArrowUp, CheckCircle2, MessageCircle, Minus, ShieldCheck, X } from "lucide-react";
-import { CHAT_CHANGE_EVENT, CHAT_STORAGE_KEY, createChatId, createMessageId, currentChatIdentity, readChatConversations, writeChatConversations, type ChatConversation } from "@/lib/chat-preview";
-
-const ACTIVE_CHAT_KEY = "hifive-active-chat";
-
-export function ChatWidget() {
-  const [open, setOpen] = useState(false);
-  const [ready, setReady] = useState(false);
-  const [conversations, setConversations] = useState<ChatConversation[]>([]);
-  const [activeId, setActiveId] = useState("");
-  const [company, setCompany] = useState("");
-  const [contact, setContact] = useState("");
-  const [email, setEmail] = useState("");
-  const [draft, setDraft] = useState("");
-  const [emailStatus, setEmailStatus] = useState<"" | "sent" | "queued">("");
-
-  const sync = () => {
-    const next = readChatConversations();
-    const identity = currentChatIdentity();
-    const storedId = sessionStorage.getItem(ACTIVE_CHAT_KEY) || "";
-    const matching = identity ? next.find((item) => item.buyerApplicationId === identity.buyerApplicationId) : next.find((item) => item.id === storedId);
-    setConversations(next);
-    setActiveId(matching?.id || "");
-    if (identity) { setCompany(identity.company); setContact(identity.contact); setEmail(identity.email); }
-  };
-
-  useEffect(() => {
-    const timer = window.setTimeout(() => { sync(); setReady(true); }, 0);
-    const onStorage = (event: StorageEvent) => { if (event.key === CHAT_STORAGE_KEY) sync(); };
-    window.addEventListener(CHAT_CHANGE_EVENT, sync);
-    window.addEventListener("storage", onStorage);
-    return () => { window.clearTimeout(timer); window.removeEventListener(CHAT_CHANGE_EVENT, sync); window.removeEventListener("storage", onStorage); };
-  }, []);
-
-  const active = useMemo(() => conversations.find((item) => item.id === activeId), [activeId, conversations]);
-
-  useEffect(() => {
-    if (!open || !active || active.unreadByBuyer === 0) return;
-    const timer = window.setTimeout(() => writeChatConversations(readChatConversations().map((item) => item.id === active.id ? { ...item, unreadByBuyer: 0 } : item)), 0);
-    return () => window.clearTimeout(timer);
-  }, [active, open]);
-
-  const send = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const body = draft.trim();
-    if (!body || !company.trim() || !contact.trim() || !email.trim()) return;
-    const now = new Date().toISOString();
-    const message = { id: createMessageId(), sender: "buyer" as const, body: body.slice(0, 2000), sentAt: now };
-    const identity = currentChatIdentity();
-    const conversationId = active?.id || createChatId();
-    const nextConversation: ChatConversation = active ? { ...active, company: company.trim(), contact: contact.trim(), email: email.trim(), status: "Open", unreadByAdmin: active.unreadByAdmin + 1, updatedAt: now, messages: [...active.messages, message] } : { id: conversationId, company: company.trim(), contact: contact.trim(), email: email.trim(), buyerApplicationId: identity?.buyerApplicationId, status: "Open", unreadByAdmin: 1, unreadByBuyer: 0, updatedAt: now, messages: [message] };
-    const next = [nextConversation, ...conversations.filter((item) => item.id !== conversationId)];
-    sessionStorage.setItem(ACTIVE_CHAT_KEY, conversationId);
-    setActiveId(conversationId);
-    setDraft("");
-    setEmailStatus("");
-    writeChatConversations(next);
-    try {
-      const response = await fetch("/api/chat/notify", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ conversationId, company: nextConversation.company, contact: nextConversation.contact, email: nextConversation.email, message: body }) });
-      const result = await response.json() as { delivered?: boolean };
-      setEmailStatus(result.delivered ? "sent" : "queued");
-    } catch {
-      setEmailStatus("queued");
-    }
-  };
-
-  if (!ready) return null;
-  return <aside className={open ? "chat-widget open" : "chat-widget"} aria-label="Hi-Five wholesale chat">
-    {open && <div className="chat-window">
-      <header><div><span><i/>Wholesale desk</span><strong>How can we help?</strong></div><div><button onClick={() => setOpen(false)} aria-label="Minimize chat"><Minus/></button><button onClick={() => setOpen(false)} aria-label="Close chat"><X/></button></div></header>
-      <div className="chat-trust"><ShieldCheck/>Messages go directly to the Hi-Five wholesale team.</div>
-      <div className="chat-thread" aria-live="polite">
-        {!active && <div className="chat-welcome"><MessageCircle/><h3>Talk to a real wholesale person.</h3><p>Ask about products, case pricing, territory, delivery, or your business application.</p></div>}
-        {active?.messages.map((message) => <div className={`chat-message ${message.sender}`} key={message.id}><span>{message.sender === "admin" ? "Hi-Five" : "You"}</span><p>{message.body}</p><small>{new Date(message.sentAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}</small></div>)}
-      </div>
-      <form onSubmit={send}>
-        {!active && <div className="chat-identify"><label>Business name<input value={company} onChange={(event) => setCompany(event.target.value)} required/></label><div><label>Your name<input value={contact} onChange={(event) => setContact(event.target.value)} required/></label><label>Business email<input type="email" value={email} onChange={(event) => setEmail(event.target.value)} required/></label></div></div>}
-        <div className="chat-compose"><textarea value={draft} onChange={(event) => setDraft(event.target.value)} placeholder="Type your message…" maxLength={2000} required/><button aria-label="Send message"><ArrowUp/></button></div>
-        <small className="chat-email-status">{emailStatus === "sent" ? <><CheckCircle2/>Admin notified by email</> : emailStatus === "queued" ? "Message saved · email activates when configured" : "Typical reply during business hours"}</small>
-      </form>
-    </div>}
-    {!open && <button className="chat-launcher" onClick={() => setOpen(true)}><MessageCircle/><span>Message wholesale</span>{active?.unreadByBuyer ? <b>{active.unreadByBuyer}</b> : null}</button>}
-  </aside>;
+import { FormEvent,useCallback,useEffect,useState } from "react";
+import { ArrowUp,CheckCircle2,MessageCircle,Minus,ShieldCheck,X } from "lucide-react";
+type Message={id:string;sender:"buyer"|"admin";body:string;sentAt:string};type Conversation={id:string;company:string;contact:string;email:string;unread_by_buyer:number;messages:Message[]};
+export function ChatWidget(){
+ const [open,setOpen]=useState(false),[ready,setReady]=useState(false),[active,setActive]=useState<Conversation|null>(null),[company,setCompany]=useState(""),[contact,setContact]=useState(""),[email,setEmail]=useState(""),[draft,setDraft]=useState(""),[status,setStatus]=useState("");
+ const load=useCallback(async()=>{const [chat,session]=await Promise.all([fetch("/api/chat/conversations",{cache:"no-store"}),fetch("/api/buyer/auth/session",{cache:"no-store"})]);if(session.ok){const data=await session.json() as {buyer:{company:string;displayName:string;email:string}};setCompany(data.buyer.company);setContact(data.buyer.displayName);setEmail(data.buyer.email)}if(chat.ok){const data=await chat.json() as {conversations?:Conversation[]};setActive(data.conversations?.[0]??null)}setReady(true)},[]);
+ useEffect(()=>{const initial=window.setTimeout(()=>void load(),0);const timer=window.setInterval(()=>void load(),15000);return()=>{window.clearTimeout(initial);window.clearInterval(timer)}},[load]);
+ useEffect(()=>{if(open&&active?.unread_by_buyer)void fetch("/api/chat/conversations",{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({conversationId:active.id,action:"read"})})},[active,open]);
+ const send=async(event:FormEvent<HTMLFormElement>)=>{event.preventDefault();if(!draft.trim())return;setStatus("Sending…");const response=await fetch("/api/chat/conversations",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({conversationId:active?.id,company,contact,email,message:draft.trim()})});const result=await response.json() as {conversationId?:string};if(!response.ok){setStatus("Message could not be sent.");return}const now=new Date().toISOString(),message={id:`local-${Date.now()}`,sender:"buyer" as const,body:draft.trim(),sentAt:now};setActive(current=>current?{...current,messages:[...current.messages,message]}:{id:result.conversationId!,company,contact,email,unread_by_buyer:0,messages:[message]});setDraft("");setStatus("Message saved · the wholesale team has been notified")};
+ if(!ready)return null;return <aside className={open?"chat-widget open":"chat-widget"} aria-label="Hi-Five wholesale chat">{open&&<div className="chat-window"><header><div><span><i/>Wholesale desk</span><strong>How can we help?</strong></div><div><button onClick={()=>setOpen(false)} aria-label="Minimize chat"><Minus/></button><button onClick={()=>setOpen(false)} aria-label="Close chat"><X/></button></div></header><div className="chat-trust"><ShieldCheck/>Messages go directly to the Hi-Five wholesale team.</div><div className="chat-thread" aria-live="polite">{!active&&<div className="chat-welcome"><MessageCircle/><h3>Talk to a real wholesale person.</h3><p>Ask about products, pricing, territory, delivery, or your business application.</p></div>}{active?.messages.map(item=><div className={`chat-message ${item.sender}`} key={item.id}><span>{item.sender==="admin"?"Hi-Five":"You"}</span><p>{item.body}</p><small>{new Date(item.sentAt).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})}</small></div>)}</div><form onSubmit={send}>{!active&&<div className="chat-identify"><label>Business name<input value={company} onChange={event=>setCompany(event.target.value)} required/></label><div><label>Your name<input value={contact} onChange={event=>setContact(event.target.value)} required/></label><label>Business email<input type="email" value={email} onChange={event=>setEmail(event.target.value)} required/></label></div></div>}<div className="chat-compose"><textarea value={draft} onChange={event=>setDraft(event.target.value)} placeholder="Type your message…" maxLength={2000} required/><button aria-label="Send message"><ArrowUp/></button></div><small className="chat-email-status">{status&&<><CheckCircle2/>{status}</>}</small></form></div>}{!open&&<button className="chat-launcher" onClick={()=>setOpen(true)}><MessageCircle/><span>Message wholesale</span>{active?.unread_by_buyer?<b>{active.unread_by_buyer}</b>:null}</button>}</aside>;
 }
