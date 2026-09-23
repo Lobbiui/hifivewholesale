@@ -4,7 +4,7 @@ import { z } from "zod";
 import { hasValidRequestOrigin } from "@/lib/server/admin-auth";
 import { getBuyerIdentity } from "@/lib/server/buyer-auth";
 import { getDatabase } from "@/lib/server/database";
-import { products } from "@/lib/data";
+import { getStorefrontProductsByIds } from "@/lib/server/catalog";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -52,6 +52,7 @@ export async function POST(request: Request) {
   const parsed = submitSchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ ok: false, message: "Review the order details and try again." }, { status: 422 });
 
+  const products = await getStorefrontProductsByIds(parsed.data.items.map((item) => item.id));
   const catalog = new Map(products.map((product) => [product.id, product]));
   const requested = parsed.data.items.map((item) => ({ product: catalog.get(item.id), quantity: item.quantity }));
   if (requested.some((item) => !item.product)) return NextResponse.json({ ok: false, message: "A selected product is no longer available." }, { status: 422 });

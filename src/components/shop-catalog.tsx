@@ -2,7 +2,7 @@
 
 import { Check, ChevronDown, Search, SlidersHorizontal, X } from "lucide-react";
 import { useMemo, useState } from "react";
-import { products } from "@/lib/data";
+import type { Product } from "@/lib/data";
 import { ProductCard } from "./product-card";
 import { useLanguage } from "./language-provider";
 
@@ -11,7 +11,7 @@ type Filters = Record<FilterKey, string[]>;
 const emptyFilters: Filters = { categories: [], brands: [], strengths: [], flavors: [] };
 const unique = (values: string[]) => [...new Set(values)].sort();
 
-export function ShopCatalog() {
+export function ShopCatalog({ products }: { products: Product[] }) {
   const { copy } = useLanguage();
   const [query, setQuery] = useState("");
   const [filters, setFilters] = useState<Filters>(emptyFilters);
@@ -41,7 +41,7 @@ export function ShopCatalog() {
       if (sort === "new") return (b.badge === "New" ? 1 : 0) - (a.badge === "New" ? 1 : 0);
       return (b.badge ? 1 : 0) - (a.badge ? 1 : 0);
     });
-  }, [filters, query, sort]);
+  }, [filters, products, query, sort]);
 
   const active = Object.entries(filters).flatMap(([key, values]) => values.map((value) => ({ key: key as FilterKey, value })));
   const toggle = (key: FilterKey, value: string) => setFilters((current) => ({ ...current, [key]: current[key].includes(value) ? current[key].filter((item) => item !== value) : [...current[key], value] }));

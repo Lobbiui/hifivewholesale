@@ -4,10 +4,10 @@ import Link from "next/link";
 import { ArrowDownRight, ArrowRight, BadgeCheck, Boxes, Headphones, MapPin, PackageCheck, Sparkles, Truck } from "lucide-react";
 import { CinematicIntro } from "./cinematic-intro";
 import { ProductCard } from "./product-card";
-import { products, posts } from "@/lib/data";
+import { posts, type Product } from "@/lib/data";
 import { useLanguage } from "./language-provider";
 
-export function HomePage() {
+export function HomePage({ products }: { products: Product[] }) {
   const { copy } = useLanguage();
   return <main>
     <CinematicIntro />

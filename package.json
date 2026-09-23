@@ -13,6 +13,8 @@
     "admin:invite": "tsx scripts/admin-invite.ts",
     "clover:check": "tsx scripts/clover-check.ts",
     "catalog": "node scripts/generate-catalog.mjs",
+    "catalog:check": "tsx scripts/catalog-import-smoke.ts",
+    "catalog:import": "tsx scripts/catalog-import.ts",
     "remotion": "remotion studio src/remotion/index.ts --no-open"
   },
   "dependencies": {
