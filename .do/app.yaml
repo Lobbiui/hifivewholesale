@@ -1,5 +1,8 @@
 name: hifive-wholesale-preview
 region: nyc
+domains:
+  - domain: hifivesupply.com
+    type: PRIMARY
 services:
   - name: storefront
     environment_slug: node-js
