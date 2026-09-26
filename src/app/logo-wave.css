@@ -1,0 +1,32 @@
+.cinematic-intro {
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 50%, #1c0c2a 0, #08060b 48%, #050408 78%);
+}
+
+.intro-logo-wave-stage {
+  position: relative;
+  width: min(92vmin, 960px);
+  aspect-ratio: 1;
+  background: #050408 url("/images/hifive-logo.png") center / contain no-repeat;
+  box-shadow: 0 0 120px rgba(119, 55, 200, 0.22);
+}
+
+.intro-logo-wave {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.intro-progress {
+  animation-duration: 5.05s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro-progress {
+    width: 100%;
+    animation: none;
+  }
+}

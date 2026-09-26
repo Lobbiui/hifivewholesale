@@ -1,30 +1,43 @@
 "use client";
 
-import { Player, PlayerRef } from "@remotion/player";
-import { useEffect, useRef, useState } from "react";
-import { CinematicOpener } from "@/remotion/CinematicOpener";
+import { useCallback, useEffect, useState } from "react";
 
 export function CinematicIntro() {
   const [visible, setVisible] = useState(true);
-  const player = useRef<PlayerRef>(null);
+  const close = useCallback(() => {
+    sessionStorage.setItem("hifive-intro-seen", "1");
+    setVisible(false);
+  }, []);
+
   useEffect(() => {
     const hydrateTimer = window.setTimeout(() => {
-      if (sessionStorage.getItem("hifive-intro-seen")) setVisible(false);
+      if (sessionStorage.getItem("hifive-intro-seen") || window.matchMedia("(prefers-reduced-motion: reduce)").matches) close();
     }, 0);
-    const exitTimer = window.setTimeout(() => {
-      sessionStorage.setItem("hifive-intro-seen", "1");
-      setVisible(false);
-    }, 5200);
+    const exitTimer = window.setTimeout(close, 6000);
     return () => {
       window.clearTimeout(hydrateTimer);
       window.clearTimeout(exitTimer);
     };
-  }, []);
-  const close = () => { sessionStorage.setItem("hifive-intro-seen", "1"); setVisible(false); };
+  }, [close]);
+
   if (!visible) return null;
   return (
     <div className="cinematic-intro" aria-label="Hi-Five cinematic introduction">
-      <Player ref={player} component={CinematicOpener} durationInFrames={150} compositionWidth={1920} compositionHeight={1080} fps={30} autoPlay initiallyMuted controls={false} style={{ width: "100%", height: "100%" }} acknowledgeRemotionLicense />
+      <div className="intro-logo-wave-stage">
+        <video
+          className="intro-logo-wave"
+          src="/videos/hifive-logo-wave.mp4"
+          poster="/images/hifive-logo.png"
+          autoPlay
+          muted
+          playsInline
+          preload="auto"
+          onEnded={close}
+          aria-hidden="true"
+        >
+          Your browser does not support the Hi-Five animated introduction.
+        </video>
+      </div>
       <button className="intro-skip" onClick={close}>Enter site <span>↗</span></button>
       <div className="intro-progress" />
       <button className="intro-hitarea" aria-label="Continue to website" onClick={close} />
