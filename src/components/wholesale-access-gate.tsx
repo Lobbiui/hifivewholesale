@@ -86,7 +86,10 @@ export function WholesaleAccessGate() {
   return <main className="wholesale-gate">
     <section className="gate-visual">
       <div className="gate-wave-logo" role="img" aria-label="Hi-Five Supply Wholesale">
-        <video src="/videos/hifive-logo-wave.mp4" autoPlay muted playsInline loop preload="auto" aria-hidden="true" />
+        <video autoPlay muted playsInline loop preload="auto" aria-hidden="true">
+          <source src="/videos/hifive-logo-wave-alpha.webm" type="video/webm" />
+          <source src="/videos/hifive-logo-wave.mp4" type="video/mp4" />
+        </video>
       </div>
       <div><span className="eyebrow light">Private wholesale network</span><h1>THE GOOD STUFF<br/><em>STAYS GATED.</em></h1><p>Hi-Five is a business-to-business wholesale portal. Catalog, case pricing, inventory, checkout, and loyalty benefits are available only to approved accounts.</p></div>
       <div className="gate-proof"><span><ShieldCheck/>Wholesaler approved</span><span><LockKeyhole/>Private case pricing</span><span><PackageCheck/>Verified business buyers</span></div>

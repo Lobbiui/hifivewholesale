@@ -32,10 +32,19 @@
 }
 
 .gate-wave-logo {
+  position: relative;
+  z-index: 1;
   width: 230px;
   aspect-ratio: 1;
   margin: -34px 0 -30px -20px;
-  background: transparent url("/images/hifive-logo.png") center / contain no-repeat;
+  background: transparent;
+}
+
+.gate-visual {
+  background:
+    radial-gradient(circle at 132px 138px, #08060b 0 175px, rgba(8, 6, 11, 0.94) 230px, rgba(8, 6, 11, 0.55) 315px, transparent 455px),
+    linear-gradient(90deg, rgba(8, 6, 11, 0.9), rgba(40, 12, 67, 0.55)),
+    url("/images/cinematic-warehouse.png") center / cover;
 }
 
 .gate-wave-logo video {
@@ -43,7 +52,7 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
-  mix-blend-mode: screen;
+  mix-blend-mode: lighten;
   filter: drop-shadow(0 12px 32px rgba(119, 55, 200, 0.24));
 }
 
@@ -54,6 +63,13 @@
 }
 
 @media (max-width: 600px) {
+  .gate-visual {
+    background:
+      radial-gradient(circle at 98px 105px, #08060b 0 145px, rgba(8, 6, 11, 0.94) 190px, rgba(8, 6, 11, 0.5) 265px, transparent 375px),
+      linear-gradient(90deg, rgba(8, 6, 11, 0.9), rgba(40, 12, 67, 0.55)),
+      url("/images/cinematic-warehouse.png") center / cover;
+  }
+
   .gate-wave-logo {
     width: 190px;
     margin: -28px 0 -26px -16px;
