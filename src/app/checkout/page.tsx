@@ -67,7 +67,7 @@ export default function CheckoutPage() {
   if (submittedOrder) return <main className="page-shell light-page checkout-page"><section className="order-confirmation container"><CheckCircle2/><span className="eyebrow">Approved buyer order received</span><h1>ORDER<br/>SUBMITTED.</h1><p><strong>{submittedOrder}</strong> has been sent for wholesale review. Your account representative will confirm pricing and fulfillment before payment.</p><div><Link className="button primary" href="/account">View buyer account</Link><Link className="button dark" href="/shop">Continue shopping</Link></div></section></main>;
 
   return <main className="page-shell light-page checkout-page">
-    <header className="simple-head container"><span className="eyebrow">{copy.checkout.kicker}</span><h1>{copy.checkout.title}</h1><p className="approved-order-note"><ShieldCheck/>Purchasing is restricted to businesses approved by a Hi-Five administrator.</p></header>
+    <header className="simple-head container"><span className="eyebrow">{copy.checkout.kicker}</span><h1>{copy.checkout.title}</h1><p className="approved-order-note"><ShieldCheck/>Purchasing is restricted to businesses approved by a HiFive administrator.</p></header>
     <section className="checkout-grid container">
       <div><h2>{copy.checkout.order}</h2>{items.length === 0 ? <div className="empty-cart"><PackageCheck/><h3>{copy.checkout.empty}</h3><p>{copy.checkout.emptyCopy}</p><Link className="button dark" href="/shop">{copy.checkout.shop}</Link></div> : items.map((item) => <article className="cart-row" key={item.id}>
         <div className="mini-pack" style={{ background: item.color }}><Image src={item.images[0]} alt="" fill sizes="70px"/></div>

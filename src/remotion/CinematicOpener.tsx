@@ -16,7 +16,7 @@ export function CinematicOpener() {
       <AbsoluteFill style={{ background: "linear-gradient(90deg, rgba(5,4,8,.72), transparent 45%, rgba(5,4,8,.45)), radial-gradient(circle at 50% 58%, transparent, rgba(5,4,8,.55))" }} />
       <AbsoluteFill style={{ alignItems: "center", justifyContent: "center", padding: "8%" }}>
         <Img
-          src={staticFile("images/hifive-logo.png")}
+          src={staticFile("images/hifive-logo-white-type.png")}
           style={{
             width: "min(620px, 50vw)", objectFit: "contain",
             opacity: interpolate(frame, [fps * 0.5, fps * 1.4, fps * 4.2, fps * 4.8], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.16, 1, 0.3, 1) }),

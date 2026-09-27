@@ -17,6 +17,7 @@ type ApplicationRow = {
   website_url: string | null;
   status: "PENDING" | "APPROVED" | "DECLINED" | "MORE_INFO_REQUIRED";
   submitted_at: Date | string;
+  tn_hdcp_license_filename: string | null;
 };
 
 const displayStatus = (status: ApplicationRow["status"]) => status === "APPROVED" ? "Approved" : status === "DECLINED" ? "Declined" : "Pending";
@@ -28,7 +29,7 @@ export async function GET() {
   const database = await getDatabase();
   const result = await database.query<ApplicationRow>(
     `SELECT id, legal_business_name, contact_name, business_email, business_phone, resale_id,
-            primary_territory, business_type, website_url, status, submitted_at
+            primary_territory, business_type, website_url, status, submitted_at, tn_hdcp_license_filename
        FROM buyer_applications
       ORDER BY CASE status WHEN 'PENDING' THEN 0 WHEN 'MORE_INFO_REQUIRED' THEN 1 ELSE 2 END, submitted_at DESC`,
   );
@@ -47,6 +48,8 @@ export async function GET() {
       website: row.website_url ?? undefined,
       status: displayStatus(row.status),
       submitted: new Date(row.submitted_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
+      tnHdcpLicenseFilename: row.tn_hdcp_license_filename ?? undefined,
+      tnHdcpLicenseUrl: row.tn_hdcp_license_filename ? `/api/admin/applications/${encodeURIComponent(row.id)}/tn-hdcp-license` : undefined,
     })),
   });
 }

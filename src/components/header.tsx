@@ -17,7 +17,7 @@ export function Header() {
   return (
     <header className={lightHeader ? "site-header site-header-light" : "site-header"}>
       <div className="header-inner">
-        <Link href="/" className="brand"><Image src="/images/hifive-logo.png" alt="Hi-Five Supply" width={196} height={106} priority /></Link>
+        <Link href="/" className="brand"><Image src="/images/hifive-logo-white-type.png" alt="HiFive Supply" width={196} height={106} priority /></Link>
         <nav className={open ? "nav-open" : ""}>
           <Link href="/shop" onClick={() => setOpen(false)}>{copy.shop}</Link>
           <Link href="/loyalty" onClick={() => setOpen(false)}>{copy.loyalty}</Link>

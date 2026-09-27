@@ -3,7 +3,7 @@ import { mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { Pool } from "pg";
 
-export type SqlValue = string | number | boolean | Date | null | Record<string, unknown> | unknown[];
+export type SqlValue = string | number | boolean | Date | null | Uint8Array | Record<string, unknown> | unknown[];
 export type SqlResult<Row extends Record<string, unknown> = Record<string, unknown>> = {
   rows: Row[];
   rowCount: number;

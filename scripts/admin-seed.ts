@@ -71,7 +71,7 @@ async function seedPreviewBuyer() {
   await database.transaction(async (transaction) => {
     await transaction.query(
       `INSERT INTO organizations (id, legal_name, display_name, organization_type, status, resale_id, primary_territory)
-       VALUES ('org_preview_buyer', 'Hi-Five Preview Retailer', 'Hi-Five Preview Retailer', 'WHOLESALE_BUYER', 'APPROVED', 'DEMO-RESALE', 'Tennessee')
+       VALUES ('org_preview_buyer', 'HiFive Preview Retailer', 'HiFive Preview Retailer', 'WHOLESALE_BUYER', 'APPROVED', 'DEMO-RESALE', 'Tennessee')
        ON CONFLICT (id) DO UPDATE SET status = 'APPROVED', updated_at = CURRENT_TIMESTAMP`,
     );
     await transaction.query(
@@ -96,7 +96,7 @@ async function seedPreviewBuyer() {
          id, legal_business_name, contact_name, business_email, business_phone, resale_id,
          primary_territory, business_type, certification_accepted_at, status, organization_id
        ) VALUES (
-         'WA-DEMO', 'Hi-Five Preview Retailer', 'Preview Buyer', 'buyer@hifivesupply.com',
+         'WA-DEMO', 'HiFive Preview Retailer', 'Preview Buyer', 'buyer@hifivesupply.com',
          '(555) 010-0000', 'DEMO-RESALE', 'Tennessee', 'Retail store', CURRENT_TIMESTAMP,
          'APPROVED', 'org_preview_buyer'
        ) ON CONFLICT ((LOWER(business_email))) DO UPDATE SET organization_id = 'org_preview_buyer', status = 'APPROVED'`,

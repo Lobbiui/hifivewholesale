@@ -9,7 +9,7 @@
   position: relative;
   width: min(92vmin, 960px);
   aspect-ratio: 1;
-  background: #050408 url("/images/hifive-logo.png") center / contain no-repeat;
+  background: #050408 url("/images/hifive-logo-white-type.png") center / contain no-repeat;
   box-shadow: 0 0 120px rgba(119, 55, 200, 0.22);
 }
 
@@ -54,6 +54,40 @@
   object-fit: contain;
   mix-blend-mode: lighten;
   filter: drop-shadow(0 12px 32px rgba(119, 55, 200, 0.24));
+}
+
+.license-upload {
+  gap: 0.65rem;
+  padding: 1rem;
+  border: 1px dashed rgba(119, 55, 200, 0.55);
+  border-radius: 14px;
+  background: rgba(119, 55, 200, 0.06);
+}
+
+.license-upload input[type="file"] {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.license-upload small,
+.territory-note {
+  color: #665d70;
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.territory-note {
+  margin: 0;
+  padding: 0.9rem 1rem;
+  border-radius: 12px;
+  background: rgba(46, 152, 98, 0.08);
+}
+
+.credential-warning {
+  color: #b42318 !important;
+  font-weight: 700;
 }
 
 @media (prefers-reduced-motion: reduce) {

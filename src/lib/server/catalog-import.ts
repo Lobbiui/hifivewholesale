@@ -57,7 +57,7 @@ export function parseCatalogImport(filename: string, bytes: Uint8Array): ImportP
   const inventoryOnly = headers.includes("product") && headers.includes("qty");
   const fullCatalog = headers.includes("product_name") && headers.includes("quantity_on_hand");
   if (!inventoryOnly && !fullCatalog) {
-    throw new Error("Use either Clover columns Product, Qty or the Hi-Five catalog template columns.");
+    throw new Error("Use either Clover columns Product, Qty or the HiFive catalog template columns.");
   }
 
   const seenNames = new Set<string>();
@@ -332,10 +332,10 @@ function parseUrlList(primary: string, extra: string, row: number, label: string
 async function ensureWarehouse(database: Database) {
   await database.query(
     `INSERT INTO organizations (id, legal_name, display_name, organization_type, status)
-     VALUES ('org_hifive_internal','Hi-Five Supply','Hi-Five Supply','INTERNAL','APPROVED') ON CONFLICT (id) DO NOTHING`,
+     VALUES ('org_hifive_internal','HiFive Supply','HiFive Supply','INTERNAL','APPROVED') ON CONFLICT (id) DO NOTHING`,
   );
   await database.query(
     `INSERT INTO locations (id, organization_id, name, location_type, fulfillment_enabled)
-     VALUES ('loc_hifive_warehouse','org_hifive_internal','Hi-Five Wholesale Warehouse','WAREHOUSE',TRUE) ON CONFLICT (id) DO NOTHING`,
+     VALUES ('loc_hifive_warehouse','org_hifive_internal','HiFive Wholesale Warehouse','WAREHOUSE',TRUE) ON CONFLICT (id) DO NOTHING`,
   );
 }

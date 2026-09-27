@@ -6,7 +6,7 @@ import { getStorefrontProduct, getStorefrontProducts } from "@/lib/server/catalo
 export async function generateMetadata({ params }: PageProps<"/shop/[id]">): Promise<Metadata> {
   const { id } = await params;
   const product = await getStorefrontProduct(id);
-  return product ? { title: `${product.name} | Hi-Five Wholesale`, description: `${product.brand} ${product.name}, ${product.flavor}, ${product.strength}. Wholesale case ordering for approved buyers.` } : {};
+  return product ? { title: `${product.name} | HiFive Wholesale`, description: `${product.brand} ${product.name}, ${product.flavor}, ${product.strength}. Wholesale case ordering for approved buyers.` } : {};
 }
 
 export default async function ProductPage({ params }: PageProps<"/shop/[id]">) {

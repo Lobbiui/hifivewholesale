@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowRight, BadgeCheck, Building2, LockKeyhole, PackageCheck, ShieldCheck } from "lucide-react";
 import { useState } from "react";
+import { US_STATES } from "@/lib/us-states";
 
 export type { AccessApplication } from "@/lib/wholesale-preview";
 
@@ -12,6 +13,7 @@ export function WholesaleAccessGate() {
   const [mode, setMode] = useState<"login" | "apply">("login");
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [territory, setTerritory] = useState("");
 
   const login = async (form: FormData) => {
     setSubmitting(true);
@@ -38,27 +40,13 @@ export function WholesaleAccessGate() {
   };
 
   const apply = async (form: FormData) => {
-    const email = String(form.get("email") || "");
     setSubmitting(true);
     setMessage("");
-    const payload = {
-      company: String(form.get("company") || ""),
-      contact: String(form.get("contact") || ""),
-      email,
-      phone: String(form.get("phone") || ""),
-      resaleId: String(form.get("resaleId") || ""),
-      territory: String(form.get("territory") || ""),
-      businessType: String(form.get("businessType") || ""),
-      website: String(form.get("website") || ""),
-      certified: form.get("certified") === "on",
-    };
-
     let response: Response;
     try {
       response = await fetch("/api/access-applications", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: form,
       });
     } catch {
       setMessage("We could not submit the application right now. Please try again shortly.");
@@ -85,13 +73,13 @@ export function WholesaleAccessGate() {
 
   return <main className="wholesale-gate">
     <section className="gate-visual">
-      <div className="gate-wave-logo" role="img" aria-label="Hi-Five Supply Wholesale">
+      <div className="gate-wave-logo" role="img" aria-label="HiFive Supply Wholesale">
         <video autoPlay muted playsInline loop preload="auto" aria-hidden="true">
-          <source src="/videos/hifive-logo-wave-alpha.webm" type="video/webm" />
-          <source src="/videos/hifive-logo-wave.mp4" type="video/mp4" />
+          <source src="/videos/hifive-logo-wave-white-type-alpha.webm" type="video/webm" />
+          <source src="/videos/hifive-logo-wave-white-type.mp4" type="video/mp4" />
         </video>
       </div>
-      <div><span className="eyebrow light">Private wholesale network</span><h1>THE GOOD STUFF<br/><em>STAYS GATED.</em></h1><p>Hi-Five is a business-to-business wholesale portal. Catalog, case pricing, inventory, checkout, and loyalty benefits are available only to approved accounts.</p></div>
+      <div><span className="eyebrow light">Private wholesale network</span><h1>THE GOOD STUFF<br/><em>STAYS GATED.</em></h1><p>HiFive is a business-to-business wholesale portal. Catalog, case pricing, inventory, checkout, and loyalty benefits are available only to approved accounts.</p></div>
       <div className="gate-proof"><span><ShieldCheck/>Wholesaler approved</span><span><LockKeyhole/>Private case pricing</span><span><PackageCheck/>Verified business buyers</span></div>
     </section>
     <section className="gate-panel">
@@ -107,11 +95,11 @@ export function WholesaleAccessGate() {
           <button type="button" className="link-button" onClick={()=>void resetPassword()}>Forgot password?</button>
           <small className="demo-note"><BadgeCheck/>Access is limited to administrator-approved businesses.</small>
         </form> : <form action={apply}>
-          <div className="field-grid"><label>Legal business name<input name="company" required /></label><label>Contact name<input name="contact" required /></label><label>Business email<input name="email" type="email" required /></label><label>Business phone<input name="phone" type="tel" required /></label><label>Resale certificate / tax ID<input name="resaleId" required /></label><label>Primary territory<input name="territory" required /></label><label>Business type<select name="businessType" required defaultValue=""><option value="" disabled>Select business type</option><option>Retail store</option><option>Multi-location retailer</option><option>Distributor</option><option>Online retailer</option></select></label><label>Business website<input name="website" type="url" placeholder="https://" /></label></div>
-          <label className="business-certification"><input name="certified" type="checkbox" required/><span>I certify that I represent a legitimate business purchasing products for resale and that the information supplied may be verified by Hi-Five.</span></label>
+          <div className="field-grid"><label>Legal business name<input name="company" required /></label><label>Contact name<input name="contact" required /></label><label>Business email<input name="email" type="email" required /></label><label>Business phone<input name="phone" type="tel" required /></label><label>Resale certificate / tax ID<input name="resaleId" required /></label><label>Primary state / territory<select name="territory" value={territory} onChange={(event)=>setTerritory(event.target.value)} required><option value="" disabled>Select a location</option>{US_STATES.map(([code,name])=><option value={code} key={code}>{name}</option>)}</select></label><label>Business type<select name="businessType" required defaultValue=""><option value="" disabled>Select business type</option><option>Retail store</option><option>Multi-location retailer</option><option>Distributor</option><option>Online retailer</option></select></label><label>Business website<input name="website" type="url" placeholder="https://" /></label>{territory==="TN"?<label className="full-field license-upload">Tennessee HDCP license<input name="tnHdcpLicense" type="file" accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png" required/><small>Required for Tennessee applicants. Upload a PDF, JPG, or PNG up to 8 MB.</small></label>:territory?<p className="full-field territory-note">A Tennessee HDCP license is not required for applicants outside Tennessee.</p>:null}</div>
+          <label className="business-certification"><input name="certified" type="checkbox" required/><span>I certify that I represent a legitimate business purchasing products for resale and that the information supplied may be verified by HiFive.</span></label>
           <button className="button primary full" disabled={submitting}>{submitting ? "Submitting…" : "Submit for approval"} {!submitting && <ArrowRight/>}</button>
         </form>}
-        <div className="brand-entry"><Building2/><div><b>Are you a brand?</b><p>Introduce your products to the Hi-Five wholesale buying team.</p></div><Link href="/brands">Brand partnerships <ArrowRight/></Link></div>
+        <div className="brand-entry"><Building2/><div><b>Are you a brand?</b><p>Introduce your products to the HiFive wholesale buying team.</p></div><Link href="/brands">Brand partnerships <ArrowRight/></Link></div>
         <div className="gate-legal"><Link href="/terms">Terms</Link><Link href="/contact">Contact wholesale</Link></div>
       </div>
     </section>

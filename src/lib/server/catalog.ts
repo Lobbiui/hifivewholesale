@@ -87,7 +87,7 @@ function toProduct(row: CatalogRow): Product {
     color: row.color,
     accent: row.accent,
     badge: row.badge ?? undefined,
-    images: images.length ? images : ["/images/hifive-logo.png"],
+    images: images.length ? images : ["/images/hifive-logo-white-type.png"],
     coa: stringArray(row.coa_urls),
     brandLogo: row.brand_logo_url,
     sourceUrl: row.source_url,

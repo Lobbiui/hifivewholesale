@@ -16,6 +16,8 @@ export type AccessApplication = {
   status: "Pending" | "Approved" | "Declined";
   submitted: string;
   accessCode?: string;
+  tnHdcpLicenseFilename?: string;
+  tnHdcpLicenseUrl?: string;
 };
 
 export type WholesaleBuyerSession = {
@@ -43,7 +45,7 @@ export type WholesalePreviewOrder = {
 
 export const demoBuyer: WholesaleBuyerSession = {
   applicationId: "WA-DEMO",
-  company: "Hi-Five Preview Retailer",
+  company: "HiFive Preview Retailer",
   contact: "Preview Buyer",
   email: "buyer@hifivesupply.com",
   status: "Approved",

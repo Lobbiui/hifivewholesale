@@ -48,7 +48,7 @@ export async function POST(request: Request) {
       to: [adminEmail],
       reply_to: email,
       subject: `New wholesale chat from ${company}`,
-      text: `New Hi-Five wholesale chat message\n\nConversation: ${conversationId}\nBusiness: ${company}\nContact: ${contact}\nEmail: ${email}\n\n${message}\n\nOpen the Hi-Five admin dashboard and select Chat inbox to reply.`,
+      text: `New HiFive wholesale chat message\n\nConversation: ${conversationId}\nBusiness: ${company}\nContact: ${contact}\nEmail: ${email}\n\n${message}\n\nOpen the HiFive admin dashboard and select Chat inbox to reply.`,
       tags: [{ name: "channel", value: "wholesale_chat" }],
     }),
   });

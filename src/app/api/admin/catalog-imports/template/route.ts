@@ -17,7 +17,7 @@ const example = [
 export async function GET() {
   if (!await getAdminIdentity()) return NextResponse.json({ ok: false }, { status: 401 });
   const csv = `${headers.map(quote).join(",")}\r\n${example.map(quote).join(",")}\r\n`;
-  return new NextResponse(csv, { headers: { "Content-Type": "text/csv; charset=utf-8", "Content-Disposition": 'attachment; filename="Hi-Five_Catalog_Import_Template.csv"', "Cache-Control": "no-store" } });
+  return new NextResponse(csv, { headers: { "Content-Type": "text/csv; charset=utf-8", "Content-Disposition": 'attachment; filename="HiFive_Catalog_Import_Template.csv"', "Cache-Control": "no-store" } });
 }
 
 function quote(value: string) { return `"${value.replaceAll('"', '""')}"`; }

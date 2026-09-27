@@ -67,7 +67,7 @@ export class CloverClient {
       headers: {
         Accept: "application/json",
         Authorization: `Bearer ${this.configuration.apiToken}`,
-        "User-Agent": "Hi-Five-Wholesale/0.1",
+        "User-Agent": "HiFive-Wholesale/0.1",
         ...init.headers,
       },
       signal: AbortSignal.timeout(15_000),

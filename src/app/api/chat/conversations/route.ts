@@ -50,7 +50,7 @@ export async function POST(request: Request) {
   });
   if (!admin) {
     const notify = process.env.CHAT_ADMIN_EMAIL?.trim();
-    if (notify) await queueAndSendEmail(database,{templateKey:"chat_message",to:notify,subject:`New wholesale chat from ${parsed.data.company || buyer?.company || "buyer"}`,text:`A new message was received:\n\n${parsed.data.message}\n\nOpen the Hi-Five admin Chat inbox to reply.`});
+    if (notify) await queueAndSendEmail(database,{templateKey:"chat_message",to:notify,subject:`New wholesale chat from ${parsed.data.company || buyer?.company || "buyer"}`,text:`A new message was received:\n\n${parsed.data.message}\n\nOpen the HiFive admin Chat inbox to reply.`});
   }
   return NextResponse.json({ ok: true, conversationId: result }, { status: 201 });
 }

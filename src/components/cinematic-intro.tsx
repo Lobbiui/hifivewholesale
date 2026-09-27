@@ -22,12 +22,12 @@ export function CinematicIntro() {
 
   if (!visible) return null;
   return (
-    <div className="cinematic-intro" aria-label="Hi-Five cinematic introduction">
+    <div className="cinematic-intro" aria-label="HiFive cinematic introduction">
       <div className="intro-logo-wave-stage">
         <video
           className="intro-logo-wave"
-          src="/videos/hifive-logo-wave.mp4"
-          poster="/images/hifive-logo.png"
+          src="/videos/hifive-logo-wave-white-type.mp4"
+          poster="/images/hifive-logo-white-type.png"
           autoPlay
           muted
           playsInline
@@ -35,7 +35,7 @@ export function CinematicIntro() {
           onEnded={close}
           aria-hidden="true"
         >
-          Your browser does not support the Hi-Five animated introduction.
+          Your browser does not support the HiFive animated introduction.
         </video>
       </div>
       <button className="intro-skip" onClick={close}>Enter site <span>↗</span></button>

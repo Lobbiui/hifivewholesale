@@ -4,6 +4,7 @@ import { z } from "zod";
 import { getAdminIdentity, hasValidRequestOrigin } from "@/lib/server/admin-auth";
 import { hashBuyerToken } from "@/lib/server/buyer-auth";
 import { getDatabase } from "@/lib/server/database";
+import { isTennesseeTerritory } from "@/lib/us-states";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -20,6 +21,7 @@ type ApplicationRow = {
   website_url: string | null;
   status: string;
   organization_id: string | null;
+  tn_hdcp_license_data: Buffer | null;
 };
 
 export async function PATCH(request: Request, context: { params: Promise<{ id: string }> }) {
@@ -35,13 +37,16 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
   const database = await getDatabase();
   const updated = await database.transaction(async (transaction) => {
     const existing = await transaction.query<ApplicationRow>(
-      "SELECT id, legal_business_name, contact_name, business_email, resale_id, primary_territory, website_url, status, organization_id FROM buyer_applications WHERE id = $1 FOR UPDATE",
+      "SELECT id, legal_business_name, contact_name, business_email, resale_id, primary_territory, website_url, status, organization_id, tn_hdcp_license_data FROM buyer_applications WHERE id = $1 FOR UPDATE",
       [id],
     );
     const application = existing.rows[0];
     if (!application) return null;
 
     const nextStatus = parsed.data.status.toUpperCase();
+    if (nextStatus === "APPROVED" && isTennesseeTerritory(application.primary_territory) && !application.tn_hdcp_license_data) {
+      return { id, status: parsed.data.status, includeActivationLink: false, validationError: "A TN HDCP license must be submitted before this Tennessee applicant can be approved." };
+    }
     let organizationId = application.organization_id;
     if (nextStatus === "APPROVED" && !organizationId) {
       organizationId = `org_${randomUUID()}`;
@@ -121,10 +126,11 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
         { status: nextStatus },
       ],
     );
-    return { id, status: parsed.data.status, includeActivationLink };
+    return { id, status: parsed.data.status, includeActivationLink, validationError: undefined as string | undefined };
   });
 
   if (!updated) return NextResponse.json({ ok: false, message: "Application not found." }, { status: 404 });
+  if (updated.validationError) return NextResponse.json({ ok: false, message: updated.validationError }, { status: 422 });
   const activationUrl = updated.includeActivationLink
     ? new URL(`/activate?token=${encodeURIComponent(activationToken)}`, request.url).toString()
     : undefined;

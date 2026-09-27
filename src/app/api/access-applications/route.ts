@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getDatabase } from "@/lib/server/database";
+import { isTennesseeTerritory } from "@/lib/us-states";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -25,14 +26,19 @@ type ApplicationRow = {
 };
 
 export async function POST(request: Request) {
-  let body: unknown;
+  let form: FormData;
   try {
-    body = await request.json();
+    form = await request.formData();
   } catch {
     return NextResponse.json({ ok: false, message: "The application could not be read." }, { status: 400 });
   }
 
-  const parsed = applicationSchema.safeParse(body);
+  const parsed = applicationSchema.safeParse({
+    company: form.get("company"), contact: form.get("contact"), email: form.get("email"),
+    phone: form.get("phone"), resaleId: form.get("resaleId"), territory: form.get("territory"),
+    businessType: form.get("businessType"), website: form.get("website") ?? "",
+    certified: form.get("certified") === "on",
+  });
   if (!parsed.success) {
     return NextResponse.json(
       { ok: false, message: "Please review the required business information and try again." },
@@ -41,6 +47,20 @@ export async function POST(request: Request) {
   }
 
   const application = parsed.data;
+  const submittedLicense = form.get("tnHdcpLicense");
+  const license = submittedLicense instanceof File && submittedLicense.size > 0 ? submittedLicense : null;
+  if (isTennesseeTerritory(application.territory) && !license) {
+    return NextResponse.json({ ok: false, message: "A Tennessee HDCP license is required for Tennessee applicants." }, { status: 422 });
+  }
+  if (license && !["application/pdf", "image/jpeg", "image/png"].includes(license.type)) {
+    return NextResponse.json({ ok: false, message: "Upload the TN HDCP license as a PDF, JPG, or PNG." }, { status: 422 });
+  }
+  if (license && license.size > 8 * 1024 * 1024) {
+    return NextResponse.json({ ok: false, message: "The TN HDCP license must be 8 MB or smaller." }, { status: 422 });
+  }
+  const licenseData = isTennesseeTerritory(application.territory) && license
+    ? Buffer.from(await license.arrayBuffer())
+    : null;
   try {
     const database = await getDatabase();
     const result = await database.query<ApplicationRow>(
@@ -55,12 +75,17 @@ export async function POST(request: Request) {
           primary_territory,
           business_type,
           website_url,
+          tn_hdcp_license_filename,
+          tn_hdcp_license_content_type,
+          tn_hdcp_license_size_bytes,
+          tn_hdcp_license_data,
+          tn_hdcp_license_submitted_at,
           certification_accepted_at,
           status,
           submitted_at,
           updated_at
         )
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NULLIF($9, ''), CURRENT_TIMESTAMP, 'PENDING', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NULLIF($9, ''), $10, $11, $12, $13, CASE WHEN $13::BYTEA IS NULL THEN NULL ELSE CURRENT_TIMESTAMP END, CURRENT_TIMESTAMP, 'PENDING', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
         ON CONFLICT ((LOWER(business_email))) DO UPDATE SET
           legal_business_name = EXCLUDED.legal_business_name,
           contact_name = EXCLUDED.contact_name,
@@ -69,6 +94,11 @@ export async function POST(request: Request) {
           primary_territory = EXCLUDED.primary_territory,
           business_type = EXCLUDED.business_type,
           website_url = EXCLUDED.website_url,
+          tn_hdcp_license_filename = EXCLUDED.tn_hdcp_license_filename,
+          tn_hdcp_license_content_type = EXCLUDED.tn_hdcp_license_content_type,
+          tn_hdcp_license_size_bytes = EXCLUDED.tn_hdcp_license_size_bytes,
+          tn_hdcp_license_data = EXCLUDED.tn_hdcp_license_data,
+          tn_hdcp_license_submitted_at = EXCLUDED.tn_hdcp_license_submitted_at,
           certification_accepted_at = CURRENT_TIMESTAMP,
           status = CASE WHEN buyer_applications.status = 'APPROVED' THEN 'APPROVED' ELSE 'PENDING' END,
           reviewed_at = CASE WHEN buyer_applications.status = 'APPROVED' THEN buyer_applications.reviewed_at ELSE NULL END,
@@ -88,6 +118,10 @@ export async function POST(request: Request) {
         application.territory,
         application.businessType,
         application.website,
+        licenseData ? license!.name.slice(0, 255) : null,
+        licenseData ? license!.type : null,
+        licenseData ? license!.size : null,
+        licenseData,
       ],
     );
     const saved = result.rows[0];
