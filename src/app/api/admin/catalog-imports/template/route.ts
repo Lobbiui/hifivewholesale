@@ -5,7 +5,7 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const headers = [
-  "Inventory Match Name", "Product Name", "SKU", "UPC", "Brand", "Category", "Description", "Strength", "Flavor", "Format",
+  "Alternate Name", "Product Name", "SKU", "UPC", "Brand", "Category", "Description", "Strength", "Flavor", "Format",
   "Units Per Case", "Wholesale Case Price", "Unit Price", "Quantity On Hand", "Image URL",
   "Additional Image URLs", "COA URL", "Brand Logo URL", "Source URL", "Color", "Accent", "Badge", "Status",
 ];

@@ -17,6 +17,7 @@ export type ParsedImportRow = {
   unitsPerCase: number;
   status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
   matchedMedia: boolean;
+  alternateName: string;
 };
 
 export type ImportPreview = {
@@ -127,15 +128,16 @@ export async function commitCatalogImport(database: Database, preview: ImportPre
              description = CASE WHEN $5 = '' THEN description ELSE $5 END,
              status = CASE WHEN $6 = 'DRAFT' AND status = 'PUBLISHED' THEN status ELSE $6 END,
              published_at = CASE WHEN $6 = 'PUBLISHED' THEN COALESCE(published_at, CURRENT_TIMESTAMP) ELSE published_at END,
+             alternate_name = CASE WHEN $7 = '' THEN alternate_name ELSE $7 END,
              updated_at = CURRENT_TIMESTAMP WHERE id = $1`,
-          [productId, row.product.name, row.product.brand, row.product.category, row.product.description, status],
+          [productId, row.product.name, row.product.brand, row.product.category, row.product.description, status, row.alternateName],
         );
       } else {
         createdProducts += 1;
         await transaction.query(
-          `INSERT INTO products (id, name, brand, category, description, status, published_at)
-           VALUES ($1, $2, $3, $4, $5, $6, CASE WHEN $6 = 'PUBLISHED' THEN CURRENT_TIMESTAMP ELSE NULL END)`,
-          [productId, row.product.name, row.product.brand, row.product.category, row.product.description, status],
+          `INSERT INTO products (id, name, alternate_name, brand, category, description, status, published_at)
+           VALUES ($1, $2, NULLIF($3, ''), $4, $5, $6, $7, CASE WHEN $7 = 'PUBLISHED' THEN CURRENT_TIMESTAMP ELSE NULL END)`,
+          [productId, row.product.name, row.alternateName, row.product.brand, row.product.category, row.product.description, status],
         );
         await transaction.query(
           `INSERT INTO product_variants (id, product_id, sku, upc, variant_name, units_per_case, wholesale_price_cents, online_sellable)
@@ -239,12 +241,13 @@ function fromCloverRow(record: CsvRecord, rowNumber: number): ParsedImportRow {
     brandLogo: "",
     sourceUrl: "",
   };
-  return { rowNumber, sourceName, quantity, product, sku: "", upc: "", unitsPerCase: parsePackSize(format), status: match ? "PUBLISHED" : "DRAFT", matchedMedia: Boolean(match) };
+  return { rowNumber, sourceName, quantity, product, sku: "", upc: "", unitsPerCase: parsePackSize(format), status: match ? "PUBLISHED" : "DRAFT", matchedMedia: Boolean(match), alternateName: "" };
 }
 
 function fromFullCatalogRow(record: CsvRecord, rowNumber: number): ParsedImportRow {
   const displayName = required(record.product_name, rowNumber, "Product Name");
-  const sourceName = record.inventory_match_name || displayName;
+  const alternateName = record.alternate_name || record.inventory_match_name || "";
+  const sourceName = alternateName || displayName;
   const quantity = parseQuantity(record.quantity_on_hand, rowNumber);
   const statusValue = (record.status || "DRAFT").toUpperCase();
   if (!(["DRAFT", "PUBLISHED", "ARCHIVED"] as string[]).includes(statusValue)) throw new Error(`Row ${rowNumber}: Status must be Draft, Published, or Archived.`);
@@ -264,6 +267,7 @@ function fromFullCatalogRow(record: CsvRecord, rowNumber: number): ParsedImportR
     unitsPerCase: parsePositiveInteger(record.units_per_case || "1", rowNumber, "Units Per Case"),
     status,
     matchedMedia: ready,
+    alternateName,
     product: {
       id: `${slugify(record.brand || "catalog")}-${slugify(displayName)}-${stableId(`${record.brand}|${sourceName}`).slice(0, 7)}`,
       name: displayName,
