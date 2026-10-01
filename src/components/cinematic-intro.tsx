@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 
 export function CinematicIntro() {
@@ -11,7 +12,11 @@ export function CinematicIntro() {
 
   useEffect(() => {
     const hydrateTimer = window.setTimeout(() => {
-      if (sessionStorage.getItem("hifive-intro-seen") || window.matchMedia("(prefers-reduced-motion: reduce)").matches) close();
+      if (
+        sessionStorage.getItem("hifive-intro-seen") ||
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      )
+        close();
     }, 0);
     const exitTimer = window.setTimeout(close, 6000);
     return () => {
@@ -24,23 +29,24 @@ export function CinematicIntro() {
   return (
     <div className="cinematic-intro" aria-label="HiFive cinematic introduction">
       <div className="intro-logo-wave-stage">
-        <video
+        <Image
           className="intro-logo-wave"
-          src="/videos/hifive-logo-wave-white-type.mp4"
-          poster="/images/hifive-logo-white-type.png"
-          autoPlay
-          muted
-          playsInline
-          preload="auto"
-          onEnded={close}
-          aria-hidden="true"
-        >
-          Your browser does not support the HiFive animated introduction.
-        </video>
+          src="/images/hifive-logo-black-banner.png"
+          alt=""
+          width={1254}
+          height={1254}
+          priority
+        />
       </div>
-      <button className="intro-skip" onClick={close}>Enter site <span>↗</span></button>
+      <button className="intro-skip" onClick={close}>
+        Enter site <span>↗</span>
+      </button>
       <div className="intro-progress" />
-      <button className="intro-hitarea" aria-label="Continue to website" onClick={close} />
+      <button
+        className="intro-hitarea"
+        aria-label="Continue to website"
+        onClick={close}
+      />
     </div>
   );
 }

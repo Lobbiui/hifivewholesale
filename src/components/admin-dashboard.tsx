@@ -2,51 +2,784 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { BarChart3, Boxes, Gift, Globe2, Handshake, LayoutDashboard, LockKeyhole, LogOut, MessageSquare, PackageCheck, Settings, ShieldCheck, ShoppingCart, Sparkles, Store, Tag, UserRoundCheck, Users } from "lucide-react";
+import {
+  BarChart3,
+  Boxes,
+  Gift,
+  Globe2,
+  Handshake,
+  LayoutDashboard,
+  LockKeyhole,
+  LogOut,
+  MessageSquare,
+  PackageCheck,
+  Settings,
+  ShieldCheck,
+  ShoppingCart,
+  Sparkles,
+  Store,
+  Tag,
+  UserRoundCheck,
+  Users,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import type { AccessApplication } from "@/lib/wholesale-preview";
 import { AdminChatInbox } from "./admin-chat-inbox";
 import { AdminCatalogManager } from "./admin-catalog-manager";
-import { LiveBlog,LiveBrands,LiveCustomers,LiveDistributors,LiveLoyalty,LiveMarkets,LiveOperations,LiveOrders,LivePricing,LiveReports } from "./admin-live-operations";
+import {
+  LiveBlog,
+  LiveBrands,
+  LiveCustomers,
+  LiveDistributors,
+  LiveLoyalty,
+  LiveMarkets,
+  LiveOperations,
+  LiveOrders,
+  LivePricing,
+  LiveReports,
+} from "./admin-live-operations";
 import { AdminTeam } from "./admin-team";
 
-type Tab="overview"|"chat"|"orders"|"products"|"customers"|"access"|"loyalty"|"content"|"distributors"|"brands"|"wholesale"|"markets"|"reports"|"operations"|"team"|"security";
-type Product={id:string;name:string;sku:string;variant:string;price:number;stock:number;lowAt:number;status:string};
-type Order={id:string;customer:string;method:string;status:string;total:number;refunded:number;note:string};
-type Content={id:string;type:string;title:string;status:string;date:string};
-type DemoState={products:Product[];orders:Order[];content:Content[];points:number;multiplier:number;leads:{company:string;stage:string;owner:string}[]};
-type AdminIdentity={id:string;email:string;displayName:string;role:"ADMIN"|"SUPER_ADMIN"};
-const initial:DemoState={products:[{id:"P-1024",name:"Midnight Mint",sku:"NS-MM-06",variant:"Cool Mint / 6mg",price:109.8,stock:8,lowAt:12,status:"Published"},{id:"P-1025",name:"Purple Rush",sku:"HL-PR-05",variant:"Grape Ice / 5%",price:195,stock:34,lowAt:10,status:"Published"},{id:"P-1026",name:"Berry Static",sku:"HL-BS-03",variant:"Mixed Berry / 3mg",price:138,stock:6,lowAt:8,status:"Scheduled"}],orders:[{id:"HF-4821",customer:"Midtown Market",method:"Delivery",status:"Ready to pack",total:1248,refunded:0,note:"Call receiving desk on arrival."},{id:"HF-4820",customer:"Five Points Smoke",method:"Pickup",status:"Processing",total:684.5,refunded:0,note:"Tax certificate on file."},{id:"HF-4819",customer:"Westline Retail",method:"Freight",status:"Shipped",total:2940,refunded:195,note:"One case credited."}],content:[{id:"C-31",type:"Social",title:"Purple Rush just landed",status:"Scheduled",date:"Aug 20 · 4:30 PM"},{id:"C-30",type:"Blog",title:"Build a shelf that moves product",status:"Published",date:"Aug 16 · 9:00 AM"}],points:1,multiplier:2,leads:[{company:"Eastside Tobacco",stage:"Application",owner:"Jamie"},{company:"Gulf Market Supply",stage:"Qualified",owner:"Alex"},{company:"North Loop Retail",stage:"Negotiation",owner:"Alex"}]};
-const common:[Tab,string,React.ElementType][]=[["overview","Overview",LayoutDashboard],["chat","Chat inbox",MessageSquare],["orders","Orders",ShoppingCart],["products","Products",Boxes],["customers","Customers",Users],["access","Access approvals",ShieldCheck],["loyalty","Loyalty & promos",Gift],["content","Blog",Sparkles],["distributors","Distributor CRM",Store],["brands","Brand pipeline",Handshake],["wholesale","Wholesale pricing",Tag],["markets","Markets",Globe2],["reports","Reports & exports",BarChart3],["operations","Operations",Settings]];
-function Pill({children,tone=""}:{children:React.ReactNode;tone?:string}){return <span className={`admin-pill ${tone}`}>{children}</span>}
-function Head({eyebrow,title,copy,action}:{eyebrow:string;title:string;copy?:string;action?:React.ReactNode}){return <div className="admin-section-head"><div><span className="eyebrow">{eyebrow}</span><h2>{title}</h2>{copy&&<p>{copy}</p>}</div>{action}</div>}
-
-export function AdminDashboard({superAdmin=false}:{superAdmin?:boolean}){
- const [ready,setReady]=useState(false); const [session,setSession]=useState<AdminIdentity|null>(null); const [tab,setTab]=useState<Tab>("overview"); const [state,setState]=useState(initial); const [toast,setToast]=useState(""); const [authMessage,setAuthMessage]=useState(""); const [authenticating,setAuthenticating]=useState(false);
- useEffect(()=>{let active=true;void Promise.resolve().then(async()=>{const saved=localStorage.getItem("hifive-admin-demo");if(saved){try{if(active)setState(JSON.parse(saved))}catch{}}try{const response=await fetch("/api/admin/auth/session",{cache:"no-store"});if(!active)return;if(response.ok){const result=await response.json() as {user:AdminIdentity};if(superAdmin&&result.user.role!=="SUPER_ADMIN")setAuthMessage("A super-admin account is required for this workspace.");else setSession(result.user)}}finally{if(active)setReady(true)}});return()=>{active=false}},[superAdmin]);
- const signIn=async(event:React.FormEvent<HTMLFormElement>)=>{event.preventDefault();setAuthenticating(true);setAuthMessage("");const form=new FormData(event.currentTarget);try{const response=await fetch("/api/admin/auth/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:String(form.get("email")||""),password:String(form.get("password")||"")})});const result=await response.json() as {message?:string;user?:AdminIdentity};if(!response.ok||!result.user){setAuthMessage(result.message||"Sign-in failed.");return}if(superAdmin&&result.user.role!=="SUPER_ADMIN"){await fetch("/api/admin/auth/logout",{method:"POST"});setAuthMessage("A super-admin account is required for this workspace.");return}setSession(result.user)}catch{setAuthMessage("The admin service is temporarily unavailable.")}finally{setAuthenticating(false)}};
- const signOut=async()=>{await fetch("/api/admin/auth/logout",{method:"POST"});setSession(null)};
- const resetPassword=async()=>{const email=window.prompt("Administrator email");if(!email)return;const response=await fetch("/api/auth/password-reset",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email})});const result=await response.json() as {message?:string};setAuthMessage(result.message||"Password reset request received.")};
- const update=(next:DemoState,message:string)=>{setState(next);localStorage.setItem("hifive-admin-demo",JSON.stringify(next));setToast(message);setTimeout(()=>setToast(""),2200)};
- const nav=superAdmin?[...common,["team","Admin users",UserRoundCheck] as [Tab,string,React.ElementType],["security","Security & audit",LockKeyhole] as [Tab,string,React.ElementType]]:common;
- if(!ready)return null;
- if(!session)return <main className="admin-login"><section><Image src="/images/hifive-logo-white-type.png" alt="HiFive Supply" width={250} height={136}/><div><Pill tone="purple">Secure operations workspace</Pill><h1>CONTROL THE<br/><em>WHOLE FLOW.</em></h1><p>One connected view of catalog, inventory, fulfillment, customers, loyalty, content, distributors, and growth.</p></div><small>Administrator access uses encrypted passwords, expiring server sessions, account lockout protection, and role enforcement.</small></section><form onSubmit={signIn}><span className="eyebrow">Protected workspace</span><h2>WELCOME BACK.</h2>{authMessage&&<div className="gate-message">{authMessage}</div>}<label>Email<input name="email" type="email" autoComplete="email" required/></label><label>Password<input name="password" type="password" autoComplete="current-password" required/></label><button className="button primary full" disabled={authenticating}>{authenticating?"Signing in…":`Sign in as ${superAdmin?"super admin":"admin"}`}</button><button type="button" className="link-button" onClick={()=>void resetPassword()}>Forgot password?</button><div className="login-proof"><ShieldCheck/>Database session · HTTP-only cookie · Role protected</div></form></main>;
- return <main className="admin-shell"><aside><Link href="/"><Image src="/images/hifive-logo-white-type.png" alt="HiFive Supply" width={170} height={92}/></Link><Pill tone="purple">{superAdmin?"Super admin":"Admin workspace"}</Pill><nav>{nav.map(([id,label,Icon])=><button key={id} className={tab===id?"active":""} onClick={()=>setTab(id)}><Icon size={17}/><span>{label}</span></button>)}</nav></aside><section className="admin-main"><header><div><span className="eyebrow">Operations center</span><h1>{nav.find(([id])=>id===tab)?.[1]}</h1></div><div><Pill tone="good">{session.displayName}</Pill><Pill tone="good">Live data</Pill><Link href="/" className="admin-store-link">Storefront</Link><button className="icon-button" onClick={signOut} aria-label="Sign out"><LogOut size={18}/></button></div></header>{toast&&<div className="toast"><PackageCheck/>{toast}</div>}
- {tab==="overview"&&<Overview state={state} setTab={setTab}/>} {tab==="chat"&&<AdminChatInbox/>} {tab==="orders"&&<Orders state={state} update={update}/>} {tab==="products"&&<AdminCatalogManager/>} {tab==="customers"&&<Customers/>} {tab==="access"&&<AccessApprovals/>} {tab==="loyalty"&&<Loyalty state={state} update={update}/>} {tab==="content"&&<ContentStudio state={state} update={update}/>} {tab==="distributors"&&<Distributors state={state} update={update}/>} {tab==="brands"&&<BrandPipeline/>} {tab==="wholesale"&&<Capability title="PRICING THAT SCALES." icon={<Tag/>} items={["Account-specific price books","Case and volume tiers","Minimum order rules","Net terms and tax status"]}/>} {tab==="markets"&&<Capability title="SELL WHERE YOU SHOULD." icon={<Globe2/>} items={["United States · USD · Active","Canada · CAD · Review","UAE · AED · Preview","Jurisdiction and shipping restrictions"]}/>} {tab==="reports"&&<Reports state={state}/>} {tab==="operations"&&<Capability title="RUN THE DAY." icon={<Settings/>} items={["Pickup and delivery settings","Notification and email templates","Email delivery queue","Privacy export and deletion workflows"]}/>} {tab==="team"&&superAdmin&&<AdminTeam/>} {tab==="security"&&superAdmin&&<Capability title="SECURITY & RECOVERY." icon={<LockKeyhole/>} items={["Audit log and CSV export","Session and account monitoring","Database backup readiness","Privacy request audit trail"]}/>} </section></main>
+type Tab =
+  | "overview"
+  | "chat"
+  | "orders"
+  | "products"
+  | "customers"
+  | "access"
+  | "loyalty"
+  | "content"
+  | "distributors"
+  | "brands"
+  | "wholesale"
+  | "markets"
+  | "reports"
+  | "operations"
+  | "team"
+  | "security";
+type Product = {
+  id: string;
+  name: string;
+  sku: string;
+  variant: string;
+  price: number;
+  stock: number;
+  lowAt: number;
+  status: string;
+};
+type Order = {
+  id: string;
+  customer: string;
+  method: string;
+  status: string;
+  total: number;
+  refunded: number;
+  note: string;
+};
+type Content = {
+  id: string;
+  type: string;
+  title: string;
+  status: string;
+  date: string;
+};
+type DemoState = {
+  products: Product[];
+  orders: Order[];
+  content: Content[];
+  points: number;
+  multiplier: number;
+  leads: { company: string; stage: string; owner: string }[];
+};
+type AdminIdentity = {
+  id: string;
+  email: string;
+  displayName: string;
+  role: "ADMIN" | "SUPER_ADMIN";
+};
+const initial: DemoState = {
+  products: [
+    {
+      id: "P-1024",
+      name: "Midnight Mint",
+      sku: "NS-MM-06",
+      variant: "Cool Mint / 6mg",
+      price: 109.8,
+      stock: 8,
+      lowAt: 12,
+      status: "Published",
+    },
+    {
+      id: "P-1025",
+      name: "Purple Rush",
+      sku: "HL-PR-05",
+      variant: "Grape Ice / 5%",
+      price: 195,
+      stock: 34,
+      lowAt: 10,
+      status: "Published",
+    },
+    {
+      id: "P-1026",
+      name: "Berry Static",
+      sku: "HL-BS-03",
+      variant: "Mixed Berry / 3mg",
+      price: 138,
+      stock: 6,
+      lowAt: 8,
+      status: "Scheduled",
+    },
+  ],
+  orders: [
+    {
+      id: "HF-4821",
+      customer: "Midtown Market",
+      method: "Delivery",
+      status: "Ready to pack",
+      total: 1248,
+      refunded: 0,
+      note: "Call receiving desk on arrival.",
+    },
+    {
+      id: "HF-4820",
+      customer: "Five Points Smoke",
+      method: "Pickup",
+      status: "Processing",
+      total: 684.5,
+      refunded: 0,
+      note: "Tax certificate on file.",
+    },
+    {
+      id: "HF-4819",
+      customer: "Westline Retail",
+      method: "Freight",
+      status: "Shipped",
+      total: 2940,
+      refunded: 195,
+      note: "One case credited.",
+    },
+  ],
+  content: [
+    {
+      id: "C-31",
+      type: "Social",
+      title: "Purple Rush just landed",
+      status: "Scheduled",
+      date: "Aug 20 · 4:30 PM",
+    },
+    {
+      id: "C-30",
+      type: "Blog",
+      title: "Build a shelf that moves product",
+      status: "Published",
+      date: "Aug 16 · 9:00 AM",
+    },
+  ],
+  points: 1,
+  multiplier: 2,
+  leads: [
+    { company: "Eastside Tobacco", stage: "Application", owner: "Jamie" },
+    { company: "Gulf Market Supply", stage: "Qualified", owner: "Alex" },
+    { company: "North Loop Retail", stage: "Negotiation", owner: "Alex" },
+  ],
+};
+const common: [Tab, string, React.ElementType][] = [
+  ["overview", "Overview", LayoutDashboard],
+  ["chat", "Chat inbox", MessageSquare],
+  ["orders", "Orders", ShoppingCart],
+  ["products", "Products", Boxes],
+  ["customers", "Customers", Users],
+  ["access", "Access approvals", ShieldCheck],
+  ["loyalty", "Loyalty & promos", Gift],
+  ["content", "Blog", Sparkles],
+  ["distributors", "Distributor CRM", Store],
+  ["brands", "Brand pipeline", Handshake],
+  ["wholesale", "Wholesale pricing", Tag],
+  ["markets", "Markets", Globe2],
+  ["reports", "Reports & exports", BarChart3],
+  ["operations", "Operations", Settings],
+];
+function Pill({
+  children,
+  tone = "",
+}: {
+  children: React.ReactNode;
+  tone?: string;
+}) {
+  return <span className={`admin-pill ${tone}`}>{children}</span>;
+}
+function Head({
+  eyebrow,
+  title,
+  copy,
+  action,
+}: {
+  eyebrow: string;
+  title: string;
+  copy?: string;
+  action?: React.ReactNode;
+}) {
+  return (
+    <div className="admin-section-head">
+      <div>
+        <span className="eyebrow">{eyebrow}</span>
+        <h2>{title}</h2>
+        {copy && <p>{copy}</p>}
+      </div>
+      {action}
+    </div>
+  );
 }
 
-function Overview(props:{state:DemoState;setTab:(tab:Tab)=>void}){void props;return <LiveReports/>}
-function Orders(props:{state:DemoState;update:(next:DemoState,message:string)=>void}){void props;return <LiveOrders/>}
-function Customers(){return <LiveCustomers/>}
-function AccessApprovals(){
- const [applications,setApplications]=useState<AccessApplication[]>([]); const [message,setMessage]=useState("Loading applications…"); const [saving,setSaving]=useState(""); const [activationLinks,setActivationLinks]=useState<Record<string,string>>({});
- useEffect(()=>{let active=true;fetch("/api/admin/applications",{cache:"no-store"}).then(async response=>{const result=await response.json() as {applications?:AccessApplication[]};if(active&&response.ok&&result.applications){setApplications(result.applications);setMessage(result.applications.length?"":"No wholesale applications have been submitted yet.")}else if(active)setMessage("Applications could not be loaded.")}).catch(()=>{if(active)setMessage("Applications could not be loaded.")});return()=>{active=false}},[]);
- const change=async(id:string,status:AccessApplication["status"])=>{if(status==="Pending")return;setSaving(id);const response=await fetch(`/api/admin/applications/${encodeURIComponent(id)}`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({status})});const result=await response.json() as {activationUrl?:string;message?:string};if(response.ok){setApplications(current=>current.map(item=>item.id===id?{...item,status}:item));if(result.activationUrl)setActivationLinks(current=>({...current,[id]:result.activationUrl!}));setMessage(result.activationUrl?"Buyer approved. Copy the activation link and send it to the buyer.":"")}else setMessage(result.message||"The decision could not be saved.");setSaving("")};
- return <><Head eyebrow="Private wholesale network" title="APPROVE WHO GETS IN." copy="Review business identity, resale credentials, territory, and account fit before unlocking catalog, case pricing, and ordering." action={<Pill tone="warn">{applications.filter(item=>item.status==="Pending").length} pending</Pill>}/>{message&&<div className="gate-message">{message}</div>}<div className="admin-table-wrap"><table><thead><tr><th>Business</th><th>Contact</th><th>Credentials</th><th>Territory</th><th>Submitted</th><th>Status</th><th>Decision</th></tr></thead><tbody>{applications.map(item=><tr key={item.id}><td><b>{item.company}</b><small>{item.businessType||"Business"} · {item.id}</small></td><td>{item.contact}<small>{item.email} · {item.phone}</small></td><td><b>{item.resaleId}</b><small>{item.status==="Approved"?"Business account approved":"Verification required"}</small>{item.tnHdcpLicenseUrl?<a className="link-button" href={item.tnHdcpLicenseUrl} target="_blank" rel="noreferrer">View TN HDCP license</a>:item.territory.trim().toUpperCase()==="TN"||item.territory.trim().toUpperCase()==="TENNESSEE"?<small className="credential-warning">TN HDCP license missing</small>:<small>TN HDCP license not required</small>}{activationLinks[item.id]&&<button className="link-button" onClick={()=>void navigator.clipboard.writeText(activationLinks[item.id])}>Copy activation link</button>}</td><td>{item.territory}</td><td>{item.submitted}</td><td><Pill tone={item.status==="Approved"?"good":item.status==="Declined"?"":"warn"}>{item.status}</Pill></td><td><div className="decision-actions"><button disabled={saving===item.id} onClick={()=>change(item.id,"Approved")}>Approve</button><button disabled={saving===item.id} onClick={()=>change(item.id,"Declined")}>Decline</button></div></td></tr>)}</tbody></table></div></>
+export function AdminDashboard({
+  superAdmin = false,
+}: {
+  superAdmin?: boolean;
+}) {
+  const [ready, setReady] = useState(false);
+  const [session, setSession] = useState<AdminIdentity | null>(null);
+  const [tab, setTab] = useState<Tab>("overview");
+  const [state, setState] = useState(initial);
+  const [toast, setToast] = useState("");
+  const [authMessage, setAuthMessage] = useState("");
+  const [authenticating, setAuthenticating] = useState(false);
+  useEffect(() => {
+    let active = true;
+    void Promise.resolve().then(async () => {
+      const saved = localStorage.getItem("hifive-admin-demo");
+      if (saved) {
+        try {
+          if (active) setState(JSON.parse(saved));
+        } catch {}
+      }
+      try {
+        const response = await fetch("/api/admin/auth/session", {
+          cache: "no-store",
+        });
+        if (!active) return;
+        if (response.ok) {
+          const result = (await response.json()) as { user: AdminIdentity };
+          if (superAdmin && result.user.role !== "SUPER_ADMIN")
+            setAuthMessage(
+              "A super-admin account is required for this workspace.",
+            );
+          else setSession(result.user);
+        }
+      } finally {
+        if (active) setReady(true);
+      }
+    });
+    return () => {
+      active = false;
+    };
+  }, [superAdmin]);
+  const signIn = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setAuthenticating(true);
+    setAuthMessage("");
+    const form = new FormData(event.currentTarget);
+    try {
+      const response = await fetch("/api/admin/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: String(form.get("email") || ""),
+          password: String(form.get("password") || ""),
+        }),
+      });
+      const result = (await response.json()) as {
+        message?: string;
+        user?: AdminIdentity;
+      };
+      if (!response.ok || !result.user) {
+        setAuthMessage(result.message || "Sign-in failed.");
+        return;
+      }
+      if (superAdmin && result.user.role !== "SUPER_ADMIN") {
+        await fetch("/api/admin/auth/logout", { method: "POST" });
+        setAuthMessage("A super-admin account is required for this workspace.");
+        return;
+      }
+      setSession(result.user);
+    } catch {
+      setAuthMessage("The admin service is temporarily unavailable.");
+    } finally {
+      setAuthenticating(false);
+    }
+  };
+  const signOut = async () => {
+    await fetch("/api/admin/auth/logout", { method: "POST" });
+    setSession(null);
+  };
+  const resetPassword = async () => {
+    const email = window.prompt("Administrator email");
+    if (!email) return;
+    const response = await fetch("/api/auth/password-reset", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+    const result = (await response.json()) as { message?: string };
+    setAuthMessage(result.message || "Password reset request received.");
+  };
+  const update = (next: DemoState, message: string) => {
+    setState(next);
+    localStorage.setItem("hifive-admin-demo", JSON.stringify(next));
+    setToast(message);
+    setTimeout(() => setToast(""), 2200);
+  };
+  const nav = superAdmin
+    ? [
+        ...common,
+        ["team", "Admin users", UserRoundCheck] as [
+          Tab,
+          string,
+          React.ElementType,
+        ],
+        ["security", "Security & audit", LockKeyhole] as [
+          Tab,
+          string,
+          React.ElementType,
+        ],
+      ]
+    : common;
+  if (!ready) return null;
+  if (!session)
+    return (
+      <main className="admin-login">
+        <section>
+          <Image
+            src="/images/hifive-logo-black-banner.png"
+            alt="HiFive Supply"
+            width={250}
+            height={136}
+          />
+          <div>
+            <Pill tone="purple">Secure operations workspace</Pill>
+            <h1>
+              CONTROL THE
+              <br />
+              <em>WHOLE FLOW.</em>
+            </h1>
+            <p>
+              One connected view of catalog, inventory, fulfillment, customers,
+              loyalty, content, distributors, and growth.
+            </p>
+          </div>
+          <small>
+            Administrator access uses encrypted passwords, expiring server
+            sessions, account lockout protection, and role enforcement.
+          </small>
+        </section>
+        <form onSubmit={signIn}>
+          <span className="eyebrow">Protected workspace</span>
+          <h2>WELCOME BACK.</h2>
+          {authMessage && <div className="gate-message">{authMessage}</div>}
+          <label>
+            Email
+            <input name="email" type="email" autoComplete="email" required />
+          </label>
+          <label>
+            Password
+            <input
+              name="password"
+              type="password"
+              autoComplete="current-password"
+              required
+            />
+          </label>
+          <button className="button primary full" disabled={authenticating}>
+            {authenticating
+              ? "Signing in…"
+              : `Sign in as ${superAdmin ? "super admin" : "admin"}`}
+          </button>
+          <button
+            type="button"
+            className="link-button"
+            onClick={() => void resetPassword()}
+          >
+            Forgot password?
+          </button>
+          <div className="login-proof">
+            <ShieldCheck />
+            Database session · HTTP-only cookie · Role protected
+          </div>
+        </form>
+      </main>
+    );
+  return (
+    <main className="admin-shell">
+      <aside>
+        <Link href="/">
+          <Image
+            src="/images/hifive-logo-black-banner.png"
+            alt="HiFive Supply"
+            width={170}
+            height={92}
+          />
+        </Link>
+        <Pill tone="purple">
+          {superAdmin ? "Super admin" : "Admin workspace"}
+        </Pill>
+        <nav>
+          {nav.map(([id, label, Icon]) => (
+            <button
+              key={id}
+              className={tab === id ? "active" : ""}
+              onClick={() => setTab(id)}
+            >
+              <Icon size={17} />
+              <span>{label}</span>
+            </button>
+          ))}
+        </nav>
+      </aside>
+      <section className="admin-main">
+        <header>
+          <div>
+            <span className="eyebrow">Operations center</span>
+            <h1>{nav.find(([id]) => id === tab)?.[1]}</h1>
+          </div>
+          <div>
+            <Pill tone="good">{session.displayName}</Pill>
+            <Pill tone="good">Live data</Pill>
+            <Link href="/" className="admin-store-link">
+              Storefront
+            </Link>
+            <button
+              className="icon-button"
+              onClick={signOut}
+              aria-label="Sign out"
+            >
+              <LogOut size={18} />
+            </button>
+          </div>
+        </header>
+        {toast && (
+          <div className="toast">
+            <PackageCheck />
+            {toast}
+          </div>
+        )}
+        {tab === "overview" && <Overview state={state} setTab={setTab} />}{" "}
+        {tab === "chat" && <AdminChatInbox />}{" "}
+        {tab === "orders" && <Orders state={state} update={update} />}{" "}
+        {tab === "products" && <AdminCatalogManager />}{" "}
+        {tab === "customers" && <Customers />}{" "}
+        {tab === "access" && <AccessApprovals />}{" "}
+        {tab === "loyalty" && <Loyalty state={state} update={update} />}{" "}
+        {tab === "content" && <ContentStudio state={state} update={update} />}{" "}
+        {tab === "distributors" && (
+          <Distributors state={state} update={update} />
+        )}{" "}
+        {tab === "brands" && <BrandPipeline />}{" "}
+        {tab === "wholesale" && (
+          <Capability
+            title="PRICING THAT SCALES."
+            icon={<Tag />}
+            items={[
+              "Account-specific price books",
+              "Case and volume tiers",
+              "Minimum order rules",
+              "Net terms and tax status",
+            ]}
+          />
+        )}{" "}
+        {tab === "markets" && (
+          <Capability
+            title="SELL WHERE YOU SHOULD."
+            icon={<Globe2 />}
+            items={[
+              "United States · USD · Active",
+              "Canada · CAD · Review",
+              "UAE · AED · Preview",
+              "Jurisdiction and shipping restrictions",
+            ]}
+          />
+        )}{" "}
+        {tab === "reports" && <Reports state={state} />}{" "}
+        {tab === "operations" && (
+          <Capability
+            title="RUN THE DAY."
+            icon={<Settings />}
+            items={[
+              "Pickup and delivery settings",
+              "Notification and email templates",
+              "Email delivery queue",
+              "Privacy export and deletion workflows",
+            ]}
+          />
+        )}{" "}
+        {tab === "team" && superAdmin && <AdminTeam />}{" "}
+        {tab === "security" && superAdmin && (
+          <Capability
+            title="SECURITY & RECOVERY."
+            icon={<LockKeyhole />}
+            items={[
+              "Audit log and CSV export",
+              "Session and account monitoring",
+              "Database backup readiness",
+              "Privacy request audit trail",
+            ]}
+          />
+        )}{" "}
+      </section>
+    </main>
+  );
 }
-function BrandPipeline(){return <LiveBrands/>}
-function Loyalty(props:{state:DemoState;update:(next:DemoState,message:string)=>void}){void props;return <LiveLoyalty/>}
-function ContentStudio(props:{state:DemoState;update:(next:DemoState,message:string)=>void}){void props;return <LiveBlog/>}
-function Distributors(props:{state:DemoState;update:(next:DemoState,message:string)=>void}){void props;return <LiveDistributors/>}
-function Reports(props:{state:DemoState}){void props;return <LiveReports/>}
-function Capability({title,icon,items}:{title:string;icon:React.ReactNode;items:string[]}){if(title.startsWith("PRICING"))return <LivePricing/>;if(title.startsWith("SELL WHERE"))return <LiveMarkets/>;if(title.startsWith("RUN THE DAY"))return <LiveOperations/>;return <><Head eyebrow="Administrative capability" title={title} copy="Protected super-admin controls and audit visibility."/><div className="capability-grid">{items.map((item,index)=><article key={item}>{icon}<span>0{index+1}</span><h3>{item}</h3><p>Configuration is restricted to the super-admin workspace.</p><Pill tone="good">Protected</Pill></article>)}</div></>}
+
+function Overview(props: { state: DemoState; setTab: (tab: Tab) => void }) {
+  void props;
+  return <LiveReports />;
+}
+function Orders(props: {
+  state: DemoState;
+  update: (next: DemoState, message: string) => void;
+}) {
+  void props;
+  return <LiveOrders />;
+}
+function Customers() {
+  return <LiveCustomers />;
+}
+function AccessApprovals() {
+  const [applications, setApplications] = useState<AccessApplication[]>([]);
+  const [message, setMessage] = useState("Loading applications…");
+  const [saving, setSaving] = useState("");
+  const [activationLinks, setActivationLinks] = useState<
+    Record<string, string>
+  >({});
+  useEffect(() => {
+    let active = true;
+    fetch("/api/admin/applications", { cache: "no-store" })
+      .then(async (response) => {
+        const result = (await response.json()) as {
+          applications?: AccessApplication[];
+        };
+        if (active && response.ok && result.applications) {
+          setApplications(result.applications);
+          setMessage(
+            result.applications.length
+              ? ""
+              : "No wholesale applications have been submitted yet.",
+          );
+        } else if (active) setMessage("Applications could not be loaded.");
+      })
+      .catch(() => {
+        if (active) setMessage("Applications could not be loaded.");
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+  const change = async (id: string, status: AccessApplication["status"]) => {
+    if (status === "Pending") return;
+    setSaving(id);
+    const response = await fetch(
+      `/api/admin/applications/${encodeURIComponent(id)}`,
+      {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status }),
+      },
+    );
+    const result = (await response.json()) as {
+      activationUrl?: string;
+      message?: string;
+    };
+    if (response.ok) {
+      setApplications((current) =>
+        current.map((item) => (item.id === id ? { ...item, status } : item)),
+      );
+      if (result.activationUrl)
+        setActivationLinks((current) => ({
+          ...current,
+          [id]: result.activationUrl!,
+        }));
+      setMessage(
+        result.activationUrl
+          ? "Buyer approved. Copy the activation link and send it to the buyer."
+          : "",
+      );
+    } else setMessage(result.message || "The decision could not be saved.");
+    setSaving("");
+  };
+  return (
+    <>
+      <Head
+        eyebrow="Private wholesale network"
+        title="APPROVE WHO GETS IN."
+        copy="Review business identity, resale credentials, territory, and account fit before unlocking catalog, case pricing, and ordering."
+        action={
+          <Pill tone="warn">
+            {applications.filter((item) => item.status === "Pending").length}{" "}
+            pending
+          </Pill>
+        }
+      />
+      {message && <div className="gate-message">{message}</div>}
+      <div className="admin-table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Business</th>
+              <th>Contact</th>
+              <th>Credentials</th>
+              <th>Territory</th>
+              <th>Submitted</th>
+              <th>Status</th>
+              <th>Decision</th>
+            </tr>
+          </thead>
+          <tbody>
+            {applications.map((item) => (
+              <tr key={item.id}>
+                <td>
+                  <b>{item.company}</b>
+                  <small>
+                    {item.businessType || "Business"} · {item.id}
+                  </small>
+                </td>
+                <td>
+                  {item.contact}
+                  <small>
+                    {item.email} · {item.phone}
+                  </small>
+                </td>
+                <td>
+                  <b>{item.resaleId}</b>
+                  <small>
+                    {item.status === "Approved"
+                      ? "Business account approved"
+                      : "Verification required"}
+                  </small>
+                  {item.tnHdcpLicenseUrl ? (
+                    <a
+                      className="link-button"
+                      href={item.tnHdcpLicenseUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      View TN HDCP license
+                    </a>
+                  ) : item.territory.trim().toUpperCase() === "TN" ||
+                    item.territory.trim().toUpperCase() === "TENNESSEE" ? (
+                    <small className="credential-warning">
+                      TN HDCP license missing
+                    </small>
+                  ) : (
+                    <small>TN HDCP license not required</small>
+                  )}
+                  {activationLinks[item.id] && (
+                    <button
+                      className="link-button"
+                      onClick={() =>
+                        void navigator.clipboard.writeText(
+                          activationLinks[item.id],
+                        )
+                      }
+                    >
+                      Copy activation link
+                    </button>
+                  )}
+                </td>
+                <td>{item.territory}</td>
+                <td>{item.submitted}</td>
+                <td>
+                  <Pill
+                    tone={
+                      item.status === "Approved"
+                        ? "good"
+                        : item.status === "Declined"
+                          ? ""
+                          : "warn"
+                    }
+                  >
+                    {item.status}
+                  </Pill>
+                </td>
+                <td>
+                  <div className="decision-actions">
+                    <button
+                      disabled={saving === item.id}
+                      onClick={() => change(item.id, "Approved")}
+                    >
+                      Approve
+                    </button>
+                    <button
+                      disabled={saving === item.id}
+                      onClick={() => change(item.id, "Declined")}
+                    >
+                      Decline
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
+  );
+}
+function BrandPipeline() {
+  return <LiveBrands />;
+}
+function Loyalty(props: {
+  state: DemoState;
+  update: (next: DemoState, message: string) => void;
+}) {
+  void props;
+  return <LiveLoyalty />;
+}
+function ContentStudio(props: {
+  state: DemoState;
+  update: (next: DemoState, message: string) => void;
+}) {
+  void props;
+  return <LiveBlog />;
+}
+function Distributors(props: {
+  state: DemoState;
+  update: (next: DemoState, message: string) => void;
+}) {
+  void props;
+  return <LiveDistributors />;
+}
+function Reports(props: { state: DemoState }) {
+  void props;
+  return <LiveReports />;
+}
+function Capability({
+  title,
+  icon,
+  items,
+}: {
+  title: string;
+  icon: React.ReactNode;
+  items: string[];
+}) {
+  if (title.startsWith("PRICING")) return <LivePricing />;
+  if (title.startsWith("SELL WHERE")) return <LiveMarkets />;
+  if (title.startsWith("RUN THE DAY")) return <LiveOperations />;
+  return (
+    <>
+      <Head
+        eyebrow="Administrative capability"
+        title={title}
+        copy="Protected super-admin controls and audit visibility."
+      />
+      <div className="capability-grid">
+        {items.map((item, index) => (
+          <article key={item}>
+            {icon}
+            <span>0{index + 1}</span>
+            <h3>{item}</h3>
+            <p>Configuration is restricted to the super-admin workspace.</p>
+            <Pill tone="good">Protected</Pill>
+          </article>
+        ))}
+      </div>
+    </>
+  );
+}

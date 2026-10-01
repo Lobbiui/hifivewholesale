@@ -56,12 +56,16 @@ export async function getStorefrontProducts(): Promise<Product[]> {
   }
 }
 
-export async function getStorefrontProduct(id: string): Promise<Product | null> {
+export async function getStorefrontProduct(
+  id: string,
+): Promise<Product | null> {
   const products = await getStorefrontProducts();
   return products.find((product) => product.id === id) ?? null;
 }
 
-export async function getStorefrontProductsByIds(ids: string[]): Promise<Product[]> {
+export async function getStorefrontProductsByIds(
+  ids: string[],
+): Promise<Product[]> {
   if (!ids.length) return [];
   const products = await getStorefrontProducts();
   const wanted = new Set(ids);
@@ -70,9 +74,10 @@ export async function getStorefrontProductsByIds(ids: string[]): Promise<Product
 
 function toProduct(row: CatalogRow): Product {
   const images = stringArray(row.image_urls);
-  const unitPrice = row.wholesale_price_cents !== null && row.units_per_case
-    ? row.wholesale_price_cents / 100 / row.units_per_case
-    : null;
+  const unitPrice =
+    row.wholesale_price_cents !== null && row.units_per_case
+      ? row.wholesale_price_cents / 100 / row.units_per_case
+      : null;
   return {
     id: row.id,
     name: row.name,
@@ -83,11 +88,14 @@ function toProduct(row: CatalogRow): Product {
     format: row.format,
     description: row.description,
     price: unitPrice,
-    casePrice: row.wholesale_price_cents === null ? null : row.wholesale_price_cents / 100,
+    casePrice:
+      row.wholesale_price_cents === null
+        ? null
+        : row.wholesale_price_cents / 100,
     color: row.color,
     accent: row.accent,
     badge: row.badge ?? undefined,
-    images: images.length ? images : ["/images/hifive-logo-white-type.png"],
+    images: images.length ? images : ["/images/hifive-logo-black-banner.png"],
     coa: stringArray(row.coa_urls),
     brandLogo: row.brand_logo_url,
     sourceUrl: row.source_url,
@@ -95,9 +103,16 @@ function toProduct(row: CatalogRow): Product {
 }
 
 function stringArray(value: unknown) {
-  if (Array.isArray(value)) return value.filter((item): item is string => typeof item === "string" && item.length > 0);
+  if (Array.isArray(value))
+    return value.filter(
+      (item): item is string => typeof item === "string" && item.length > 0,
+    );
   if (typeof value === "string") {
-    try { return stringArray(JSON.parse(value)); } catch { return []; }
+    try {
+      return stringArray(JSON.parse(value));
+    } catch {
+      return [];
+    }
   }
   return [];
 }

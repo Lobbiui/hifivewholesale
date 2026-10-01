@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ArrowRight, BadgeCheck, Building2, LockKeyhole, PackageCheck, ShieldCheck } from "lucide-react";
 import { useState } from "react";
@@ -74,10 +75,7 @@ export function WholesaleAccessGate() {
   return <main className="wholesale-gate">
     <section className="gate-visual">
       <div className="gate-wave-logo" role="img" aria-label="HiFive Supply Wholesale">
-        <video autoPlay muted playsInline loop preload="auto" aria-hidden="true">
-          <source src="/videos/hifive-logo-wave-white-type-alpha.webm" type="video/webm" />
-          <source src="/videos/hifive-logo-wave-white-type.mp4" type="video/mp4" />
-        </video>
+        <Image src="/images/hifive-logo-black-banner.png" alt="" width={1254} height={1254} priority />
       </div>
       <div><span className="eyebrow light">Private wholesale network</span><h1>THE GOOD STUFF<br/><em>STAYS GATED.</em></h1><p>HiFive is a business-to-business wholesale portal. Catalog, case pricing, inventory, checkout, and loyalty benefits are available only to approved accounts.</p></div>
       <div className="gate-proof"><span><ShieldCheck/>Wholesaler approved</span><span><LockKeyhole/>Private case pricing</span><span><PackageCheck/>Verified business buyers</span></div>

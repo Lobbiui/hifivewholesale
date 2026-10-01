@@ -9,7 +9,7 @@
   position: relative;
   width: min(92vmin, 960px);
   aspect-ratio: 1;
-  background: #050408 url("/images/hifive-logo-white-type.png") center / contain no-repeat;
+  background: #050408 url("/images/hifive-logo-black-banner.png") center / contain no-repeat;
   box-shadow: 0 0 120px rgba(119, 55, 200, 0.22);
 }
 
@@ -18,6 +18,8 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
+  transform-origin: 18% 50%;
+  animation: hifive-logo-wave 3.2s ease-in-out infinite;
 }
 
 .intro-progress {
@@ -47,13 +49,21 @@
     url("/images/cinematic-warehouse.png") center / cover;
 }
 
-.gate-wave-logo video {
+.gate-wave-logo img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: contain;
-  mix-blend-mode: lighten;
+  transform-origin: 18% 50%;
+  animation: hifive-logo-wave 3.2s ease-in-out infinite;
   filter: drop-shadow(0 12px 32px rgba(119, 55, 200, 0.24));
+}
+
+@keyframes hifive-logo-wave {
+  0%, 100% { transform: perspective(900px) rotateY(0deg) skewY(0deg); }
+  25% { transform: perspective(900px) rotateY(-4deg) skewY(.45deg); }
+  50% { transform: perspective(900px) rotateY(2deg) skewY(-.25deg); }
+  75% { transform: perspective(900px) rotateY(-2deg) skewY(.2deg); }
 }
 
 .license-upload {
@@ -91,9 +101,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .gate-wave-logo video {
-    display: none;
-  }
+  .intro-logo-wave,
+  .gate-wave-logo img { animation: none; }
 }
 
 @media (max-width: 600px) {

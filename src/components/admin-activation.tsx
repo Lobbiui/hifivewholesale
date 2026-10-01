@@ -25,9 +25,11 @@ export function AdminActivation({ token }: { token: string }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token, password }),
       });
-      const result = await response.json() as { message?: string };
+      const result = (await response.json()) as { message?: string };
       if (!response.ok) {
-        setMessage(result.message || "The administrator account could not be activated.");
+        setMessage(
+          result.message || "The administrator account could not be activated.",
+        );
         return;
       }
       router.replace("/admin");
@@ -39,5 +41,78 @@ export function AdminActivation({ token }: { token: string }) {
     }
   };
 
-  return <main className="wholesale-gate"><section className="gate-visual"><Image src="/images/hifive-logo-white-type.png" alt="HiFive Supply Wholesale" width={230} height={125} priority/><div><span className="eyebrow light">Secure administration</span><h1>MANAGE<br/><em>HIFIVE.</em></h1><p>Create your private administrator password to manage wholesale access, customers, and orders.</p></div><div className="gate-proof"><span><ShieldCheck/>One-time secure activation</span></div></section><section className="gate-panel"><div className="gate-card"><span className="eyebrow">Administrator activation</span><h2>CREATE YOUR PASSWORD</h2>{message&&<div className="gate-message">{message}</div>}{token?<form action={activate}><label>New password<input name="password" type="password" minLength={12} autoComplete="new-password" required/></label><label>Confirm password<input name="confirmation" type="password" minLength={12} autoComplete="new-password" required/></label><button className="button primary full" disabled={submitting}>{submitting?"Activating…":"Activate administrator"}{!submitting&&<ArrowRight/>}</button><small className="demo-note">Use at least 12 characters with a letter, number, and special character. This link expires in 24 hours.</small></form>:<div className="gate-message">This activation link is incomplete.</div>}</div></section></main>;
+  return (
+    <main className="wholesale-gate">
+      <section className="gate-visual">
+        <Image
+          src="/images/hifive-logo-black-banner.png"
+          alt="HiFive Supply Wholesale"
+          width={230}
+          height={125}
+          priority
+        />
+        <div>
+          <span className="eyebrow light">Secure administration</span>
+          <h1>
+            MANAGE
+            <br />
+            <em>HIFIVE.</em>
+          </h1>
+          <p>
+            Create your private administrator password to manage wholesale
+            access, customers, and orders.
+          </p>
+        </div>
+        <div className="gate-proof">
+          <span>
+            <ShieldCheck />
+            One-time secure activation
+          </span>
+        </div>
+      </section>
+      <section className="gate-panel">
+        <div className="gate-card">
+          <span className="eyebrow">Administrator activation</span>
+          <h2>CREATE YOUR PASSWORD</h2>
+          {message && <div className="gate-message">{message}</div>}
+          {token ? (
+            <form action={activate}>
+              <label>
+                New password
+                <input
+                  name="password"
+                  type="password"
+                  minLength={12}
+                  autoComplete="new-password"
+                  required
+                />
+              </label>
+              <label>
+                Confirm password
+                <input
+                  name="confirmation"
+                  type="password"
+                  minLength={12}
+                  autoComplete="new-password"
+                  required
+                />
+              </label>
+              <button className="button primary full" disabled={submitting}>
+                {submitting ? "Activating…" : "Activate administrator"}
+                {!submitting && <ArrowRight />}
+              </button>
+              <small className="demo-note">
+                Use at least 12 characters with a letter, number, and special
+                character. This link expires in 24 hours.
+              </small>
+            </form>
+          ) : (
+            <div className="gate-message">
+              This activation link is incomplete.
+            </div>
+          )}
+        </div>
+      </section>
+    </main>
+  );
 }
