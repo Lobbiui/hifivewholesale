@@ -1,10 +1,23 @@
 "use client";
 
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import type { Product } from "@/lib/data";
+import type { Product, ProductVariant } from "@/lib/data";
 
-type CartItem = Product & { quantity: number };
-type CartContextValue = { items: CartItem[]; add: (product: Product, quantity?: number) => void; remove: (id: string) => void; setQuantity: (id: string, quantity: number) => void; clear: () => void; count: number; total: number; pricingPending: boolean };
+export type CartItem = Product & {
+  quantity: number;
+  variantId?: string;
+  cartKey: string;
+};
+type CartContextValue = {
+  items: CartItem[];
+  add: (product: Product, quantity?: number, variant?: ProductVariant) => void;
+  remove: (key: string) => void;
+  setQuantity: (key: string, quantity: number) => void;
+  clear: () => void;
+  count: number;
+  total: number;
+  pricingPending: boolean;
+};
 const CartContext = createContext<CartContextValue | null>(null);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
@@ -13,17 +26,27 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [authenticated, setAuthenticated] = useState(false);
   useEffect(() => {
     let active = true;
-    void fetch("/api/buyer/cart", { cache: "no-store" }).then(async response => {
-      if (!active) return;
-      if (response.ok) {
-        const result = await response.json() as { items: CartItem[] };
-        setItems(result.items);
-        setAuthenticated(true);
-      }
-    }).finally(() => { if (active) setHydrated(true); });
-    const clearBuyerCart = () => { setItems([]); setAuthenticated(false); };
+    void fetch("/api/buyer/cart", { cache: "no-store" })
+      .then(async (response) => {
+        if (!active) return;
+        if (response.ok) {
+          const result = (await response.json()) as { items: CartItem[] };
+          setItems(result.items);
+          setAuthenticated(true);
+        }
+      })
+      .finally(() => {
+        if (active) setHydrated(true);
+      });
+    const clearBuyerCart = () => {
+      setItems([]);
+      setAuthenticated(false);
+    };
     window.addEventListener("hifive-buyer-session-change", clearBuyerCart);
-    return () => { active = false; window.removeEventListener("hifive-buyer-session-change", clearBuyerCart); };
+    return () => {
+      active = false;
+      window.removeEventListener("hifive-buyer-session-change", clearBuyerCart);
+    };
   }, []);
   useEffect(() => {
     if (!hydrated || !authenticated) return;
@@ -31,16 +54,56 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       void fetch("/api/buyer/cart", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items: items.map(({ id, quantity }) => ({ id, quantity })) }),
+        body: JSON.stringify({
+          items: items.map(({ id, variantId, quantity }) => ({
+            id,
+            variantId,
+            quantity,
+          })),
+        }),
       });
     }, 150);
     return () => window.clearTimeout(timer);
   }, [authenticated, hydrated, items]);
-  const add = (product: Product, quantity = 1) => setItems((current) => current.some((item) => item.id === product.id) ? current.map((item) => item.id === product.id ? { ...item, quantity: item.quantity + quantity } : item) : [...current, { ...product, quantity }]);
-  const remove = (id: string) => setItems((current) => current.filter((item) => item.id !== id));
-  const setQuantity = (id: string, quantity: number) => setItems((current) => quantity < 1 ? current.filter((item) => item.id !== id) : current.map((item) => item.id === id ? { ...item, quantity } : item));
+  const add = (product: Product, quantity = 1, variant?: ProductVariant) =>
+    setItems((current) => {
+      const variantId = variant?.id;
+      const cartKey = `${product.id}:${variantId ?? "default"}`;
+      return current.some((item) => item.cartKey === cartKey)
+        ? current.map((item) =>
+            item.cartKey === cartKey
+              ? { ...item, quantity: item.quantity + quantity }
+              : item,
+          )
+        : [...current, { ...product, variantId, cartKey, quantity }];
+    });
+  const remove = (key: string) =>
+    setItems((current) => current.filter((item) => item.cartKey !== key));
+  const setQuantity = (key: string, quantity: number) =>
+    setItems((current) =>
+      quantity < 1
+        ? current.filter((item) => item.cartKey !== key)
+        : current.map((item) =>
+            item.cartKey === key ? { ...item, quantity } : item,
+          ),
+    );
   const clear = () => setItems([]);
-  const value = useMemo(() => ({ items, add, remove, setQuantity, clear, count: items.reduce((sum, item) => sum + item.quantity, 0), total: items.reduce((sum, item) => sum + (item.casePrice ?? 0) * item.quantity, 0), pricingPending: items.some((item) => item.casePrice === null) }), [items]);
+  const value = useMemo(
+    () => ({
+      items,
+      add,
+      remove,
+      setQuantity,
+      clear,
+      count: items.reduce((sum, item) => sum + item.quantity, 0),
+      total: items.reduce(
+        (sum, item) => sum + (item.casePrice ?? 0) * item.quantity,
+        0,
+      ),
+      pricingPending: items.some((item) => item.casePrice === null),
+    }),
+    [items],
+  );
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }
 

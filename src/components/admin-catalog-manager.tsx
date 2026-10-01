@@ -10,30 +10,41 @@ import {
   RefreshCw,
   Trash2,
   UploadCloud,
+  LayoutGrid,
+  List,
   X,
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { AdminTaxonomyManager } from "@/components/admin-taxonomy-manager";
+
+type ProductOption = {
+  id?: string;
+  name: string;
+  unitsPerCase: number;
+  price: number | null;
+  stock: number;
+  lowAt: number;
+  active?: boolean;
+};
 
 type CatalogProduct = {
   id: string;
   name: string;
   alternateName: string;
+  productType: string;
   brand: string;
   productLine: string;
   category: string;
   description: string;
-  sku: string;
-  upc: string;
-  variant: string;
-  unitsPerCase: number;
-  price: number | null;
-  stock: number;
-  lowAt: number;
+  variants: ProductOption[];
   status: string;
-  strength: string;
+  productStats: string;
   flavor: string;
   format: string;
-  imageUrl: string;
+  imageUrls: string[];
+  coaUrls: string[];
+  color: string;
+  accent: string;
 };
 type ImportRecord = {
   id: string;
@@ -72,6 +83,13 @@ export function AdminCatalogManager() {
   const [busy, setBusy] = useState(false);
   const [dragging, setDragging] = useState(false);
   const [editor, setEditor] = useState<CatalogProduct | "new" | null>(null);
+  const [options, setOptions] = useState<ProductOption[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [productTypes, setProductTypes] = useState<string[]>([]);
+  const [section, setSection] = useState<
+    "products" | "category" | "productType"
+  >("products");
+  const [view, setView] = useState<"detail" | "list">("detail");
 
   const load = useCallback(async () => {
     const response = await fetch("/api/admin/products", { cache: "no-store" });
@@ -84,6 +102,17 @@ export function AdminCatalogManager() {
       throw new Error(result.message || "Catalog records could not be loaded.");
     setProducts(result.products ?? []);
     setImports(result.imports ?? []);
+    const taxonomyResponse = await fetch("/api/admin/catalog-taxonomy", {
+      cache: "no-store",
+    });
+    if (taxonomyResponse.ok) {
+      const taxonomy = (await taxonomyResponse.json()) as {
+        categories: string[];
+        productTypes: string[];
+      };
+      setCategories(taxonomy.categories);
+      setProductTypes(taxonomy.productTypes);
+    }
     setMessage(
       (result.products?.length ?? 0)
         ? ""
@@ -168,27 +197,34 @@ export function AdminCatalogManager() {
     setBusy(true);
     setMessage("Saving product…");
     const editing = editor !== "new" && editor !== null;
-    const price = String(form.get("price") || "").trim();
+    const prices = form.getAll("optionPrice").map(String);
     const payload = {
       id: editing ? editor.id : undefined,
       name: String(form.get("name") || ""),
       alternateName: String(form.get("alternateName") || ""),
+      productType: String(form.get("productType") || "Uncategorized"),
       brand: String(form.get("brand") || ""),
       productLine: String(form.get("productLine") || ""),
       category: String(form.get("category") || ""),
       description: String(form.get("description") || ""),
       status: String(form.get("status") || "DRAFT"),
-      sku: String(form.get("sku") || ""),
-      upc: String(form.get("upc") || ""),
-      variant: String(form.get("variant") || ""),
-      unitsPerCase: Number(form.get("unitsPerCase") || 1),
-      price: price === "" ? null : Number(price),
-      stock: Number(form.get("stock") || 0),
-      lowAt: Number(form.get("lowAt") || 0),
-      strength: String(form.get("strength") || ""),
+      variants: form
+        .getAll("optionName")
+        .map((name, index) => ({
+          id: options[index]?.id,
+          name: String(name),
+          unitsPerCase: Number(form.getAll("optionUnits")[index] || 1),
+          price: prices[index] === "" ? null : Number(prices[index]),
+          stock: Number(form.getAll("optionStock")[index] || 0),
+          lowAt: Number(form.getAll("optionLowAt")[index] || 0),
+        })),
+      productStats: String(form.get("productStats") || ""),
       flavor: String(form.get("flavor") || ""),
       format: String(form.get("format") || ""),
       imageUrl: String(form.get("imageUrl") || ""),
+      coaUrl: String(form.get("coaUrl") || ""),
+      color: String(form.get("color") || "#39244d"),
+      accent: String(form.get("accent") || "#b67cff"),
     };
     const response = await fetch("/api/admin/products", {
       method: editing ? "PATCH" : "POST",
@@ -223,8 +259,91 @@ export function AdminCatalogManager() {
     setBusy(false);
   };
 
+  const openEditor = (product: CatalogProduct | "new") => {
+    setOptions(
+      product === "new"
+        ? [
+            {
+              name: "Standard",
+              unitsPerCase: 1,
+              price: null,
+              stock: 0,
+              lowAt: 0,
+            },
+          ]
+        : product.variants.filter((option) => option.active !== false),
+    );
+    setEditor(product);
+  };
+  const uploadAsset = async (
+    productId: string,
+    assetType: "IMAGE" | "COA",
+    asset: File | null,
+  ) => {
+    if (!asset) return;
+    setBusy(true);
+    const form = new FormData();
+    form.set("productId", productId);
+    form.set("assetType", assetType);
+    form.set("file", asset);
+    const response = await fetch("/api/admin/product-assets", {
+      method: "POST",
+      body: form,
+    });
+    const result = (await response.json()) as { message?: string };
+    setMessage(
+      response.ok
+        ? `${assetType === "IMAGE" ? "Image" : "COA"} uploaded.`
+        : result.message || "Upload failed.",
+    );
+    if (response.ok) await load();
+    setBusy(false);
+  };
+
+  if (section !== "products")
+    return (
+      <>
+        <div className="catalog-section-tabs">
+          <button onClick={() => setSection("products")}>Products</button>
+          <button
+            className={section === "category" ? "active" : ""}
+            onClick={() => setSection("category")}
+          >
+            Categories
+          </button>
+          <button
+            className={section === "productType" ? "active" : ""}
+            onClick={() => setSection("productType")}
+          >
+            Product types
+          </button>
+        </div>
+        <AdminTaxonomyManager kind={section} onChanged={() => void load()} />
+      </>
+    );
+
   return (
     <>
+      <div className="catalog-section-tabs">
+        <button className="active">Products</button>
+        <button onClick={() => setSection("category")}>Categories</button>
+        <button onClick={() => setSection("productType")}>Product types</button>
+        <span />
+        <button
+          className={view === "detail" ? "active" : ""}
+          onClick={() => setView("detail")}
+        >
+          <LayoutGrid />
+          Detail
+        </button>
+        <button
+          className={view === "list" ? "active" : ""}
+          onClick={() => setView("list")}
+        >
+          <List />
+          List
+        </button>
+      </div>
       <div className="admin-section-head catalog-admin-head">
         <div>
           <span className="eyebrow">Catalog & inventory</span>
@@ -237,7 +356,7 @@ export function AdminCatalogManager() {
         <div className="decision-actions">
           <button
             className="admin-button primary"
-            onClick={() => setEditor("new")}
+            onClick={() => openEditor("new")}
           >
             <Plus />
             New product
@@ -314,6 +433,20 @@ export function AdminCatalogManager() {
               </small>
             </label>
             <label>
+              Product type
+              <select
+                name="productType"
+                defaultValue={
+                  editor === "new" ? "Uncategorized" : editor.productType
+                }
+                required
+              >
+                {productTypes.map((item) => (
+                  <option key={item}>{item}</option>
+                ))}
+              </select>
+            </label>
+            <label>
               Brand
               <input
                 name="brand"
@@ -331,11 +464,17 @@ export function AdminCatalogManager() {
             </label>
             <label>
               Category
-              <input
+              <select
                 name="category"
-                defaultValue={editor === "new" ? "" : editor.category}
+                defaultValue={
+                  editor === "new" ? "Uncategorized" : editor.category
+                }
                 required
-              />
+              >
+                {categories.map((item) => (
+                  <option key={item}>{item}</option>
+                ))}
+              </select>
             </label>
             <label>
               Status
@@ -351,76 +490,108 @@ export function AdminCatalogManager() {
                 <option>ARCHIVED</option>
               </select>
             </label>
+            <fieldset className="product-options full-field">
+              <legend>Shopper options / flavors</legend>
+              <p>
+                Each option is grouped under this single product profile and may
+                have its own case price and inventory. Hidden Clover identifiers
+                remain intact.
+              </p>
+              {options.map((option, index) => (
+                <div className="product-option-row" key={option.id ?? index}>
+                  <label>
+                    Flavor / option
+                    <input
+                      name="optionName"
+                      defaultValue={option.name}
+                      required
+                    />
+                  </label>
+                  <label>
+                    Units/case
+                    <input
+                      name="optionUnits"
+                      type="number"
+                      min="1"
+                      defaultValue={option.unitsPerCase}
+                      required
+                    />
+                  </label>
+                  <label>
+                    Case price
+                    <input
+                      name="optionPrice"
+                      type="number"
+                      min="0"
+                      step=".01"
+                      defaultValue={option.price ?? ""}
+                    />
+                  </label>
+                  <label>
+                    On hand
+                    <input
+                      name="optionStock"
+                      type="number"
+                      min="0"
+                      defaultValue={option.stock}
+                      required
+                    />
+                  </label>
+                  <label>
+                    Low alert
+                    <input
+                      name="optionLowAt"
+                      type="number"
+                      min="0"
+                      defaultValue={option.lowAt}
+                      required
+                    />
+                  </label>
+                  <button
+                    type="button"
+                    className="icon-button"
+                    aria-label="Remove option"
+                    disabled={options.length === 1}
+                    onClick={() =>
+                      setOptions((current) =>
+                        current.filter((_, position) => position !== index),
+                      )
+                    }
+                  >
+                    <Trash2 />
+                  </button>
+                </div>
+              ))}
+              <button
+                type="button"
+                className="admin-button"
+                onClick={() =>
+                  setOptions((current) => [
+                    ...current,
+                    {
+                      name: "",
+                      unitsPerCase: 1,
+                      price: null,
+                      stock: 0,
+                      lowAt: 0,
+                    },
+                  ])
+                }
+              >
+                <Plus />
+                Add flavor / option
+              </button>
+            </fieldset>
             <label>
-              SKU
+              Product stats
               <input
-                name="sku"
-                defaultValue={editor === "new" ? "" : editor.sku}
+                name="productStats"
+                defaultValue={editor === "new" ? "" : editor.productStats}
               />
-            </label>
-            <label>
-              UPC
-              <input
-                name="upc"
-                defaultValue={editor === "new" ? "" : editor.upc}
-              />
-            </label>
-            <label>
-              Variant
-              <input
-                name="variant"
-                defaultValue={editor === "new" ? "Standard" : editor.variant}
-                required
-              />
-            </label>
-            <label>
-              Units per case
-              <input
-                name="unitsPerCase"
-                type="number"
-                min="1"
-                defaultValue={editor === "new" ? 1 : editor.unitsPerCase}
-                required
-              />
-            </label>
-            <label>
-              Case price
-              <input
-                name="price"
-                type="number"
-                min="0"
-                step="0.01"
-                defaultValue={editor === "new" ? "" : (editor.price ?? "")}
-                placeholder="Pending"
-              />
-              <small>Leave blank until wholesale pricing is confirmed.</small>
-            </label>
-            <label>
-              On hand
-              <input
-                name="stock"
-                type="number"
-                min="0"
-                defaultValue={editor === "new" ? 0 : editor.stock}
-                required
-              />
-            </label>
-            <label>
-              Low-stock alert
-              <input
-                name="lowAt"
-                type="number"
-                min="0"
-                defaultValue={editor === "new" ? 0 : editor.lowAt}
-                required
-              />
-            </label>
-            <label>
-              Strength
-              <input
-                name="strength"
-                defaultValue={editor === "new" ? "" : editor.strength}
-              />
+              <small>
+                Strength, count, size, or other key specifications shown to
+                buyers.
+              </small>
             </label>
             <label>
               Flavor
@@ -435,13 +606,79 @@ export function AdminCatalogManager() {
                 name="format"
                 defaultValue={editor === "new" ? "" : editor.format}
               />
+              <small>
+                The package or case format shared by this product profile.
+              </small>
             </label>
             <label className="full-field">
               Primary image URL
               <input
                 name="imageUrl"
-                defaultValue={editor === "new" ? "" : editor.imageUrl}
+                defaultValue={
+                  editor === "new" ? "" : (editor.imageUrls[0] ?? "")
+                }
                 placeholder="https://… or /catalog/…"
+              />
+            </label>
+            {editor !== "new" && (
+              <label className="full-field asset-upload">
+                Upload product image
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  onChange={(event) =>
+                    void uploadAsset(
+                      editor.id,
+                      "IMAGE",
+                      event.target.files?.[0] ?? null,
+                    )
+                  }
+                />
+                <small>
+                  Stored securely with this product. JPG, PNG, or WebP; maximum
+                  8 MB.
+                </small>
+              </label>
+            )}
+            <label className="full-field">
+              COA URL
+              <input
+                name="coaUrl"
+                defaultValue={editor === "new" ? "" : (editor.coaUrls[0] ?? "")}
+                placeholder="https://… or /api/catalog/assets/…"
+              />
+            </label>
+            {editor !== "new" && (
+              <label className="full-field asset-upload">
+                Upload COA document
+                <input
+                  type="file"
+                  accept="application/pdf,image/jpeg,image/png,image/webp"
+                  onChange={(event) =>
+                    void uploadAsset(
+                      editor.id,
+                      "COA",
+                      event.target.files?.[0] ?? null,
+                    )
+                  }
+                />
+              </label>
+            )}
+            <label>
+              Shopping-view background
+              <input
+                name="color"
+                type="color"
+                defaultValue={editor === "new" ? "#39244d" : editor.color}
+              />
+              <small>Controls the product display background.</small>
+            </label>
+            <label>
+              Shopping-view accent
+              <input
+                name="accent"
+                type="color"
+                defaultValue={editor === "new" ? "#b67cff" : editor.accent}
               />
             </label>
             <label className="full-field">
@@ -629,12 +866,18 @@ export function AdminCatalogManager() {
           ))}
         </section>
       )}
-      <div className="inventory-grid catalog-inventory-grid">
+      <div
+        className={
+          view === "list"
+            ? "catalog-product-list"
+            : "inventory-grid catalog-inventory-grid"
+        }
+      >
         {products.map((product) => (
           <article className="inventory-card" key={product.id}>
             <div className="inventory-art">
-              {product.imageUrl ? (
-                <img src={product.imageUrl} alt="" />
+              {product.imageUrls[0] ? (
+                <img src={product.imageUrls[0]} alt="" />
               ) : (
                 <span>{product.brand.slice(0, 2).toUpperCase()}</span>
               )}
@@ -646,33 +889,46 @@ export function AdminCatalogManager() {
             </span>
             <h3>{product.name}</h3>
             <small>
-              {product.brand} · {product.sku || "No SKU"} · {product.variant}
+              {product.productType} · {product.brand} ·{" "}
+              {product.productLine || product.category} ·{" "}
+              {product.variants.length} option
+              {product.variants.length === 1 ? "" : "s"}
             </small>
             <div>
               <span>
                 <small>Case price</small>
                 <b>
-                  {product.price === null
+                  {product.variants[0]?.price === null || !product.variants[0]
                     ? "Pending"
                     : new Intl.NumberFormat("en-US", {
                         style: "currency",
                         currency: "USD",
-                      }).format(product.price)}
+                      }).format(product.variants[0].price!)}
                 </b>
               </span>
               <span>
                 <small>On hand</small>
-                <b className={product.stock <= product.lowAt ? "danger" : ""}>
-                  {product.stock}
+                <b
+                  className={
+                    (product.variants[0]?.stock ?? 0) <=
+                    (product.variants[0]?.lowAt ?? 0)
+                      ? "danger"
+                      : ""
+                  }
+                >
+                  {product.variants.reduce(
+                    (sum, option) => sum + option.stock,
+                    0,
+                  )}
                 </b>
               </span>
               <span>
-                <small>Alert at</small>
-                <b>{product.lowAt}</b>
+                <small>COA</small>
+                <b>{product.coaUrls.length ? "Linked" : "Missing"}</b>
               </span>
             </div>
             <div className="decision-actions">
-              <button onClick={() => setEditor(product)}>
+              <button onClick={() => openEditor(product)}>
                 <Pencil />
                 Edit
               </button>

@@ -9,6 +9,7 @@ type CatalogRow = {
   name: string;
   brand: string;
   category: string;
+  product_type: string;
   description: string;
   strength: string;
   flavor: string;
@@ -22,13 +23,15 @@ type CatalogRow = {
   coa_urls: unknown;
   brand_logo_url: string;
   source_url: string;
+  variant_id: string;
+  variant_name: string;
 };
 
 const catalogQuery = `
-  SELECT p.id, p.name, p.brand, p.category, p.description,
+  SELECT p.id, p.name, p.brand, p.category, p.product_type, p.description,
          COALESCE(d.strength, '') AS strength,
          COALESCE(d.flavor, '') AS flavor,
-         COALESCE(d.format, v.variant_name, 'Standard') AS format,
+         COALESCE(d.format, 'Standard') AS format, v.id AS variant_id, v.variant_name,
          v.wholesale_price_cents, v.units_per_case,
          COALESCE(d.color, '#39244d') AS color,
          COALESCE(d.accent, '#b67cff') AS accent,
@@ -37,11 +40,7 @@ const catalogQuery = `
          COALESCE(d.brand_logo_url, '') AS brand_logo_url,
          COALESCE(d.source_url, '') AS source_url
     FROM products p
-    JOIN LATERAL (
-      SELECT * FROM product_variants candidate
-       WHERE candidate.product_id = p.id AND candidate.online_sellable = TRUE
-       ORDER BY candidate.created_at LIMIT 1
-    ) v ON TRUE
+    JOIN product_variants v ON v.product_id=p.id AND v.online_sellable=TRUE
     LEFT JOIN product_catalog_details d ON d.product_id = p.id
    WHERE p.status = 'PUBLISHED'
    ORDER BY p.brand, p.name`;
@@ -50,7 +49,11 @@ export async function getStorefrontProducts(): Promise<Product[]> {
   try {
     const database = await getDatabase();
     const result = await database.query<CatalogRow>(catalogQuery);
-    return result.rows.length ? result.rows.map(toProduct) : fallbackCatalog;
+    if (!result.rows.length) return fallbackCatalog;
+    const grouped = new Map<string, CatalogRow[]>();
+    for (const row of result.rows)
+      grouped.set(row.id, [...(grouped.get(row.id) ?? []), row]);
+    return [...grouped.values()].map((rows) => toProduct(rows[0], rows));
   } catch {
     return fallbackCatalog;
   }
@@ -72,7 +75,7 @@ export async function getStorefrontProductsByIds(
   return products.filter((product) => wanted.has(product.id));
 }
 
-function toProduct(row: CatalogRow): Product {
+function toProduct(row: CatalogRow, rows: CatalogRow[]): Product {
   const images = stringArray(row.image_urls);
   const unitPrice =
     row.wholesale_price_cents !== null && row.units_per_case
@@ -83,6 +86,7 @@ function toProduct(row: CatalogRow): Product {
     name: row.name,
     brand: row.brand,
     category: row.category,
+    productType: row.product_type,
     strength: row.strength,
     flavor: row.flavor || row.name,
     format: row.format,
@@ -99,6 +103,19 @@ function toProduct(row: CatalogRow): Product {
     coa: stringArray(row.coa_urls),
     brandLogo: row.brand_logo_url,
     sourceUrl: row.source_url,
+    variants: rows.map((variant) => ({
+      id: variant.variant_id,
+      name: variant.variant_name,
+      unitsPerCase: variant.units_per_case ?? 1,
+      price:
+        variant.wholesale_price_cents !== null && variant.units_per_case
+          ? variant.wholesale_price_cents / 100 / variant.units_per_case
+          : null,
+      casePrice:
+        variant.wholesale_price_cents === null
+          ? null
+          : variant.wholesale_price_cents / 100,
+    })),
   };
 }
 
