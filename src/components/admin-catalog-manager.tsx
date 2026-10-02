@@ -20,6 +20,7 @@ import { AdminTaxonomyManager } from "@/components/admin-taxonomy-manager";
 type ProductOption = {
   id?: string;
   name: string;
+  upc: string;
   unitsPerCase: number;
   price: number | null;
   stock: number;
@@ -213,6 +214,7 @@ export function AdminCatalogManager() {
       variants: form.getAll("optionName").map((name, index) => ({
         id: options[index]?.id,
         name: String(name),
+        upc: String(form.getAll("optionUpc")[index] || ""),
         unitsPerCase: Number(form.getAll("optionUnits")[index] || 1),
         price: prices[index] === "" ? null : Number(prices[index]),
         stock: Number(form.getAll("optionStock")[index] || 0),
@@ -265,6 +267,7 @@ export function AdminCatalogManager() {
         ? [
             {
               name: "Standard",
+              upc: "",
               unitsPerCase: 1,
               price: null,
               stock: 0,
@@ -510,6 +513,15 @@ export function AdminCatalogManager() {
                     />
                   </label>
                   <label>
+                    UPC
+                    <input
+                      name="optionUpc"
+                      defaultValue={option.upc}
+                      inputMode="numeric"
+                      autoComplete="off"
+                    />
+                  </label>
+                  <label>
                     Units/case
                     <input
                       name="optionUnits"
@@ -612,6 +624,7 @@ export function AdminCatalogManager() {
                     ...current,
                     {
                       name: "",
+                      upc: "",
                       unitsPerCase: 1,
                       price: null,
                       stock: 0,

@@ -5249,7 +5249,10 @@ html[dir="rtl"] .detail-specs div:last-child {
 }
 .product-option-row {
   display: grid;
-  grid-template-columns: 1.5fr repeat(4, 0.8fr) minmax(190px, 1.6fr) auto;
+  grid-template-columns: 1.35fr 0.9fr repeat(4, 0.72fr) minmax(
+      190px,
+      1.45fr
+    ) auto;
   gap: 8px;
   align-items: end;
   margin: 10px 0;

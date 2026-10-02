@@ -76,6 +76,7 @@ const productInput = z.object({
       z.object({
         id: z.string().optional(),
         name: z.string().trim().min(1).max(200),
+        upc: z.string().trim().max(120).default(""),
         unitsPerCase: z.number().int().min(1).max(10000),
         price: z.number().min(0).max(1000000).nullable(),
         stock: z.number().int().min(0).max(100000000),
@@ -123,6 +124,7 @@ export async function GET() {
           .map((variant) => ({
             id: variant.id,
             name: variant.variant_name,
+            upc: variant.upc ?? "",
             unitsPerCase: variant.units_per_case ?? 1,
             price:
               variant.wholesale_price_cents === null
@@ -247,10 +249,11 @@ async function save(request: Request, updating: boolean) {
           option.price === null ? null : Math.round(option.price * 100);
         if (found)
           await tx.query(
-            "UPDATE product_variants SET variant_name=$2,units_per_case=$3,wholesale_price_cents=$4,safety_stock_units=$5,online_sellable=$6,updated_at=CURRENT_TIMESTAMP WHERE id=$1",
+            "UPDATE product_variants SET variant_name=$2,upc=NULLIF($3,''),units_per_case=$4,wholesale_price_cents=$5,safety_stock_units=$6,online_sellable=$7,updated_at=CURRENT_TIMESTAMP WHERE id=$1",
             [
               variantId,
               option.name,
+              option.upc,
               option.unitsPerCase,
               priceCents,
               option.lowAt,
@@ -259,11 +262,12 @@ async function save(request: Request, updating: boolean) {
           );
         else
           await tx.query(
-            "INSERT INTO product_variants (id,product_id,variant_name,units_per_case,wholesale_price_cents,safety_stock_units,online_sellable) VALUES ($1,$2,$3,$4,$5,$6,$7)",
+            "INSERT INTO product_variants (id,product_id,variant_name,upc,units_per_case,wholesale_price_cents,safety_stock_units,online_sellable) VALUES ($1,$2,$3,NULLIF($4,''),$5,$6,$7,$8)",
             [
               variantId,
               productId,
               option.name,
+              option.upc,
               option.unitsPerCase,
               priceCents,
               option.lowAt,
