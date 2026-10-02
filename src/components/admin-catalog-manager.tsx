@@ -86,6 +86,7 @@ export function AdminCatalogManager() {
   const [busy, setBusy] = useState(false);
   const [dragging, setDragging] = useState(false);
   const [editor, setEditor] = useState<CatalogProduct | "new" | null>(null);
+  const [editorName, setEditorName] = useState("");
   const [options, setOptions] = useState<ProductOption[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [productTypes, setProductTypes] = useState<string[]>([]);
@@ -203,7 +204,7 @@ export function AdminCatalogManager() {
     const prices = form.getAll("optionPrice").map(String);
     const payload = {
       id: editing ? editor.id : undefined,
-      name: String(form.get("name") || ""),
+      name: editorName.trim(),
       alternateName: String(form.get("alternateName") || ""),
       productType: String(form.get("productType") || "Uncategorized"),
       brand: String(form.get("brand") || ""),
@@ -262,6 +263,7 @@ export function AdminCatalogManager() {
   };
 
   const openEditor = (product: CatalogProduct | "new") => {
+    setEditorName(product === "new" ? "" : product.name);
     setOptions(
       product === "new"
         ? [
@@ -404,7 +406,7 @@ export function AdminCatalogManager() {
                     : "Edit catalog item"}
                 </span>
                 <h3 id="product-editor-title">
-                  {editor === "new" ? "NEW PRODUCT" : editor.name}
+                  {editor === "new" ? "NEW PRODUCT" : editorName || editor.name}
                 </h3>
               </div>
               <button
@@ -420,7 +422,8 @@ export function AdminCatalogManager() {
               Product name
               <input
                 name="name"
-                defaultValue={editor === "new" ? "" : editor.name}
+                value={editorName}
+                onChange={(event) => setEditorName(event.target.value)}
                 required
                 autoFocus
               />
