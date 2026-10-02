@@ -40,6 +40,8 @@ type VariantRow = {
   safety_stock_units: number;
   online_sellable: boolean;
   on_hand_units: number;
+  image_urls: string[];
+  coa_urls: string[];
 };
 type ImportRow = {
   id: string;
@@ -107,7 +109,7 @@ export async function GET() {
         `SELECT p.id,p.name,p.alternate_name,p.product_type,p.brand,p.product_line,p.category,p.description,p.status,COALESCE(d.strength,'') AS strength,COALESCE(d.flavor,'') AS flavor,COALESCE(d.format,'') AS format,COALESCE(d.image_urls,'[]'::jsonb) AS image_urls,COALESCE(d.coa_urls,'[]'::jsonb) AS coa_urls,COALESCE(d.color,'#39244d') AS color,COALESCE(d.accent,'#b67cff') AS accent FROM products p LEFT JOIN product_catalog_details d ON d.product_id=p.id WHERE p.status <> 'ARCHIVED' ORDER BY p.brand,p.name`,
       ),
       database.query<VariantRow>(
-        `SELECT v.id,v.product_id,v.sku,v.upc,v.variant_name,v.units_per_case,v.wholesale_price_cents,v.safety_stock_units,v.online_sellable,COALESCE(latest.on_hand_units,0)::int AS on_hand_units FROM product_variants v LEFT JOIN LATERAL (SELECT on_hand_units FROM inventory_snapshots s WHERE s.product_variant_id=v.id ORDER BY observed_at DESC LIMIT 1) latest ON TRUE ORDER BY v.created_at`,
+        `SELECT v.id,v.product_id,v.sku,v.upc,v.variant_name,v.units_per_case,v.wholesale_price_cents,v.safety_stock_units,v.online_sellable,COALESCE(latest.on_hand_units,0)::int AS on_hand_units,COALESCE(v.image_urls,'[]'::jsonb) AS image_urls,COALESCE(v.coa_urls,'[]'::jsonb) AS coa_urls FROM product_variants v LEFT JOIN LATERAL (SELECT on_hand_units FROM inventory_snapshots s WHERE s.product_variant_id=v.id ORDER BY observed_at DESC LIMIT 1) latest ON TRUE ORDER BY v.created_at`,
       ),
       database.query<ImportRow>(
         "SELECT id,filename,import_type,row_count,total_units,draft_products,created_at FROM catalog_imports ORDER BY created_at DESC LIMIT 8",
@@ -129,6 +131,10 @@ export async function GET() {
             stock: variant.on_hand_units,
             lowAt: variant.safety_stock_units,
             active: variant.online_sellable,
+            imageUrls: Array.isArray(variant.image_urls)
+              ? variant.image_urls
+              : [],
+            coaUrls: Array.isArray(variant.coa_urls) ? variant.coa_urls : [],
           }));
         return {
           id: row.id,

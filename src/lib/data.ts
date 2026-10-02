@@ -28,6 +28,8 @@ export type ProductVariant = {
   unitsPerCase: number;
   price: number | null;
   casePrice: number | null;
+  images?: string[];
+  coa?: string[];
 };
 
 export const products = catalog as Product[];

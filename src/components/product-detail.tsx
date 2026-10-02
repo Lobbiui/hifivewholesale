@@ -46,6 +46,10 @@ export function ProductDetail({
         flavor: selectedVariant.name,
         price: selectedVariant.price,
         casePrice: selectedVariant.casePrice,
+        images: selectedVariant.images?.length
+          ? selectedVariant.images
+          : product.images,
+        coa: selectedVariant.coa?.length ? selectedVariant.coa : product.coa,
       }
     : product;
   const addCases = () => {
@@ -80,11 +84,17 @@ export function ProductDetail({
               )}
               <Image
                 className="detail-product-photo"
-                src={product.images[activeImage]}
+                src={
+                  selectedProduct.images[activeImage] ??
+                  selectedProduct.images[0]
+                }
                 alt={`${product.brand} ${product.name}${activeImage > 0 ? ` product view ${activeImage + 1}` : ""}`}
                 fill
                 priority
-                unoptimized={product.images[activeImage].startsWith("https://")}
+                unoptimized={(
+                  selectedProduct.images[activeImage] ??
+                  selectedProduct.images[0]
+                ).startsWith("https://")}
                 sizes="(max-width: 900px) 94vw, 52vw"
               />
               <div className="detail-orbit orbit-one" />
@@ -95,7 +105,7 @@ export function ProductDetail({
               </span>
             </button>
             <div className="detail-thumbnails">
-              {product.images.map((image, index) => (
+              {selectedProduct.images.map((image, index) => (
                 <button
                   key={image}
                   className={activeImage === index ? "active" : ""}
@@ -129,7 +139,10 @@ export function ProductDetail({
                 <span>Choose flavor / option</span>
                 <select
                   value={selectedVariantId}
-                  onChange={(event) => setSelectedVariantId(event.target.value)}
+                  onChange={(event) => {
+                    setSelectedVariantId(event.target.value);
+                    setActiveImage(0);
+                  }}
                 >
                   {product.variants.map((variant) => (
                     <option key={variant.id} value={variant.id}>
@@ -227,7 +240,7 @@ export function ProductDetail({
                 Ask wholesale <ArrowRight />
               </Link>
             </div>
-            {product.coa.length > 0 && (
+            {selectedProduct.coa.length > 0 && (
               <div className="coa-links">
                 <FileCheck2 />
                 <div>
@@ -235,14 +248,15 @@ export function ProductDetail({
                   <p>Manufacturer-provided product documentation.</p>
                 </div>
                 <div>
-                  {product.coa.map((document, index) => (
+                  {selectedProduct.coa.map((document, index) => (
                     <a
                       key={document}
                       href={document}
                       target="_blank"
                       rel="noreferrer"
                     >
-                      View COA{product.coa.length > 1 ? ` ${index + 1}` : ""}
+                      View COA
+                      {selectedProduct.coa.length > 1 ? ` ${index + 1}` : ""}
                     </a>
                   ))}
                 </div>
@@ -269,9 +283,9 @@ export function ProductDetail({
         <div>
           <small>Wholesale case</small>
           <strong>
-            {product.casePrice === null
+            {selectedProduct.casePrice === null
               ? "Account pricing"
-              : `$${product.casePrice.toFixed(2)}`}
+              : `$${selectedProduct.casePrice.toFixed(2)}`}
           </strong>
         </div>
         <button
@@ -307,10 +321,14 @@ export function ProductDetail({
           </button>
           <div>
             <Image
-              src={product.images[activeImage]}
+              src={
+                selectedProduct.images[activeImage] ?? selectedProduct.images[0]
+              }
               alt={`${product.brand} ${product.name} enlarged`}
               fill
-              unoptimized={product.images[activeImage].startsWith("https://")}
+              unoptimized={(
+                selectedProduct.images[activeImage] ?? selectedProduct.images[0]
+              ).startsWith("https://")}
               sizes="100vw"
             />
           </div>

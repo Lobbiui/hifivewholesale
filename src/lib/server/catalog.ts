@@ -25,6 +25,8 @@ type CatalogRow = {
   source_url: string;
   variant_id: string;
   variant_name: string;
+  variant_image_urls: unknown;
+  variant_coa_urls: unknown;
 };
 
 const catalogQuery = `
@@ -32,6 +34,8 @@ const catalogQuery = `
          COALESCE(d.strength, '') AS strength,
          COALESCE(d.flavor, '') AS flavor,
          COALESCE(d.format, 'Standard') AS format, v.id AS variant_id, v.variant_name,
+         COALESCE(v.image_urls,'[]'::jsonb) AS variant_image_urls,
+         COALESCE(v.coa_urls,'[]'::jsonb) AS variant_coa_urls,
          v.wholesale_price_cents, v.units_per_case,
          COALESCE(d.color, '#39244d') AS color,
          COALESCE(d.accent, '#b67cff') AS accent,
@@ -115,6 +119,8 @@ function toProduct(row: CatalogRow, rows: CatalogRow[]): Product {
         variant.wholesale_price_cents === null
           ? null
           : variant.wholesale_price_cents / 100,
+      images: stringArray(variant.variant_image_urls),
+      coa: stringArray(variant.variant_coa_urls),
     })),
   };
 }

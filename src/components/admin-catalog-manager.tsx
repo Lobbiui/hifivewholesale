@@ -25,6 +25,8 @@ type ProductOption = {
   stock: number;
   lowAt: number;
   active?: boolean;
+  imageUrls?: string[];
+  coaUrls?: string[];
 };
 
 type CatalogProduct = {
@@ -208,16 +210,14 @@ export function AdminCatalogManager() {
       category: String(form.get("category") || ""),
       description: String(form.get("description") || ""),
       status: String(form.get("status") || "DRAFT"),
-      variants: form
-        .getAll("optionName")
-        .map((name, index) => ({
-          id: options[index]?.id,
-          name: String(name),
-          unitsPerCase: Number(form.getAll("optionUnits")[index] || 1),
-          price: prices[index] === "" ? null : Number(prices[index]),
-          stock: Number(form.getAll("optionStock")[index] || 0),
-          lowAt: Number(form.getAll("optionLowAt")[index] || 0),
-        })),
+      variants: form.getAll("optionName").map((name, index) => ({
+        id: options[index]?.id,
+        name: String(name),
+        unitsPerCase: Number(form.getAll("optionUnits")[index] || 1),
+        price: prices[index] === "" ? null : Number(prices[index]),
+        stock: Number(form.getAll("optionStock")[index] || 0),
+        lowAt: Number(form.getAll("optionLowAt")[index] || 0),
+      })),
       productStats: String(form.get("productStats") || ""),
       flavor: String(form.get("flavor") || ""),
       format: String(form.get("format") || ""),
@@ -279,12 +279,14 @@ export function AdminCatalogManager() {
     productId: string,
     assetType: "IMAGE" | "COA",
     asset: File | null,
+    variantId?: string,
   ) => {
     if (!asset) return;
     setBusy(true);
     const form = new FormData();
     form.set("productId", productId);
     form.set("assetType", assetType);
+    if (variantId) form.set("variantId", variantId);
     form.set("file", asset);
     const response = await fetch("/api/admin/product-assets", {
       method: "POST",
@@ -547,6 +549,46 @@ export function AdminCatalogManager() {
                       required
                     />
                   </label>
+                  {editor !== "new" && option.id ? (
+                    <div className="option-media-cell">
+                      <label>
+                        Product shot
+                        <input
+                          type="file"
+                          accept="image/jpeg,image/png,image/webp"
+                          onChange={(event) =>
+                            void uploadAsset(
+                              editor.id,
+                              "IMAGE",
+                              event.target.files?.[0] ?? null,
+                              option.id,
+                            )
+                          }
+                        />
+                        <small>{option.imageUrls?.length ?? 0} uploaded</small>
+                      </label>
+                      <label>
+                        COA
+                        <input
+                          type="file"
+                          accept="application/pdf,image/jpeg,image/png,image/webp"
+                          onChange={(event) =>
+                            void uploadAsset(
+                              editor.id,
+                              "COA",
+                              event.target.files?.[0] ?? null,
+                              option.id,
+                            )
+                          }
+                        />
+                        <small>{option.coaUrls?.length ?? 0} uploaded</small>
+                      </label>
+                    </div>
+                  ) : (
+                    <small className="option-save-note">
+                      Save the product before uploading this option’s media.
+                    </small>
+                  )}
                   <button
                     type="button"
                     className="icon-button"
