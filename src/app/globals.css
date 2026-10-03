@@ -5107,6 +5107,35 @@ html[dir="rtl"] .detail-specs div:last-child {
   padding-inline: 12px;
   font-size: 9px;
 }
+.admin-option-summary {
+  grid-column: 1/-1;
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  margin: 8px 0;
+}
+.admin-option-summary table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 420px;
+}
+.admin-option-summary th,
+.admin-option-summary td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  font-size: 8px;
+}
+.admin-option-summary th {
+  font-size: 7px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--muted);
+  background: #f7f4f9;
+}
+.admin-option-summary tr:last-child td {
+  border-bottom: 0;
+}
 .spin {
   animation: catalog-spin 0.8s linear infinite;
 }
@@ -5249,10 +5278,9 @@ html[dir="rtl"] .detail-specs div:last-child {
 }
 .product-option-row {
   display: grid;
-  grid-template-columns: 1.35fr 0.9fr repeat(4, 0.72fr) minmax(
-      190px,
-      1.45fr
-    ) auto;
+  grid-template-columns:
+    1.35fr 0.9fr repeat(4, 0.72fr) minmax(190px, 1.45fr)
+    auto;
   gap: 8px;
   align-items: end;
   margin: 10px 0;

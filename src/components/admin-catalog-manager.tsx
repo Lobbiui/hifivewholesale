@@ -276,7 +276,7 @@ export function AdminCatalogManager() {
               lowAt: 0,
             },
           ]
-        : product.variants.filter((option) => option.active !== false),
+        : product.variants,
     );
     setEditor(product);
   };
@@ -952,6 +952,35 @@ export function AdminCatalogManager() {
               {product.variants.length} option
               {product.variants.length === 1 ? "" : "s"}
             </small>
+            <div className="admin-option-summary">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Flavor / option</th>
+                    <th>UPC</th>
+                    <th>On hand</th>
+                    <th>Case price</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {product.variants.map((option) => (
+                    <tr key={option.id ?? option.name}>
+                      <td>{option.name}</td>
+                      <td>{option.upc || "—"}</td>
+                      <td>{option.stock}</td>
+                      <td>
+                        {option.price === null
+                          ? "Pending"
+                          : new Intl.NumberFormat("en-US", {
+                              style: "currency",
+                              currency: "USD",
+                            }).format(option.price)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
             <div>
               <span>
                 <small>Case price</small>
