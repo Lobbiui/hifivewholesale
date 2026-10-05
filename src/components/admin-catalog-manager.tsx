@@ -234,7 +234,10 @@ export function AdminCatalogManager() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
-    const result = (await response.json()) as { message?: string };
+    const result = (await response.json()) as {
+      message?: string;
+      url?: string;
+    };
     if (!response.ok) {
       setMessage(result.message || "The product could not be saved.");
       setBusy(false);
@@ -297,13 +300,33 @@ export function AdminCatalogManager() {
       method: "POST",
       body: form,
     });
-    const result = (await response.json()) as { message?: string };
+    const result = (await response.json()) as {
+      message?: string;
+      url?: string;
+    };
     setMessage(
       response.ok
         ? `${assetType === "IMAGE" ? "Image" : "COA"} uploaded.`
         : result.message || "Upload failed.",
     );
-    if (response.ok) await load();
+    if (response.ok && result.url && variantId) {
+      setOptions((current) =>
+        current.map((option) =>
+          option.id === variantId
+            ? {
+                ...option,
+                [assetType === "IMAGE" ? "imageUrls" : "coaUrls"]: [
+                  ...(assetType === "IMAGE"
+                    ? (option.imageUrls ?? [])
+                    : (option.coaUrls ?? [])),
+                  result.url!,
+                ],
+              }
+            : option,
+        ),
+      );
+      await load();
+    } else if (response.ok) await load();
     setBusy(false);
   };
 
@@ -958,6 +981,8 @@ export function AdminCatalogManager() {
                   <tr>
                     <th>Flavor / option</th>
                     <th>UPC</th>
+                    <th>Product shot</th>
+                    <th>COA</th>
                     <th>On hand</th>
                     <th>Case price</th>
                   </tr>
@@ -967,6 +992,35 @@ export function AdminCatalogManager() {
                     <tr key={option.id ?? option.name}>
                       <td>{option.name}</td>
                       <td>{option.upc || "—"}</td>
+                      <td>
+                        {option.imageUrls?.[0] ? (
+                          <a
+                            href={option.imageUrls[0]}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="option-asset-link"
+                          >
+                            <img src={option.imageUrls[0]} alt="" />
+                            View
+                          </a>
+                        ) : (
+                          "Missing"
+                        )}
+                      </td>
+                      <td>
+                        {option.coaUrls?.[0] ? (
+                          <a
+                            href={option.coaUrls[0]}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="option-asset-link"
+                          >
+                            View COA
+                          </a>
+                        ) : (
+                          "Missing"
+                        )}
+                      </td>
                       <td>{option.stock}</td>
                       <td>
                         {option.price === null

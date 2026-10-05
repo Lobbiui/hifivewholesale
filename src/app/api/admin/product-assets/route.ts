@@ -41,10 +41,12 @@ export async function POST(request: Request) {
       { ok: false, message: "Choose a valid file." },
       { status: 422 },
     );
+  const bytes = new Uint8Array(await file.arrayBuffer());
+  const mimeType = detectMimeType(file.name, file.type, bytes);
   if (
-    !allowed.has(file.type) ||
+    !mimeType ||
     file.size > 8 * 1024 * 1024 ||
-    (parsed.data.assetType === "IMAGE" && !file.type.startsWith("image/"))
+    (parsed.data.assetType === "IMAGE" && !mimeType.startsWith("image/"))
   ) {
     return NextResponse.json(
       {
@@ -75,8 +77,8 @@ export async function POST(request: Request) {
         parsed.data.variantId ?? null,
         parsed.data.assetType,
         file.name,
-        file.type,
-        Buffer.from(await file.arrayBuffer()),
+        mimeType,
+        Buffer.from(bytes),
         admin.id,
       ],
     );
@@ -92,6 +94,32 @@ export async function POST(request: Request) {
       );
   });
   return NextResponse.json({ ok: true, url }, { status: 201 });
+}
+
+function detectMimeType(filename: string, supplied: string, bytes: Uint8Array) {
+  const signature = (...values: number[]) =>
+    values.every((value, index) => bytes[index] === value);
+  if (signature(0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a))
+    return "image/png";
+  if (signature(0xff, 0xd8, 0xff)) return "image/jpeg";
+  if (signature(0x25, 0x50, 0x44, 0x46)) return "application/pdf";
+  if (
+    bytes.length >= 12 &&
+    String.fromCharCode(...bytes.slice(0, 4)) === "RIFF" &&
+    String.fromCharCode(...bytes.slice(8, 12)) === "WEBP"
+  )
+    return "image/webp";
+  if (allowed.has(supplied)) return supplied;
+  const extension = filename.toLowerCase().split(".").pop();
+  return extension === "png"
+    ? "image/png"
+    : extension === "jpg" || extension === "jpeg"
+      ? "image/jpeg"
+      : extension === "webp"
+        ? "image/webp"
+        : extension === "pdf"
+          ? "application/pdf"
+          : null;
 }
 
 export async function DELETE(request: Request) {
