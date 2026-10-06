@@ -192,9 +192,19 @@ async function save(request: Request, updating: boolean) {
   const admin = await getAdminIdentity();
   if (!admin) return NextResponse.json({ ok: false }, { status: 401 });
   const parsed = productInput.safeParse(await request.json().catch(() => null));
-  if (!parsed.success || (updating && !parsed.data.id))
+  if (!parsed.success)
     return NextResponse.json(
-      { ok: false, message: "Complete all required product fields." },
+      {
+        ok: false,
+        message: parsed.error.issues[0]
+          ? `${formatField(parsed.error.issues[0].path)}: ${parsed.error.issues[0].message}`
+          : "Complete all required product fields.",
+      },
+      { status: 422 },
+    );
+  if (updating && !parsed.data.id)
+    return NextResponse.json(
+      { ok: false, message: "The product record is missing its saved ID." },
       { status: 422 },
     );
   const data = parsed.data,
@@ -384,4 +394,12 @@ function isHttpsUrl(value: string) {
   } catch {
     return false;
   }
+}
+
+function formatField(path: PropertyKey[]) {
+  if (path[0] === "variants" && typeof path[1] === "number")
+    return `Shopper option ${path[1] + 1} ${String(path[2] ?? "field")}`;
+  return String(path[0] ?? "Product field")
+    .replace(/([a-z])([A-Z])/g, "$1 $2")
+    .replace(/^./, (letter) => letter.toUpperCase());
 }

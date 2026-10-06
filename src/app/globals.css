@@ -412,9 +412,13 @@ em {
 }
 .product-card {
   min-width: 0;
+  display: grid;
+  grid-template-rows: 360px minmax(112px, auto);
 }
 .product-visual {
   position: relative;
+  width: 100%;
+  min-width: 0;
   height: 360px;
   overflow: hidden;
   background:
@@ -534,7 +538,12 @@ em {
 }
 .product-info h3 {
   font-size: 17px;
+  line-height: 1.15;
+  min-height: 2.3em;
   margin: 6px 0 4px;
+  text-align: justify;
+  text-align-last: left;
+  overflow-wrap: anywhere;
 }
 .product-info p {
   font-size: 11px;
@@ -1968,6 +1977,9 @@ textarea {
   }
   .product-visual {
     height: 390px;
+  }
+  .product-card {
+    grid-template-rows: 390px minmax(112px, auto);
   }
   .split-story {
     min-height: 0;
@@ -3651,8 +3663,11 @@ body {
 }
 .product-photo {
   z-index: 1;
+  width: 260px;
+  height: 260px;
+  flex: 0 0 260px;
   object-fit: contain;
-  padding: 42px;
+  padding: 0;
   transition:
     transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
     filter 0.5s;
@@ -3683,14 +3698,16 @@ body {
 }
 .detail-product-photo {
   z-index: 2;
+  width: 480px;
+  height: 480px;
   object-fit: contain;
-  padding: 65px;
+  padding: 0;
   transition:
     transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
     filter 0.6s;
 }
 .detail-visual:hover .detail-product-photo {
-  transform: scale(1.16) translateY(-8px);
+  transform: translateY(-8px) scale(1.08);
   filter: drop-shadow(0 35px 30px rgba(0, 0, 0, 0.28));
 }
 .detail-zoom {
@@ -3705,10 +3722,14 @@ body {
   position: relative;
   flex: 0 0 auto;
   overflow: hidden;
+  display: grid;
+  place-items: center;
 }
 .detail-thumbnails button img {
+  width: 58px;
+  height: 58px;
   object-fit: contain;
-  padding: 5px;
+  padding: 0;
 }
 .price-block > div strong {
   font-size: clamp(30px, 3.2vw, 44px);
@@ -3767,10 +3788,13 @@ body {
 }
 @media (max-width: 560px) {
   .product-photo {
-    padding: 32px;
+    width: 230px;
+    height: 230px;
+    flex-basis: 230px;
   }
   .detail-product-photo {
-    padding: 38px;
+    width: 310px;
+    height: 310px;
   }
   .coa-links {
     grid-template-columns: 25px 1fr;
@@ -5057,15 +5081,16 @@ html[dir="rtl"] .detail-specs div:last-child {
 }
 .catalog-inventory-grid .inventory-art {
   height: 180px;
+  min-height: 180px;
   overflow: hidden;
-  padding: 12px;
+  padding: 0;
 }
 .catalog-inventory-grid .inventory-art img {
   display: block;
-  width: 100%;
-  height: 100%;
-  max-width: 100%;
-  max-height: 100%;
+  width: 156px;
+  height: 156px;
+  max-width: none;
+  max-height: none;
   object-fit: contain;
   object-position: center;
 }
@@ -5117,7 +5142,26 @@ html[dir="rtl"] .detail-specs div:last-child {
 .admin-option-summary table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 420px;
+  min-width: 760px;
+  table-layout: fixed;
+}
+.admin-option-summary .option-name-column {
+  width: 27%;
+}
+.admin-option-summary .option-upc-column {
+  width: 18%;
+}
+.admin-option-summary .option-shot-column {
+  width: 128px;
+}
+.admin-option-summary .option-coa-column {
+  width: 104px;
+}
+.admin-option-summary .option-stock-column {
+  width: 76px;
+}
+.admin-option-summary .option-price-column {
+  width: 96px;
 }
 .admin-option-summary th,
 .admin-option-summary td {
@@ -5125,6 +5169,7 @@ html[dir="rtl"] .detail-specs div:last-child {
   border-bottom: 1px solid var(--line);
   text-align: left;
   font-size: 8px;
+  overflow-wrap: anywhere;
 }
 .admin-option-summary th {
   font-size: 7px;
@@ -5145,8 +5190,9 @@ html[dir="rtl"] .detail-specs div:last-child {
   text-decoration: none;
 }
 .option-asset-link img {
-  width: 28px;
-  height: 28px;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
   object-fit: contain;
   border: 1px solid var(--line);
   border-radius: 4px;

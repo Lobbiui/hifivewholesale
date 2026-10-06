@@ -89,13 +89,13 @@ export function ProductDetail({
                   selectedProduct.images[0]
                 }
                 alt={`${product.brand} ${product.name}${activeImage > 0 ? ` product view ${activeImage + 1}` : ""}`}
-                fill
+                width={480}
+                height={480}
                 priority
                 unoptimized={(
                   selectedProduct.images[activeImage] ??
                   selectedProduct.images[0]
                 ).startsWith("https://")}
-                sizes="(max-width: 900px) 94vw, 52vw"
               />
               <div className="detail-orbit orbit-one" />
               <div className="detail-orbit orbit-two" />
@@ -115,9 +115,9 @@ export function ProductDetail({
                   <Image
                     src={image}
                     alt=""
-                    fill
+                    width={58}
+                    height={58}
                     unoptimized={image.startsWith("https://")}
-                    sizes="78px"
                   />
                 </button>
               ))}

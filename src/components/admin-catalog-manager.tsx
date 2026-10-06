@@ -104,7 +104,8 @@ export function AdminCatalogManager() {
     };
     if (!response.ok)
       throw new Error(result.message || "Catalog records could not be loaded.");
-    setProducts(result.products ?? []);
+    const catalogProducts = result.products ?? [];
+    setProducts(catalogProducts);
     setImports(result.imports ?? []);
     const taxonomyResponse = await fetch("/api/admin/catalog-taxonomy", {
       cache: "no-store",
@@ -122,6 +123,7 @@ export function AdminCatalogManager() {
         ? ""
         : "No products have been imported yet.",
     );
+    return catalogProducts;
   }, []);
 
   useEffect(() => {
@@ -197,11 +199,22 @@ export function AdminCatalogManager() {
     }
   };
 
+  const updateOption = <Key extends keyof ProductOption>(
+    index: number,
+    key: Key,
+    value: ProductOption[Key],
+  ) => {
+    setOptions((current) =>
+      current.map((option, position) =>
+        position === index ? { ...option, [key]: value } : option,
+      ),
+    );
+  };
+
   const saveProduct = async (form: FormData) => {
     setBusy(true);
     setMessage("Saving product…");
     const editing = editor !== "new" && editor !== null;
-    const prices = form.getAll("optionPrice").map(String);
     const payload = {
       id: editing ? editor.id : undefined,
       name: editorName.trim(),
@@ -212,14 +225,14 @@ export function AdminCatalogManager() {
       category: String(form.get("category") || ""),
       description: String(form.get("description") || ""),
       status: String(form.get("status") || "DRAFT"),
-      variants: form.getAll("optionName").map((name, index) => ({
-        id: options[index]?.id,
-        name: String(name),
-        upc: String(form.getAll("optionUpc")[index] || ""),
-        unitsPerCase: Number(form.getAll("optionUnits")[index] || 1),
-        price: prices[index] === "" ? null : Number(prices[index]),
-        stock: Number(form.getAll("optionStock")[index] || 0),
-        lowAt: Number(form.getAll("optionLowAt")[index] || 0),
+      variants: options.map((option) => ({
+        id: option.id,
+        name: option.name,
+        upc: option.upc,
+        unitsPerCase: option.unitsPerCase,
+        price: option.price,
+        stock: option.stock,
+        lowAt: option.lowAt,
       })),
       productStats: String(form.get("productStats") || ""),
       flavor: String(form.get("flavor") || ""),
@@ -229,24 +242,38 @@ export function AdminCatalogManager() {
       color: String(form.get("color") || "#39244d"),
       accent: String(form.get("accent") || "#b67cff"),
     };
-    const response = await fetch("/api/admin/products", {
-      method: editing ? "PATCH" : "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-    const result = (await response.json()) as {
-      message?: string;
-      url?: string;
-    };
-    if (!response.ok) {
-      setMessage(result.message || "The product could not be saved.");
+    try {
+      const response = await fetch("/api/admin/products", {
+        method: editing ? "PATCH" : "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const result = (await response.json()) as {
+        id?: string;
+        message?: string;
+      };
+      if (!response.ok || !result.id) {
+        setMessage(result.message || "The product could not be saved.");
+        return;
+      }
+      const refreshed = await load();
+      const saved = refreshed.find((product) => product.id === result.id);
+      if (saved) openEditor(saved);
+      else setEditor(null);
+      setMessage(
+        editing
+          ? "Product and shopper options updated."
+          : "Product created. You may now upload option images and COAs.",
+      );
+    } catch (error) {
+      setMessage(
+        error instanceof Error
+          ? error.message
+          : "The product could not be saved.",
+      );
+    } finally {
       setBusy(false);
-      return;
     }
-    setEditor(null);
-    setMessage(editing ? "Product updated." : "Product created.");
-    await load();
-    setBusy(false);
   };
   const archiveProduct = async (product: CatalogProduct) => {
     if (
@@ -415,7 +442,10 @@ export function AdminCatalogManager() {
         >
           <form
             className="admin-card operations-form product-editor"
-            action={saveProduct}
+            onSubmit={(event) => {
+              event.preventDefault();
+              void saveProduct(new FormData(event.currentTarget));
+            }}
             key={editor === "new" ? "new" : editor.id}
             role="dialog"
             aria-modal="true"
@@ -534,7 +564,10 @@ export function AdminCatalogManager() {
                     Flavor / option
                     <input
                       name="optionName"
-                      defaultValue={option.name}
+                      value={option.name}
+                      onChange={(event) =>
+                        updateOption(index, "name", event.target.value)
+                      }
                       required
                     />
                   </label>
@@ -542,7 +575,10 @@ export function AdminCatalogManager() {
                     UPC
                     <input
                       name="optionUpc"
-                      defaultValue={option.upc}
+                      value={option.upc}
+                      onChange={(event) =>
+                        updateOption(index, "upc", event.target.value)
+                      }
                       inputMode="numeric"
                       autoComplete="off"
                     />
@@ -553,7 +589,14 @@ export function AdminCatalogManager() {
                       name="optionUnits"
                       type="number"
                       min="1"
-                      defaultValue={option.unitsPerCase}
+                      value={option.unitsPerCase}
+                      onChange={(event) =>
+                        updateOption(
+                          index,
+                          "unitsPerCase",
+                          Number(event.target.value),
+                        )
+                      }
                       required
                     />
                   </label>
@@ -564,7 +607,16 @@ export function AdminCatalogManager() {
                       type="number"
                       min="0"
                       step=".01"
-                      defaultValue={option.price ?? ""}
+                      value={option.price ?? ""}
+                      onChange={(event) =>
+                        updateOption(
+                          index,
+                          "price",
+                          event.target.value === ""
+                            ? null
+                            : Number(event.target.value),
+                        )
+                      }
                     />
                   </label>
                   <label>
@@ -573,7 +625,10 @@ export function AdminCatalogManager() {
                       name="optionStock"
                       type="number"
                       min="0"
-                      defaultValue={option.stock}
+                      value={option.stock}
+                      onChange={(event) =>
+                        updateOption(index, "stock", Number(event.target.value))
+                      }
                       required
                     />
                   </label>
@@ -583,7 +638,10 @@ export function AdminCatalogManager() {
                       name="optionLowAt"
                       type="number"
                       min="0"
-                      defaultValue={option.lowAt}
+                      value={option.lowAt}
+                      onChange={(event) =>
+                        updateOption(index, "lowAt", Number(event.target.value))
+                      }
                       required
                     />
                   </label>
@@ -977,6 +1035,14 @@ export function AdminCatalogManager() {
             </small>
             <div className="admin-option-summary">
               <table>
+                <colgroup>
+                  <col className="option-name-column" />
+                  <col className="option-upc-column" />
+                  <col className="option-shot-column" />
+                  <col className="option-coa-column" />
+                  <col className="option-stock-column" />
+                  <col className="option-price-column" />
+                </colgroup>
                 <thead>
                   <tr>
                     <th>Flavor / option</th>
