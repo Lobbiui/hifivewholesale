@@ -11,6 +11,22 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const assetType = z.enum(["IMAGE", "COA"]);
+const mediaMutation = z.discriminatedUnion("operation", [
+  z.object({
+    operation: z.literal("REORDER"),
+    productId: z.string().min(1),
+    variantId: z.string().min(1).optional(),
+    assetType,
+    urls: z.array(z.string().min(1).max(1000)).max(100),
+  }),
+  z.object({
+    operation: z.literal("REMOVE"),
+    productId: z.string().min(1),
+    variantId: z.string().min(1).optional(),
+    assetType,
+    url: z.string().min(1).max(1000),
+  }),
+]);
 const allowed = new Set([
   "image/jpeg",
   "image/png",
@@ -104,6 +120,78 @@ export async function POST(request: Request) {
   return NextResponse.json({ ok: true, url }, { status: 201 });
 }
 
+export async function PATCH(request: Request) {
+  if (!hasValidRequestOrigin(request))
+    return NextResponse.json({ ok: false }, { status: 403 });
+  if (!(await getAdminIdentity()))
+    return NextResponse.json({ ok: false }, { status: 401 });
+  const parsed = mediaMutation.safeParse(await request.json().catch(() => null));
+  if (!parsed.success)
+    return NextResponse.json(
+      { ok: false, message: "The media change was not valid." },
+      { status: 422 },
+    );
+
+  const database = await getDatabase();
+  const data = parsed.data;
+  const column = data.assetType === "IMAGE" ? "image_urls" : "coa_urls";
+  const current = data.variantId
+    ? await database.query<{ urls: unknown }>(
+        `SELECT ${column} AS urls FROM product_variants WHERE id=$1 AND product_id=$2`,
+        [data.variantId, data.productId],
+      )
+    : await database.query<{ urls: unknown }>(
+        `SELECT ${column} AS urls FROM product_catalog_details WHERE product_id=$1`,
+        [data.productId],
+      );
+  const existing = stringArray(current.rows[0]?.urls);
+  if (!current.rows[0])
+    return NextResponse.json(
+      { ok: false, message: "The product media record was not found." },
+      { status: 404 },
+    );
+
+  let next: string[];
+  if (data.operation === "REORDER") {
+    if (!sameMembers(existing, data.urls))
+      return NextResponse.json(
+        { ok: false, message: "Images changed while this page was open. Refresh and try again." },
+        { status: 409 },
+      );
+    next = data.urls;
+  } else {
+    if (!existing.includes(data.url))
+      return NextResponse.json(
+        { ok: false, message: "That image is no longer attached to this product." },
+        { status: 404 },
+      );
+    next = existing.filter((url) => url !== data.url);
+  }
+
+  await database.transaction(async (tx) => {
+    if (data.variantId)
+      await tx.query(
+        `UPDATE product_variants SET ${column}=$2::jsonb,updated_at=CURRENT_TIMESTAMP WHERE id=$1`,
+        [data.variantId, JSON.stringify(next)],
+      );
+    else
+      await tx.query(
+        `UPDATE product_catalog_details SET ${column}=$2::jsonb,updated_at=CURRENT_TIMESTAMP WHERE product_id=$1`,
+        [data.productId, JSON.stringify(next)],
+      );
+
+    if (data.operation === "REMOVE") {
+      const storedId = storedAssetId(data.url);
+      if (storedId)
+        await tx.query(
+          "DELETE FROM product_assets WHERE id=$1 AND product_id=$2 AND product_variant_id IS NOT DISTINCT FROM $3 AND asset_type=$4",
+          [storedId, data.productId, data.variantId ?? null, data.assetType],
+        );
+    }
+  });
+  return NextResponse.json({ ok: true, urls: next });
+}
+
 function detectMimeType(filename: string, supplied: string, bytes: Uint8Array) {
   const signature = (...values: number[]) =>
     values.every((value, index) => bytes[index] === value);
@@ -128,6 +216,30 @@ function detectMimeType(filename: string, supplied: string, bytes: Uint8Array) {
         : extension === "pdf"
           ? "application/pdf"
           : null;
+}
+
+function stringArray(value: unknown) {
+  if (Array.isArray(value))
+    return value.filter((item): item is string => typeof item === "string");
+  if (typeof value === "string") {
+    try {
+      return stringArray(JSON.parse(value));
+    } catch {
+      return [];
+    }
+  }
+  return [];
+}
+
+function sameMembers(left: string[], right: string[]) {
+  if (left.length !== right.length) return false;
+  const sortedLeft = [...left].sort();
+  const sortedRight = [...right].sort();
+  return sortedLeft.every((value, index) => value === sortedRight[index]);
+}
+
+function storedAssetId(url: string) {
+  return /^\/api\/catalog\/assets\/([0-9a-f-]{36})$/i.exec(url)?.[1] ?? null;
 }
 
 export async function DELETE(request: Request) {

@@ -3,11 +3,16 @@
 
 import {
   CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
   Download,
   FileSpreadsheet,
+  GripVertical,
+  ImagePlus,
   Pencil,
   Plus,
   RefreshCw,
+  Star,
   Trash2,
   UploadCloud,
   LayoutGrid,
@@ -76,6 +81,142 @@ type Preview = {
   }[];
 };
 
+type ImageManagerProps = {
+  title: string;
+  urls: string[];
+  busy: boolean;
+  onUpload: (file: File) => void;
+  onReplace: (url: string, file: File) => void;
+  onRemove: (url: string) => void;
+  onReorder: (urls: string[]) => void;
+};
+
+function ImageManager({
+  title,
+  urls,
+  busy,
+  onUpload,
+  onReplace,
+  onRemove,
+  onReorder,
+}: ImageManagerProps) {
+  const move = (from: number, to: number) => {
+    if (from === to || to < 0 || to >= urls.length) return;
+    const next = [...urls];
+    const [moved] = next.splice(from, 1);
+    next.splice(to, 0, moved);
+    onReorder(next);
+  };
+
+  return (
+    <section className="product-image-manager">
+      <header>
+        <div>
+          <h4>{title}</h4>
+          <p>Drag to reorder. The first image is the storefront primary.</p>
+        </div>
+        <label className="admin-button image-upload-button">
+          <ImagePlus />
+          Add image
+          <input
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            disabled={busy}
+            onChange={(event) => {
+              const selected = event.target.files?.[0];
+              if (selected) onUpload(selected);
+              event.currentTarget.value = "";
+            }}
+          />
+        </label>
+      </header>
+      {urls.length === 0 ? (
+        <div className="product-image-empty">No product shots uploaded.</div>
+      ) : (
+        <div className="product-image-list">
+          {urls.map((url, index) => (
+            <article
+              key={`${url}-${index}`}
+              draggable={!busy}
+              onDragStart={(event) =>
+                event.dataTransfer.setData("text/plain", String(index))
+              }
+              onDragOver={(event) => event.preventDefault()}
+              onDrop={(event) => {
+                event.preventDefault();
+                const from = Number(event.dataTransfer.getData("text/plain"));
+                if (Number.isInteger(from)) move(from, index);
+              }}
+            >
+              <div className="product-image-preview">
+                <img src={url} alt={`${title} image ${index + 1}`} />
+                {index === 0 && (
+                  <span>
+                    <Star /> Primary
+                  </span>
+                )}
+              </div>
+              <div className="product-image-order">
+                <GripVertical aria-hidden="true" />
+                <span>{index + 1}</span>
+                <button
+                  type="button"
+                  onClick={() => move(index, 0)}
+                  disabled={busy || index === 0}
+                  title="Make primary"
+                  aria-label={`Make ${title} image ${index + 1} primary`}
+                >
+                  <Star />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => move(index, index - 1)}
+                  disabled={busy || index === 0}
+                  title="Move earlier"
+                  aria-label={`Move ${title} image ${index + 1} earlier`}
+                >
+                  <ChevronLeft />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => move(index, index + 1)}
+                  disabled={busy || index === urls.length - 1}
+                  title="Move later"
+                  aria-label={`Move ${title} image ${index + 1} later`}
+                >
+                  <ChevronRight />
+                </button>
+              </div>
+              <div className="product-image-actions">
+                <label>
+                  <Pencil /> Replace
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    disabled={busy}
+                    onChange={(event) => {
+                      const selected = event.target.files?.[0];
+                      if (selected) onReplace(url, selected);
+                      event.currentTarget.value = "";
+                    }}
+                  />
+                </label>
+                <button
+                  type="button"
+                  onClick={() => onRemove(url)}
+                  disabled={busy}
+                >
+                  <Trash2 /> Remove
+                </button>
+              </div>
+            </article>
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}
+
 export function AdminCatalogManager() {
   const input = useRef<HTMLInputElement>(null);
   const [products, setProducts] = useState<CatalogProduct[]>([]);
@@ -88,6 +229,7 @@ export function AdminCatalogManager() {
   const [editor, setEditor] = useState<CatalogProduct | "new" | null>(null);
   const [editorName, setEditorName] = useState("");
   const [options, setOptions] = useState<ProductOption[]>([]);
+  const [mainImages, setMainImages] = useState<string[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [productTypes, setProductTypes] = useState<string[]>([]);
   const [section, setSection] = useState<
@@ -237,7 +379,7 @@ export function AdminCatalogManager() {
       productStats: String(form.get("productStats") || ""),
       flavor: String(form.get("flavor") || ""),
       format: String(form.get("format") || ""),
-      imageUrl: String(form.get("imageUrl") || ""),
+      imageUrl: mainImages[0] ?? String(form.get("imageUrl") || ""),
       coaUrl: String(form.get("coaUrl") || ""),
       color: String(form.get("color") || "#39244d"),
       accent: String(form.get("accent") || "#b67cff"),
@@ -294,6 +436,7 @@ export function AdminCatalogManager() {
 
   const openEditor = (product: CatalogProduct | "new") => {
     setEditorName(product === "new" ? "" : product.name);
+    setMainImages(product === "new" ? [] : product.imageUrls);
     setOptions(
       product === "new"
         ? [
@@ -310,62 +453,153 @@ export function AdminCatalogManager() {
     );
     setEditor(product);
   };
+
+  const setTargetImages = (urls: string[], variantId?: string) => {
+    if (!variantId) {
+      setMainImages(urls);
+      setEditor((current) =>
+        current && current !== "new" ? { ...current, imageUrls: urls } : current,
+      );
+      return;
+    }
+    setOptions((current) =>
+      current.map((option) =>
+        option.id === variantId ? { ...option, imageUrls: urls } : option,
+      ),
+    );
+  };
+
   const uploadAsset = async (
     productId: string,
     assetType: "IMAGE" | "COA",
     asset: File | null,
     variantId?: string,
   ) => {
-    if (!asset) return;
+    if (!asset) return null;
     setBusy(true);
-    const form = new FormData();
-    form.set("productId", productId);
-    form.set("assetType", assetType);
-    if (variantId) form.set("variantId", variantId);
-    form.set("file", asset);
-    const response = await fetch("/api/admin/product-assets", {
-      method: "POST",
-      body: form,
-    });
-    const result = (await response.json()) as {
-      message?: string;
-      url?: string;
-    };
-    setMessage(
-      response.ok
-        ? `${assetType === "IMAGE" ? "Image" : "COA"} uploaded.`
-        : result.message || "Upload failed.",
-    );
-    if (response.ok && result.url && variantId) {
-      setOptions((current) =>
-        current.map((option) =>
-          option.id === variantId
-            ? {
-                ...option,
-                [assetType === "IMAGE" ? "imageUrls" : "coaUrls"]:
-                  assetType === "IMAGE"
-                    ? [result.url!, ...(option.imageUrls ?? [])]
-                    : [...(option.coaUrls ?? []), result.url!],
-              }
-            : option,
-        ),
-      );
+    try {
+      const form = new FormData();
+      form.set("productId", productId);
+      form.set("assetType", assetType);
+      if (variantId) form.set("variantId", variantId);
+      form.set("file", asset);
+      const response = await fetch("/api/admin/product-assets", {
+        method: "POST",
+        body: form,
+      });
+      const result = (await response.json()) as {
+        message?: string;
+        url?: string;
+      };
+      if (!response.ok || !result.url)
+        throw new Error(result.message || "Upload failed.");
+
+      if (assetType === "IMAGE") {
+        const current = variantId
+          ? (options.find((option) => option.id === variantId)?.imageUrls ?? [])
+          : mainImages;
+        setTargetImages([result.url, ...current], variantId);
+      } else if (variantId) {
+        setOptions((current) =>
+          current.map((option) =>
+            option.id === variantId
+              ? {
+                  ...option,
+                  coaUrls: [...(option.coaUrls ?? []), result.url!],
+                }
+              : option,
+          ),
+        );
+      } else {
+        setEditor((current) =>
+          current && current !== "new"
+            ? { ...current, coaUrls: [...current.coaUrls, result.url!] }
+            : current,
+        );
+      }
       await load();
-    } else if (response.ok && result.url) {
-      setEditor((current) =>
-        current && current !== "new"
-          ? {
-              ...current,
-              [assetType === "IMAGE" ? "imageUrls" : "coaUrls"]:
-                assetType === "IMAGE"
-                  ? [result.url!, ...current.imageUrls]
-                  : [...current.coaUrls, result.url!],
-            }
-          : current,
-      );
-      await load();
+      setMessage(`${assetType === "IMAGE" ? "Image" : "COA"} uploaded.`);
+      return result.url;
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Upload failed.");
+      return null;
+    } finally {
+      setBusy(false);
     }
-    setBusy(false);
+  };
+
+  const mutateImages = async (
+    productId: string,
+    operation: "REORDER" | "REMOVE",
+    value: string[] | string,
+    variantId?: string,
+  ) => {
+    setBusy(true);
+    try {
+      const response = await fetch("/api/admin/product-assets", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          operation,
+          productId,
+          variantId,
+          assetType: "IMAGE",
+          ...(operation === "REORDER" ? { urls: value } : { url: value }),
+        }),
+      });
+      const result = (await response.json()) as {
+        message?: string;
+        urls?: string[];
+      };
+      if (!response.ok || !result.urls)
+        throw new Error(result.message || "The image change could not be saved.");
+      setTargetImages(result.urls, variantId);
+      await load();
+      setMessage(
+        operation === "REMOVE" ? "Image removed." : "Image order updated.",
+      );
+      return true;
+    } catch (error) {
+      setMessage(
+        error instanceof Error
+          ? error.message
+          : "The image change could not be saved.",
+      );
+      return false;
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const removeImage = async (
+    productId: string,
+    url: string,
+    variantId?: string,
+    skipConfirmation = false,
+  ) => {
+    if (
+      !skipConfirmation &&
+      !window.confirm("Remove this image from the product gallery?")
+    )
+      return false;
+    return mutateImages(productId, "REMOVE", url, variantId);
+  };
+
+  const replaceImage = async (
+    productId: string,
+    oldUrl: string,
+    file: File,
+    variantId?: string,
+  ) => {
+    const uploaded = await uploadAsset(
+      productId,
+      "IMAGE",
+      file,
+      variantId,
+    );
+    if (!uploaded) return;
+    const removed = await removeImage(productId, oldUrl, variantId, true);
+    if (removed) setMessage("Image replaced and set as primary.");
   };
 
   if (section !== "products")
@@ -659,22 +893,6 @@ export function AdminCatalogManager() {
                   {editor !== "new" && option.id ? (
                     <div className="option-media-cell">
                       <label>
-                        Product shot
-                        <input
-                          type="file"
-                          accept="image/jpeg,image/png,image/webp"
-                          onChange={(event) =>
-                            void uploadAsset(
-                              editor.id,
-                              "IMAGE",
-                              event.target.files?.[0] ?? null,
-                              option.id,
-                            )
-                          }
-                        />
-                        <small>{option.imageUrls?.length ?? 0} uploaded</small>
-                      </label>
-                      <label>
                         COA
                         <input
                           type="file"
@@ -709,6 +927,42 @@ export function AdminCatalogManager() {
                   >
                     <Trash2 />
                   </button>
+                  {editor !== "new" && option.id && (
+                    <div className="option-image-manager">
+                      <ImageManager
+                        title={`${option.name || `Option ${index + 1}`} product shots`}
+                        urls={option.imageUrls ?? []}
+                        busy={busy}
+                        onUpload={(selected) =>
+                          void uploadAsset(
+                            editor.id,
+                            "IMAGE",
+                            selected,
+                            option.id,
+                          )
+                        }
+                        onReplace={(url, selected) =>
+                          void replaceImage(
+                            editor.id,
+                            url,
+                            selected,
+                            option.id,
+                          )
+                        }
+                        onRemove={(url) =>
+                          void removeImage(editor.id, url, option.id)
+                        }
+                        onReorder={(urls) =>
+                          void mutateImages(
+                            editor.id,
+                            "REORDER",
+                            urls,
+                            option.id,
+                          )
+                        }
+                      />
+                    </div>
+                  )}
                 </div>
               ))}
               <button
@@ -764,31 +1018,35 @@ export function AdminCatalogManager() {
               Primary image URL
               <input
                 name="imageUrl"
-                defaultValue={
-                  editor === "new" ? "" : (editor.imageUrls[0] ?? "")
+                value={mainImages[0] ?? ""}
+                onChange={(event) =>
+                  setMainImages((current) =>
+                    event.target.value
+                      ? [event.target.value, ...current.slice(1)]
+                      : current.slice(1),
+                  )
                 }
                 placeholder="https://… or /catalog/…"
               />
             </label>
             {editor !== "new" && (
-              <label className="full-field asset-upload">
-                Upload product image
-                <input
-                  type="file"
-                  accept="image/jpeg,image/png,image/webp"
-                  onChange={(event) =>
-                    void uploadAsset(
-                      editor.id,
-                      "IMAGE",
-                      event.target.files?.[0] ?? null,
-                    )
+              <div className="full-field">
+                <ImageManager
+                  title="Main product images"
+                  urls={mainImages}
+                  busy={busy}
+                  onUpload={(selected) =>
+                    void uploadAsset(editor.id, "IMAGE", selected)
+                  }
+                  onReplace={(url, selected) =>
+                    void replaceImage(editor.id, url, selected)
+                  }
+                  onRemove={(url) => void removeImage(editor.id, url)}
+                  onReorder={(urls) =>
+                    void mutateImages(editor.id, "REORDER", urls)
                   }
                 />
-                <small>
-                  Stored securely with this product. JPG, PNG, or WebP; maximum
-                  8 MB. The newest upload becomes the primary storefront image.
-                </small>
-              </label>
+              </div>
             )}
             <label className="full-field">
               COA URL
