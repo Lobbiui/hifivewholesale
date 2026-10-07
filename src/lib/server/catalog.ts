@@ -80,7 +80,11 @@ export async function getStorefrontProductsByIds(
 }
 
 function toProduct(row: CatalogRow, rows: CatalogRow[]): Product {
-  const images = stringArray(row.image_urls);
+  const productImages = stringArray(row.image_urls);
+  const defaultVariantImages = stringArray(row.variant_image_urls);
+  const images = defaultVariantImages.length
+    ? defaultVariantImages
+    : productImages;
   const unitPrice =
     row.wholesale_price_cents !== null && row.units_per_case
       ? row.wholesale_price_cents / 100 / row.units_per_case

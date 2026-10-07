@@ -82,14 +82,22 @@ export async function POST(request: Request) {
         admin.id,
       ],
     );
+    const mergeExpression =
+      parsed.data.assetType === "IMAGE"
+        ? `$2::jsonb||${column}`
+        : `${column}||$2::jsonb`;
     if (parsed.data.variantId)
       await tx.query(
-        `UPDATE product_variants SET ${column}=${column}||$2::jsonb,updated_at=CURRENT_TIMESTAMP WHERE id=$1`,
+        `UPDATE product_variants SET ${column}=${mergeExpression},updated_at=CURRENT_TIMESTAMP WHERE id=$1`,
         [parsed.data.variantId, JSON.stringify([url])],
       );
     else
       await tx.query(
-        `INSERT INTO product_catalog_details (product_id,${column}) VALUES ($1,$2::jsonb) ON CONFLICT (product_id) DO UPDATE SET ${column}=product_catalog_details.${column}||EXCLUDED.${column},updated_at=CURRENT_TIMESTAMP`,
+        `INSERT INTO product_catalog_details (product_id,${column}) VALUES ($1,$2::jsonb) ON CONFLICT (product_id) DO UPDATE SET ${column}=${
+          parsed.data.assetType === "IMAGE"
+            ? `EXCLUDED.${column}||product_catalog_details.${column}`
+            : `product_catalog_details.${column}||EXCLUDED.${column}`
+        },updated_at=CURRENT_TIMESTAMP`,
         [parsed.data.productId, JSON.stringify([url])],
       );
   });

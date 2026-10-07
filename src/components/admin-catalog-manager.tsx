@@ -342,18 +342,29 @@ export function AdminCatalogManager() {
           option.id === variantId
             ? {
                 ...option,
-                [assetType === "IMAGE" ? "imageUrls" : "coaUrls"]: [
-                  ...(assetType === "IMAGE"
-                    ? (option.imageUrls ?? [])
-                    : (option.coaUrls ?? [])),
-                  result.url!,
-                ],
+                [assetType === "IMAGE" ? "imageUrls" : "coaUrls"]:
+                  assetType === "IMAGE"
+                    ? [result.url!, ...(option.imageUrls ?? [])]
+                    : [...(option.coaUrls ?? []), result.url!],
               }
             : option,
         ),
       );
       await load();
-    } else if (response.ok) await load();
+    } else if (response.ok && result.url) {
+      setEditor((current) =>
+        current && current !== "new"
+          ? {
+              ...current,
+              [assetType === "IMAGE" ? "imageUrls" : "coaUrls"]:
+                assetType === "IMAGE"
+                  ? [result.url!, ...current.imageUrls]
+                  : [...current.coaUrls, result.url!],
+            }
+          : current,
+      );
+      await load();
+    }
     setBusy(false);
   };
 
@@ -775,7 +786,7 @@ export function AdminCatalogManager() {
                 />
                 <small>
                   Stored securely with this product. JPG, PNG, or WebP; maximum
-                  8 MB.
+                  8 MB. The newest upload becomes the primary storefront image.
                 </small>
               </label>
             )}
