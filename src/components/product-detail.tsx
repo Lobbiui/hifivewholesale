@@ -33,13 +33,12 @@ export function ProductDetail({
   const [added, setAdded] = useState(false);
   const [activeImage, setActiveImage] = useState(0);
   const [zoomed, setZoomed] = useState(false);
-  const [selectedVariantId, setSelectedVariantId] = useState(
-    product.variants?.[0]?.id ?? "",
-  );
+  const [selectedVariantId, setSelectedVariantId] = useState("");
   const { add } = useCart();
-  const selectedVariant =
-    product.variants?.find((variant) => variant.id === selectedVariantId) ??
-    product.variants?.[0];
+  const hasOptions = Boolean(product.variants?.length);
+  const selectedVariant = product.variants?.find(
+    (variant) => variant.id === selectedVariantId,
+  );
   const selectedProduct = selectedVariant
     ? {
         ...product,
@@ -53,6 +52,7 @@ export function ProductDetail({
       }
     : product;
   const addCases = () => {
+    if (hasOptions && !selectedVariant) return;
     add(selectedProduct, quantity, selectedVariant);
     setAdded(true);
     window.setTimeout(() => setAdded(false), 2200);
@@ -134,7 +134,7 @@ export function ProductDetail({
             </div>
             <h1>{product.name}</h1>
             <p className="detail-lead">{product.description}</p>
-            {product.variants && product.variants.length > 1 && (
+            {product.variants && product.variants.length > 0 && (
               <label className="product-option-picker">
                 <span>Choose flavor / option</span>
                 <select
@@ -144,6 +144,7 @@ export function ProductDetail({
                     setActiveImage(0);
                   }}
                 >
+                  <option value="">Product overview — choose an option</option>
                   {product.variants.map((variant) => (
                     <option key={variant.id} value={variant.id}>
                       {variant.name}
@@ -155,7 +156,7 @@ export function ProductDetail({
             <div className="detail-specs">
               <div>
                 <small>Flavor / option</small>
-                <strong>{selectedVariant?.name ?? product.flavor}</strong>
+                <strong>{selectedVariant?.name ?? "Product overview"}</strong>
               </div>
               <div>
                 <small>Product stats</small>
@@ -170,19 +171,25 @@ export function ProductDetail({
               <div>
                 <small>Wholesale case price</small>
                 <strong>
-                  {selectedProduct.casePrice === null
+                  {hasOptions && !selectedVariant
+                    ? "Select an option"
+                    : selectedProduct.casePrice === null
                     ? "Account pricing"
                     : `$${selectedProduct.casePrice.toFixed(2)}`}
                 </strong>
                 <span>
-                  {selectedProduct.price === null
+                  {hasOptions && !selectedVariant
+                    ? "Pricing and COA appear after selection"
+                    : selectedProduct.price === null
                     ? "Visible after wholesale account approval"
                     : `$${selectedProduct.price.toFixed(2)} estimated unit cost`}
                 </span>
               </div>
               <span className="stock-status">
-                <Check />
-                Catalog ready
+                {!hasOptions || selectedVariant ? <Check /> : null}
+                {hasOptions && !selectedVariant
+                  ? "Choose an option"
+                  : "Catalog ready"}
               </span>
             </div>
             <div className="purchase-controls">
@@ -213,8 +220,14 @@ export function ProductDetail({
                     : "button primary purchase-button"
                 }
                 onClick={addCases}
+                disabled={hasOptions && !selectedVariant}
               >
-                {added ? (
+                {hasOptions && !selectedVariant ? (
+                  <>
+                    <ShoppingBag />
+                    Choose a flavor / option
+                  </>
+                ) : added ? (
                   <>
                     <Check />
                     Added to cart
@@ -240,7 +253,8 @@ export function ProductDetail({
                 Ask wholesale <ArrowRight />
               </Link>
             </div>
-            {selectedProduct.coa.length > 0 && (
+            {(!hasOptions || selectedVariant) &&
+              selectedProduct.coa.length > 0 && (
               <div className="coa-links">
                 <FileCheck2 />
                 <div>
@@ -283,7 +297,9 @@ export function ProductDetail({
         <div>
           <small>Wholesale case</small>
           <strong>
-            {selectedProduct.casePrice === null
+            {hasOptions && !selectedVariant
+              ? "Select an option"
+              : selectedProduct.casePrice === null
               ? "Account pricing"
               : `$${selectedProduct.casePrice.toFixed(2)}`}
           </strong>
@@ -291,8 +307,14 @@ export function ProductDetail({
         <button
           className={added ? "button primary added" : "button primary"}
           onClick={addCases}
+          disabled={hasOptions && !selectedVariant}
         >
-          {added ? (
+          {hasOptions && !selectedVariant ? (
+            <>
+              <ShoppingBag />
+              Choose option
+            </>
+          ) : added ? (
             <>
               <Check />
               Added

@@ -3442,6 +3442,12 @@ body {
 .purchase-button.added {
   background: #b8efca;
 }
+.purchase-button:disabled,
+.mobile-purchase-bar .button:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+  filter: grayscale(0.35);
+}
 .volume-note {
   display: grid;
   grid-template-columns: 28px 1fr auto;

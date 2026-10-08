@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ArrowUpRight, Check, Plus } from "lucide-react";
 import { useState } from "react";
 import type { Product } from "@/lib/data";
@@ -9,8 +10,13 @@ import { useCart } from "./cart-provider";
 
 export function ProductCard({ product }: { product: Product }) {
   const { add } = useCart();
+  const router = useRouter();
   const [added, setAdded] = useState(false);
   const quickAdd = () => {
+    if (product.variants?.length) {
+      router.push(`/shop/${product.id}`);
+      return;
+    }
     add(product);
     setAdded(true);
     window.setTimeout(() => setAdded(false), 1600);
@@ -28,7 +34,7 @@ export function ProductCard({ product }: { product: Product }) {
       />
       <span className="zoom-note">View product <ArrowUpRight size={13}/></span>
     </Link>
-    <div className="product-info"><div><span>{product.brand} · {product.strength}</span><h3><Link href={`/shop/${product.id}`}>{product.name}</Link></h3><p>{product.casePrice === null ? "Account pricing" : `$${product.casePrice.toFixed(2)} / case`}</p></div><button className={added ? "quick-add added" : "quick-add"} onClick={quickAdd} aria-label={added ? `${product.name} added to cart` : `Add ${product.name} to cart`}>{added ? <Check /> : <Plus />}</button></div>
+    <div className="product-info"><div><span>{product.brand} · {product.strength}</span><h3><Link href={`/shop/${product.id}`}>{product.name}</Link></h3><p>{product.casePrice === null ? "Account pricing" : `$${product.casePrice.toFixed(2)} / case`}</p></div><button className={added ? "quick-add added" : "quick-add"} onClick={quickAdd} aria-label={product.variants?.length ? `Choose an option for ${product.name}` : added ? `${product.name} added to cart` : `Add ${product.name} to cart`}>{added ? <Check /> : <Plus />}</button></div>
     <span className="sr-only" aria-live="polite">{added ? `${product.name} added to cart` : ""}</span>
   </article>;
 }

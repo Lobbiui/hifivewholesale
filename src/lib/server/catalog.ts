@@ -81,10 +81,6 @@ export async function getStorefrontProductsByIds(
 
 function toProduct(row: CatalogRow, rows: CatalogRow[]): Product {
   const productImages = stringArray(row.image_urls);
-  const defaultVariantImages = stringArray(row.variant_image_urls);
-  const images = defaultVariantImages.length
-    ? defaultVariantImages
-    : productImages;
   const unitPrice =
     row.wholesale_price_cents !== null && row.units_per_case
       ? row.wholesale_price_cents / 100 / row.units_per_case
@@ -107,7 +103,9 @@ function toProduct(row: CatalogRow, rows: CatalogRow[]): Product {
     color: row.color,
     accent: row.accent,
     badge: row.badge ?? undefined,
-    images: images.length ? images : ["/images/hifive-logo-black-banner.png"],
+    images: productImages.length
+      ? productImages
+      : ["/images/hifive-logo-black-banner.png"],
     coa: stringArray(row.coa_urls),
     brandLogo: row.brand_logo_url,
     sourceUrl: row.source_url,
