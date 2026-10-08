@@ -83,9 +83,9 @@ export async function POST(request: Request) {
   const catalog = new Map(products.map((product) => [product.id, product]));
   const requested = parsed.data.items.map((item) => {
     const product = catalog.get(item.id);
-    const variant =
-      product?.variants?.find((candidate) => candidate.id === item.variantId) ??
-      product?.variants?.[0];
+    const variant = item.variantId
+      ? product?.variants?.find((candidate) => candidate.id === item.variantId)
+      : product?.variants?.[0];
     return {
       product:
         product && variant
@@ -109,7 +109,11 @@ export async function POST(request: Request) {
   });
   if (requested.some((item) => !item.product))
     return NextResponse.json(
-      { ok: false, message: "A selected product is no longer available." },
+      {
+        ok: false,
+        message:
+          "A selected product or flavor is no longer available. Review the cart and choose another option.",
+      },
       { status: 422 },
     );
 

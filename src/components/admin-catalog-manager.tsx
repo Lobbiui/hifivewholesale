@@ -30,7 +30,7 @@ type ProductOption = {
   price: number | null;
   stock: number;
   lowAt: number;
-  active?: boolean;
+  active: boolean;
   imageUrls?: string[];
   coaUrls?: string[];
 };
@@ -375,6 +375,7 @@ export function AdminCatalogManager() {
         price: option.price,
         stock: option.stock,
         lowAt: option.lowAt,
+        active: option.active,
       })),
       productStats: String(form.get("productStats") || ""),
       flavor: String(form.get("flavor") || ""),
@@ -447,6 +448,7 @@ export function AdminCatalogManager() {
               price: null,
               stock: 0,
               lowAt: 0,
+              active: true,
             },
           ]
         : product.variants,
@@ -804,7 +806,10 @@ export function AdminCatalogManager() {
                 remain intact.
               </p>
               {options.map((option, index) => (
-                <div className="product-option-row" key={option.id ?? index}>
+                <div
+                  className={`product-option-row${option.active ? "" : " is-hidden"}`}
+                  key={option.id ?? index}
+                >
                   <label>
                     Flavor / option
                     <input
@@ -890,6 +895,27 @@ export function AdminCatalogManager() {
                       required
                     />
                   </label>
+                  <label className="option-availability">
+                    Buyer availability
+                    <select
+                      value={option.active ? "AVAILABLE" : "HIDDEN"}
+                      onChange={(event) =>
+                        updateOption(
+                          index,
+                          "active",
+                          event.target.value === "AVAILABLE",
+                        )
+                      }
+                    >
+                      <option value="AVAILABLE">Available</option>
+                      <option value="HIDDEN">Hidden</option>
+                    </select>
+                    <small>
+                      {option.active
+                        ? "Shown to approved buyers"
+                        : "Saved, but hidden from buyers"}
+                    </small>
+                  </label>
                   {editor !== "new" && option.id ? (
                     <div className="option-media-cell">
                       <label>
@@ -914,19 +940,21 @@ export function AdminCatalogManager() {
                       Save the product before uploading this option’s media.
                     </small>
                   )}
-                  <button
-                    type="button"
-                    className="icon-button"
-                    aria-label="Remove option"
-                    disabled={options.length === 1}
-                    onClick={() =>
-                      setOptions((current) =>
-                        current.filter((_, position) => position !== index),
-                      )
-                    }
-                  >
-                    <Trash2 />
-                  </button>
+                  {!option.id && (
+                    <button
+                      type="button"
+                      className="icon-button"
+                      aria-label="Remove unsaved option"
+                      disabled={options.length === 1}
+                      onClick={() =>
+                        setOptions((current) =>
+                          current.filter((_, position) => position !== index),
+                        )
+                      }
+                    >
+                      <Trash2 />
+                    </button>
+                  )}
                   {editor !== "new" && option.id && (
                     <div className="option-image-manager">
                       <ImageManager
@@ -978,6 +1006,7 @@ export function AdminCatalogManager() {
                       price: null,
                       stock: 0,
                       lowAt: 0,
+                      active: true,
                     },
                   ])
                 }
@@ -1311,6 +1340,7 @@ export function AdminCatalogManager() {
                   <col className="option-coa-column" />
                   <col className="option-stock-column" />
                   <col className="option-price-column" />
+                  <col className="option-status-column" />
                 </colgroup>
                 <thead>
                   <tr>
@@ -1320,6 +1350,7 @@ export function AdminCatalogManager() {
                     <th>COA</th>
                     <th>On hand</th>
                     <th>Case price</th>
+                    <th>Availability</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1364,6 +1395,13 @@ export function AdminCatalogManager() {
                               style: "currency",
                               currency: "USD",
                             }).format(option.price)}
+                      </td>
+                      <td>
+                        <span
+                          className={`admin-pill ${option.active ? "good" : "warn"}`}
+                        >
+                          {option.active ? "Available" : "Hidden"}
+                        </span>
                       </td>
                     </tr>
                   ))}

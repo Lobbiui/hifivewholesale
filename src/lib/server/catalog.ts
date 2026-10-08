@@ -53,7 +53,7 @@ export async function getStorefrontProducts(): Promise<Product[]> {
   try {
     const database = await getDatabase();
     const result = await database.query<CatalogRow>(catalogQuery);
-    if (!result.rows.length) return fallbackCatalog;
+    if (!result.rows.length) return [];
     const grouped = new Map<string, CatalogRow[]>();
     for (const row of result.rows)
       grouped.set(row.id, [...(grouped.get(row.id) ?? []), row]);

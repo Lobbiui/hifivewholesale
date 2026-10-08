@@ -81,6 +81,7 @@ const productInput = z.object({
         price: z.number().min(0).max(1000000).nullable(),
         stock: z.number().int().min(0).max(100000000),
         lowAt: z.number().int().min(0).max(100000000),
+        active: z.boolean().default(true),
       }),
     )
     .min(1)
@@ -267,7 +268,7 @@ async function save(request: Request, updating: boolean) {
               option.unitsPerCase,
               priceCents,
               option.lowAt,
-              data.status === "PUBLISHED",
+              option.active,
             ],
           );
         else
@@ -281,7 +282,7 @@ async function save(request: Request, updating: boolean) {
               option.unitsPerCase,
               priceCents,
               option.lowAt,
-              data.status === "PUBLISHED",
+              option.active,
             ],
           );
         await tx.query(

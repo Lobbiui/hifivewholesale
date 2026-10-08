@@ -25,7 +25,7 @@ type BuyerIdentity = {
 };
 
 export default function CheckoutPage() {
-  const { items, total, remove, setQuantity, clear, pricingPending } =
+  const { items, total, remove, setQuantity, clear, pricingPending, notice } =
     useCart();
   const { copy } = useLanguage();
   const [method, setMethod] = useState<"pickup" | "delivery">("pickup");
@@ -132,6 +132,11 @@ export default function CheckoutPage() {
         </p>
       </header>
       <section className="checkout-grid container">
+        {notice && (
+          <div className="checkout-error checkout-cart-notice" role="status">
+            {notice}
+          </div>
+        )}
         <div>
           <h2>{copy.checkout.order}</h2>
           {items.length === 0 ? (

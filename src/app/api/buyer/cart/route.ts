@@ -38,12 +38,40 @@ export async function GET() {
       ORDER BY ci.created_at`,
     [buyer.id],
   );
+  const snapshots = result.rows.map((row) => ({
+    snapshot: row.product_snapshot_json as Record<string, unknown>,
+    quantity: row.quantity_cases,
+  }));
+  const productIds = snapshots
+    .map(({ snapshot }) => snapshot.id)
+    .filter((id): id is string => typeof id === "string");
+  const products = await getStorefrontProductsByIds(productIds);
+  const catalog = new Map(products.map((product) => [product.id, product]));
+  const items = snapshots.flatMap(({ snapshot, quantity }) => {
+    const id = typeof snapshot.id === "string" ? snapshot.id : "";
+    const variantId =
+      typeof snapshot.variantId === "string" ? snapshot.variantId : undefined;
+    const product = catalog.get(id);
+    const variant = variantId
+      ? product?.variants?.find((candidate) => candidate.id === variantId)
+      : product?.variants?.[0];
+    if (!product || !variant) return [];
+    return [
+      {
+        ...product,
+        variantId: variant.id,
+        cartKey: `${product.id}:${variant.id}`,
+        flavor: variant.name,
+        price: variant.price,
+        casePrice: variant.casePrice,
+        quantity,
+      },
+    ];
+  });
   return NextResponse.json({
     ok: true,
-    items: result.rows.map((row) => {
-      const snapshot = row.product_snapshot_json as Record<string, unknown>;
-      return { ...snapshot, cartKey: typeof snapshot.cartKey === "string" ? snapshot.cartKey : `${String(snapshot.id)}:${String(snapshot.variantId ?? "default")}`, quantity: row.quantity_cases };
-    }),
+    items,
+    removedUnavailable: snapshots.length - items.length,
   });
 }
 
@@ -65,9 +93,9 @@ export async function PUT(request: Request) {
   const catalog = new Map(products.map((product) => [product.id, product]));
   const requested = parsed.data.items.map((item) => {
     const product = catalog.get(item.id);
-    const variant =
-      product?.variants?.find((candidate) => candidate.id === item.variantId) ??
-      product?.variants?.[0];
+    const variant = item.variantId
+      ? product?.variants?.find((candidate) => candidate.id === item.variantId)
+      : product?.variants?.[0];
     return {
       product:
         product && variant
@@ -91,7 +119,11 @@ export async function PUT(request: Request) {
   });
   if (requested.some((item) => !item.product))
     return NextResponse.json(
-      { ok: false, message: "A cart item is no longer available." },
+      {
+        ok: false,
+        message:
+          "A cart item or flavor is no longer available. Remove it and choose another option.",
+      },
       { status: 422 },
     );
 

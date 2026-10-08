@@ -17,6 +17,7 @@ type CartContextValue = {
   count: number;
   total: number;
   pricingPending: boolean;
+  notice: string | null;
 };
 const CartContext = createContext<CartContextValue | null>(null);
 
@@ -24,14 +25,23 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [hydrated, setHydrated] = useState(false);
   const [authenticated, setAuthenticated] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
   useEffect(() => {
     let active = true;
     void fetch("/api/buyer/cart", { cache: "no-store" })
       .then(async (response) => {
         if (!active) return;
         if (response.ok) {
-          const result = (await response.json()) as { items: CartItem[] };
+          const result = (await response.json()) as {
+            items: CartItem[];
+            removedUnavailable?: number;
+          };
           setItems(result.items);
+          setNotice(
+            result.removedUnavailable
+              ? `${result.removedUnavailable} unavailable cart item${result.removedUnavailable === 1 ? " was" : "s were"} removed. Please choose another flavor if needed.`
+              : null,
+          );
           setAuthenticated(true);
         }
       })
@@ -41,6 +51,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     const clearBuyerCart = () => {
       setItems([]);
       setAuthenticated(false);
+      setNotice(null);
     };
     window.addEventListener("hifive-buyer-session-change", clearBuyerCart);
     return () => {
@@ -101,8 +112,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         0,
       ),
       pricingPending: items.some((item) => item.casePrice === null),
+      notice,
     }),
-    [items],
+    [items, notice],
   );
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }
