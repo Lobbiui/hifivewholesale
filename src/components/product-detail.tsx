@@ -89,8 +89,8 @@ export function ProductDetail({
                   selectedProduct.images[0]
                 }
                 alt={`${product.brand} ${product.name}${activeImage > 0 ? ` product view ${activeImage + 1}` : ""}`}
-                width={480}
-                height={480}
+                fill
+                sizes="(max-width: 900px) 100vw, 52vw"
                 priority
                 unoptimized={(
                   selectedProduct.images[activeImage] ??
