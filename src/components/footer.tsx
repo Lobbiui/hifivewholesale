@@ -34,11 +34,16 @@ export function Footer() {
         </div>
         <div>
           <span>Wholesale desk</span>
-          <a href="tel:+18005554445">1-800-555-HIFI</a>
-          <a href="mailto:wholesale@hifivesupply.com">
-            wholesale@hifivesupply.com
+          <a href="tel:+16158408105">(615) 840-8105</a>
+          <a href="mailto:hifivesupply@gmail.com">
+            hifivesupply@gmail.com
           </a>
-          <small>Mon–Fri · 8am–6pm CT</small>
+          <small>Mon–Fri · 9am–4pm</small>
+          <small>
+            4710 Old Hickory Blvd
+            <br />
+            Old Hickory, TN 37138
+          </small>
         </div>
       </div>
       <div className="footer-bottom">

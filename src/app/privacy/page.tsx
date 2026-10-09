@@ -1,1 +1,48 @@
-export default function PrivacyPage(){return <main className="legal-page container"><span className="eyebrow">Legal</span><h1>PRIVACY POLICY</h1><p className="legal-updated">Effective September 23, 2026</p><section><h2>Information we collect</h2><p>We collect business application details, account contacts, resale credentials, delivery addresses, order requests, messages, and security records needed to operate the wholesale portal.</p><h2>How information is used</h2><p>Information is used to approve business accounts, provide catalog and ordering services, fulfill requests, support customers, administer loyalty benefits, prevent unauthorized access, and meet legal obligations.</p><h2>Sharing and service providers</h2><p>Information may be shared with providers that support hosting, email delivery, payments, shipping, and business operations. We do not sell customer personal information.</p><h2>Retention and security</h2><p>Records are retained only as reasonably necessary for wholesale operations, accounting, dispute resolution, and legal compliance. Administrative access is role restricted and authenticated sessions expire.</p><h2>Your requests</h2><p>Authorized business contacts may request access, correction, export, or deletion of eligible account information by contacting wholesale@hifivesupply.com.</p></section></main>}
+export default function PrivacyPage() {
+  return (
+    <main className="legal-page container">
+      <span className="eyebrow">Legal</span>
+      <h1>PRIVACY POLICY</h1>
+      <p className="legal-updated">Effective October 8, 2026</p>
+      <section>
+        <h2>Information we collect</h2>
+        <p>
+          We collect business application details, account contacts, resale and
+          licensing credentials, delivery addresses, order requests, messages,
+          and security records needed to operate the wholesale portal.
+        </p>
+        <h2>How information is used</h2>
+        <p>
+          Information is used to approve business accounts, provide catalog and
+          ordering services, fulfill requests, support customers, administer
+          loyalty benefits, prevent unauthorized access, and meet operational
+          and legal obligations.
+        </p>
+        <h2>Sharing and service providers</h2>
+        <p>
+          Information may be shared with providers that support hosting, email,
+          payments, shipping, and business operations. We do not sell customer
+          personal information.
+        </p>
+        <h2>Retention and security</h2>
+        <p>
+          Records are retained only as reasonably necessary for wholesale
+          operations, accounting, dispute resolution, and compliance.
+          Administrative access is role restricted and authenticated sessions
+          expire.
+        </p>
+        <h2>Your requests</h2>
+        <p>
+          Authorized business contacts may request access, correction, export,
+          or deletion of eligible account information by contacting
+          hifivesupply@gmail.com.
+        </p>
+        <h2>Contact</h2>
+        <p>
+          Zervas and Zervas, LLC dba HiFive Supply, 4710 Old Hickory Blvd, Old
+          Hickory, TN 37138. Email hifivesupply@gmail.com or call (615) 840-8105.
+        </p>
+      </section>
+    </main>
+  );
+}

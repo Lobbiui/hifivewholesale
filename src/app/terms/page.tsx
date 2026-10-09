@@ -1,1 +1,64 @@
-export default function TermsPage(){ return <main className="legal-page container"><span className="eyebrow">Legal</span><h1>TERMS OF SERVICE</h1><p className="legal-updated">Wholesale terms · September 23, 2026</p><section><h2>1. Business eligibility</h2><p>HiFive Supply is a business-to-business wholesale service. Catalog access and ordering require an approved business account. Applicants may be asked to provide business licenses, resale certificates, and other commercial documentation.</p><h2>2. Products and availability</h2><p>Catalog information, pricing, case quantities, strengths, availability, and delivery estimates may change. An order request is not accepted until confirmed by HiFive Supply.</p><h2>3. Account responsibility</h2><p>The approved business is responsible for authorized use of its account, lawful resale, and compliance with all licensing and jurisdiction requirements that apply to its operations.</p><h2>4. Payment, pickup, and delivery</h2><p>Payment terms, pickup windows, delivery areas, freight terms, and applicable fees will be confirmed before an order is finalized. The customer is responsible for accurate delivery information and receiving requirements.</p><h2>5. Returns and refunds</h2><p>Returns require authorization. Eligibility may depend on product condition, category, time since fulfillment, manufacturer policy, and applicable law. Approved refunds may be partial where only part of an order is affected.</p><h2>6. Jurisdiction restrictions</h2><p>Products will not be sold or shipped where prohibited. Customers are responsible for maintaining licenses and complying with local resale, marketing, tax, and product restrictions.</p><h2>7. Privacy and account security</h2><p>Customers must safeguard account credentials and promptly report suspected unauthorized access. Requests concerning account data, correction, export, or deletion may be submitted to HiFive Supply.</p><h2>8. Contact</h2><p>Questions about these terms may be sent to wholesale@hifivesupply.com.</p></section></main> }
+export default function TermsPage() {
+  return (
+    <main className="legal-page container">
+      <span className="eyebrow">Legal</span>
+      <h1>TERMS OF SERVICE</h1>
+      <p className="legal-updated">Effective October 8, 2026</p>
+      <section>
+        <h2>1. Who we are</h2>
+        <p>
+          This website is operated by Zervas and Zervas, LLC, doing business as
+          HiFive Supply, located at 4710 Old Hickory Blvd, Old Hickory, TN 37138.
+        </p>
+        <h2>2. Business eligibility</h2>
+        <p>
+          HiFive Supply is a business-to-business wholesale service. Catalog
+          access and ordering require an approved business account. Applicants
+          may be asked to provide business licenses, resale certificates, and
+          other commercial documentation.
+        </p>
+        <h2>3. Products and availability</h2>
+        <p>
+          Catalog information, pricing, case quantities, strengths,
+          availability, and delivery estimates may change. An order request is
+          not accepted until confirmed by HiFive Supply.
+        </p>
+        <h2>4. Account responsibility</h2>
+        <p>
+          The approved business is responsible for authorized use of its
+          account, lawful resale, and compliance with all licensing and
+          jurisdiction requirements that apply to its operations.
+        </p>
+        <h2>5. Payment, pickup, and delivery</h2>
+        <p>
+          Payment terms, pickup windows, delivery arrangements, freight terms,
+          and applicable fees are confirmed before an order is finalized.
+          Please allow up to 72 hours for order processing.
+        </p>
+        <h2>6. Returns and claims</h2>
+        <p>
+          Returns are limited to manufacturer defects and certain compliance
+          issues. Claims must be submitted within 24 hours after receipt and are
+          evaluated individually under the Returns & Refunds Policy.
+        </p>
+        <h2>7. Jurisdiction restrictions</h2>
+        <p>
+          Products will not be sold or shipped where prohibited. Customers are
+          responsible for maintaining licenses and complying with local resale,
+          marketing, tax, and product restrictions.
+        </p>
+        <h2>8. Privacy and account security</h2>
+        <p>
+          Customers must safeguard account credentials and promptly report
+          suspected unauthorized access. Eligible account data requests may be
+          submitted to HiFive Supply.
+        </p>
+        <h2>9. Contact</h2>
+        <p>
+          Contact hifivesupply@gmail.com or (615) 840-8105, Monday through
+          Friday, 9:00 a.m. to 4:00 p.m.
+        </p>
+      </section>
+    </main>
+  );
+}
