@@ -3,7 +3,7 @@ export default function ShippingPage() {
     <main className="legal-page container">
       <span className="eyebrow">Fulfillment</span>
       <h1>SHIPPING & PICKUP</h1>
-      <p className="legal-updated">Effective October 8, 2026</p>
+      <p className="legal-updated">Effective 10/08/26</p>
       <section>
         <h2>Order confirmation</h2>
         <p>
@@ -15,10 +15,11 @@ export default function ShippingPage() {
         <p>Please allow up to 72 hours for order processing.</p>
         <h2>Shipping and delivery</h2>
         <p>
-          Shipping and delivery arrangements are determined on an order-by-order
-          basis and are subject to terms negotiated among the interested
-          parties. Available methods, timing, fees, minimums, carrier selection,
-          and receiving requirements may vary by order and destination.
+          HiFive Supply ships within Tennessee. Shipping and delivery
+          arrangements are determined on an order-by-order basis and are
+          subject to terms negotiated among the interested parties. Available
+          methods, timing, fees, minimums, carrier selection, and receiving
+          requirements may vary by order and destination.
         </p>
         <h2>Warehouse pickup</h2>
         <p>
@@ -28,9 +29,9 @@ export default function ShippingPage() {
         </p>
         <h2>Inspection</h2>
         <p>
-          Customers should inspect orders when received. Defective, lost,
-          damaged, incorrect, or compliance-related product claims must be
-          reported within 24 hours after receipt.
+          Customers should inspect orders when received. Damaged, incorrect,
+          missing, defective, or compliance-related product claims must be
+          reported within seven days after receipt.
         </p>
       </section>
     </main>

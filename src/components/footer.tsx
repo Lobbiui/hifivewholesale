@@ -46,6 +46,11 @@ export function Footer() {
           </small>
         </div>
       </div>
+      <p className="footer-disclaimer">
+        These statements have not been evaluated by the Food and Drug
+        Administration. These products are not intended to diagnose, treat,
+        cure, or prevent any disease.
+      </p>
       <div className="footer-bottom">
         <span>© 2026 HiFive Supply Wholesale</span>
         <span>Approved business accounts only.</span>

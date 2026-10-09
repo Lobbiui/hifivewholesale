@@ -3,7 +3,7 @@ export default function PrivacyPage() {
     <main className="legal-page container">
       <span className="eyebrow">Legal</span>
       <h1>PRIVACY POLICY</h1>
-      <p className="legal-updated">Effective October 8, 2026</p>
+      <p className="legal-updated">Effective 10/08/26</p>
       <section>
         <h2>Information we collect</h2>
         <p>

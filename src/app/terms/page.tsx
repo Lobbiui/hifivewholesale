@@ -3,7 +3,7 @@ export default function TermsPage() {
     <main className="legal-page container">
       <span className="eyebrow">Legal</span>
       <h1>TERMS OF SERVICE</h1>
-      <p className="legal-updated">Effective October 8, 2026</p>
+      <p className="legal-updated">Effective 10/08/26</p>
       <section>
         <h2>1. Who we are</h2>
         <p>
@@ -38,14 +38,15 @@ export default function TermsPage() {
         <h2>6. Returns and claims</h2>
         <p>
           Returns are limited to manufacturer defects and certain compliance
-          issues. Claims must be submitted within 24 hours after receipt and are
+          issues. Claims must be submitted within seven days after receipt and are
           evaluated individually under the Returns & Refunds Policy.
         </p>
         <h2>7. Jurisdiction restrictions</h2>
         <p>
-          Products will not be sold or shipped where prohibited. Customers are
-          responsible for maintaining licenses and complying with local resale,
-          marketing, tax, and product restrictions.
+          HiFive Supply ships within Tennessee. Products will not be sold or
+          shipped where prohibited. Customers are responsible for maintaining
+          licenses and complying with all applicable resale, marketing, tax,
+          and product restrictions.
         </p>
         <h2>8. Privacy and account security</h2>
         <p>
@@ -53,7 +54,12 @@ export default function TermsPage() {
           suspected unauthorized access. Eligible account data requests may be
           submitted to HiFive Supply.
         </p>
-        <h2>9. Contact</h2>
+        <h2>9. Governing law</h2>
+        <p>
+          These Terms of Service are governed by the laws of the State of
+          Tennessee, without regard to conflict-of-law principles.
+        </p>
+        <h2>10. Contact</h2>
         <p>
           Contact hifivesupply@gmail.com or (615) 840-8105, Monday through
           Friday, 9:00 a.m. to 4:00 p.m.
