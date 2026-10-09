@@ -5536,6 +5536,57 @@ html[dir="rtl"] .detail-specs div:last-child {
   border-radius: 8px;
   padding: 12px;
 }
+.coa-admin-manager {
+  display: grid;
+  gap: 9px;
+}
+.coa-admin-empty {
+  display: block;
+  color: var(--muted);
+  font-size: 8px;
+}
+.coa-admin-list {
+  display: grid;
+  gap: 6px;
+}
+.coa-admin-list > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: white;
+  padding: 7px 8px;
+}
+.coa-admin-list a,
+.coa-admin-list button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 8px;
+  font-weight: 800;
+}
+.coa-admin-list a {
+  min-width: 0;
+  color: var(--purple);
+  text-decoration: none;
+}
+.coa-admin-list button {
+  flex: 0 0 auto;
+  border: 0;
+  background: transparent;
+  color: #8d2435;
+  cursor: pointer;
+}
+.coa-admin-list button:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+.coa-admin-list svg {
+  width: 12px;
+  height: 12px;
+}
 .catalog-product-list {
   display: flex;
   flex-direction: column;

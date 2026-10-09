@@ -155,14 +155,14 @@ export async function PATCH(request: Request) {
   if (data.operation === "REORDER") {
     if (!sameMembers(existing, data.urls))
       return NextResponse.json(
-        { ok: false, message: "Images changed while this page was open. Refresh and try again." },
+        { ok: false, message: "Media changed while this page was open. Refresh and try again." },
         { status: 409 },
       );
     next = data.urls;
   } else {
     if (!existing.includes(data.url))
       return NextResponse.json(
-        { ok: false, message: "That image is no longer attached to this product." },
+        { ok: false, message: "That file is no longer attached to this product." },
         { status: 404 },
       );
     next = existing.filter((url) => url !== data.url);

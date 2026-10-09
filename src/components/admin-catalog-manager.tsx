@@ -6,6 +6,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Download,
+  FileText,
   FileSpreadsheet,
   GripVertical,
   ImagePlus,
@@ -90,6 +91,39 @@ type ImageManagerProps = {
   onRemove: (url: string) => void;
   onReorder: (urls: string[]) => void;
 };
+
+type CoaListProps = {
+  urls: string[];
+  busy: boolean;
+  onRemove: (url: string) => void;
+};
+
+function CoaList({ urls, busy, onRemove }: CoaListProps) {
+  if (urls.length === 0)
+    return <small className="coa-admin-empty">No COA documents uploaded.</small>;
+
+  return (
+    <div className="coa-admin-list">
+      {urls.map((url, index) => (
+        <div key={`${url}-${index}`}>
+          <a href={url} target="_blank" rel="noreferrer">
+            <FileText />
+            COA document {index + 1}
+          </a>
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => onRemove(url)}
+            aria-label={`Remove COA document ${index + 1}`}
+          >
+            <Trash2 />
+            Remove
+          </button>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 function ImageManager({
   title,
@@ -471,6 +505,20 @@ export function AdminCatalogManager() {
     );
   };
 
+  const setTargetCoas = (urls: string[], variantId?: string) => {
+    if (!variantId) {
+      setEditor((current) =>
+        current && current !== "new" ? { ...current, coaUrls: urls } : current,
+      );
+      return;
+    }
+    setOptions((current) =>
+      current.map((option) =>
+        option.id === variantId ? { ...option, coaUrls: urls } : option,
+      ),
+    );
+  };
+
   const uploadAsset = async (
     productId: string,
     assetType: "IMAGE" | "COA",
@@ -585,6 +633,45 @@ export function AdminCatalogManager() {
     )
       return false;
     return mutateImages(productId, "REMOVE", url, variantId);
+  };
+
+  const removeCoa = async (
+    productId: string,
+    url: string,
+    variantId?: string,
+  ) => {
+    if (!window.confirm("Remove this COA document?")) return false;
+    setBusy(true);
+    try {
+      const response = await fetch("/api/admin/product-assets", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          operation: "REMOVE",
+          productId,
+          variantId,
+          assetType: "COA",
+          url,
+        }),
+      });
+      const result = (await response.json()) as {
+        message?: string;
+        urls?: string[];
+      };
+      if (!response.ok || !result.urls)
+        throw new Error(result.message || "The COA could not be removed.");
+      setTargetCoas(result.urls, variantId);
+      await load();
+      setMessage("COA removed.");
+      return true;
+    } catch (error) {
+      setMessage(
+        error instanceof Error ? error.message : "The COA could not be removed.",
+      );
+      return false;
+    } finally {
+      setBusy(false);
+    }
   };
 
   const replaceImage = async (
@@ -923,17 +1010,25 @@ export function AdminCatalogManager() {
                         <input
                           type="file"
                           accept="application/pdf,image/jpeg,image/png,image/webp"
-                          onChange={(event) =>
+                          onChange={(event) => {
                             void uploadAsset(
                               editor.id,
                               "COA",
                               event.target.files?.[0] ?? null,
                               option.id,
-                            )
-                          }
+                            );
+                            event.currentTarget.value = "";
+                          }}
                         />
                         <small>{option.coaUrls?.length ?? 0} uploaded</small>
                       </label>
+                      <CoaList
+                        urls={option.coaUrls ?? []}
+                        busy={busy}
+                        onRemove={(url) =>
+                          void removeCoa(editor.id, url, option.id)
+                        }
+                      />
                     </div>
                   ) : (
                     <small className="option-save-note">
@@ -1080,26 +1175,35 @@ export function AdminCatalogManager() {
             <label className="full-field">
               COA URL
               <input
+                key={`coa-url-${editor === "new" ? "new" : `${editor.id}-${editor.coaUrls[0] ?? "empty"}`}`}
                 name="coaUrl"
                 defaultValue={editor === "new" ? "" : (editor.coaUrls[0] ?? "")}
                 placeholder="https://… or /api/catalog/assets/…"
               />
             </label>
             {editor !== "new" && (
-              <label className="full-field asset-upload">
-                Upload COA document
-                <input
-                  type="file"
-                  accept="application/pdf,image/jpeg,image/png,image/webp"
-                  onChange={(event) =>
-                    void uploadAsset(
-                      editor.id,
-                      "COA",
-                      event.target.files?.[0] ?? null,
-                    )
-                  }
+              <div className="full-field coa-admin-manager">
+                <label className="asset-upload">
+                  Upload COA document
+                  <input
+                    type="file"
+                    accept="application/pdf,image/jpeg,image/png,image/webp"
+                    onChange={(event) => {
+                      void uploadAsset(
+                        editor.id,
+                        "COA",
+                        event.target.files?.[0] ?? null,
+                      );
+                      event.currentTarget.value = "";
+                    }}
+                  />
+                </label>
+                <CoaList
+                  urls={editor.coaUrls}
+                  busy={busy}
+                  onRemove={(url) => void removeCoa(editor.id, url)}
                 />
-              </label>
+              </div>
             )}
             <label>
               Shopping-view background
