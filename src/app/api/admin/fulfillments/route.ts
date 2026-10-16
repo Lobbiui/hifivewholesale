@@ -156,11 +156,17 @@ export async function POST(request: Request) {
       subject: `${result.order_number} — ${readableStatus}`,
       text: `Hi ${result.customer},\n\nYour HiFive Supply order ${result.order_number} is ${readableStatus}.${trackingLine}${data.customerNotes ? `\n\n${data.customerNotes}` : ""}\n\nHiFive Supply`,
     });
-    notification = email.delivered ? "sent" : "queued";
-    await database.query(
-      "UPDATE order_fulfillments SET last_notified_status=$2 WHERE order_request_id=$1",
-      [data.orderId, data.status],
-    );
+    notification = email.delivered
+      ? "sent"
+      : "configurationRequired" in email && email.configurationRequired
+        ? "configuration_required"
+        : "delivery_failed";
+    if (email.delivered) {
+      await database.query(
+        "UPDATE order_fulfillments SET last_notified_status=$2 WHERE order_request_id=$1",
+        [data.orderId, data.status],
+      );
+    }
   }
 
   return NextResponse.json({ ok: true, notification });
