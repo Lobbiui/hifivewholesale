@@ -39,6 +39,16 @@ type OrderRequestRow = {
   pricing_pending: boolean;
   submitted_at: Date | string;
   item_count?: number;
+  shipping_method?: string | null;
+  shipping_status?: string | null;
+  tracking_number?: string | null;
+  tracking_url?: string | null;
+  service_level?: string | null;
+  package_count?: number | null;
+  estimated_delivery_date?: Date | string | null;
+  shipped_at?: Date | string | null;
+  delivered_at?: Date | string | null;
+  customer_notes?: string | null;
 };
 
 export async function GET() {
@@ -47,11 +57,15 @@ export async function GET() {
   const database = await getDatabase();
   const result = await database.query<OrderRequestRow>(
     `SELECT r.id, r.order_number, r.state, r.fulfillment_method, r.estimated_total_cents,
-            r.pricing_pending, r.submitted_at, COALESCE(SUM(i.quantity_cases), 0)::int AS item_count
+            r.pricing_pending, r.submitted_at, COALESCE(SUM(i.quantity_cases), 0)::int AS item_count,
+            f.method AS shipping_method, f.status AS shipping_status, f.tracking_number,
+            f.tracking_url, f.service_level, f.package_count, f.estimated_delivery_date,
+            f.shipped_at, f.delivered_at, f.customer_notes
        FROM order_requests r
        LEFT JOIN order_request_items i ON i.order_request_id = r.id
+       LEFT JOIN order_fulfillments f ON f.order_request_id = r.id
       WHERE r.buyer_user_id = $1
-      GROUP BY r.id
+      GROUP BY r.id, f.id
       ORDER BY r.submitted_at DESC`,
     [buyer.id],
   );
@@ -219,5 +233,19 @@ function serializeOrder(row: OrderRequestRow) {
     pricingPending: row.pricing_pending,
     submitted: new Date(row.submitted_at).toISOString(),
     itemCount: row.item_count ?? 0,
+    shipment: row.shipping_method ? {
+      method: row.shipping_method,
+      status: row.shipping_status,
+      trackingNumber: row.tracking_number,
+      trackingUrl: row.tracking_url,
+      serviceLevel: row.service_level,
+      packageCount: row.package_count,
+      estimatedDeliveryDate: row.estimated_delivery_date
+        ? new Date(row.estimated_delivery_date).toISOString().slice(0, 10)
+        : null,
+      shippedAt: row.shipped_at ? new Date(row.shipped_at).toISOString() : null,
+      deliveredAt: row.delivered_at ? new Date(row.delivered_at).toISOString() : null,
+      customerNotes: row.customer_notes,
+    } : null,
   };
 }

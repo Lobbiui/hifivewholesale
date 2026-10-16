@@ -26,7 +26,20 @@ export async function GET() {
   if (!await getAdminIdentity()) return NextResponse.json({ ok: false }, { status: 401 });
   const database = await getDatabase();
   const [orders, customers, brands, loyalty, promotions, blogs, distributors, tiers, markets, emails, contacts] = await Promise.all([
-    database.query(`SELECT r.id, r.order_number, r.state, r.fulfillment_method, r.contact_email, r.purchase_order_number, r.estimated_total_cents, r.pricing_pending, r.submitted_at, o.display_name AS customer, COALESCE(SUM(i.quantity_cases),0)::int AS cases, (SELECT note FROM order_request_notes n WHERE n.order_request_id=r.id ORDER BY n.created_at DESC LIMIT 1) AS latest_note FROM order_requests r JOIN organizations o ON o.id=r.organization_id LEFT JOIN order_request_items i ON i.order_request_id=r.id GROUP BY r.id,o.display_name ORDER BY r.submitted_at DESC LIMIT 200`),
+    database.query(`SELECT r.id, r.order_number, r.state, r.fulfillment_method, r.contact_email,
+      r.purchase_order_number, r.estimated_total_cents, r.pricing_pending, r.submitted_at,
+      o.display_name AS customer, COALESCE(SUM(i.quantity_cases),0)::int AS cases,
+      (SELECT note FROM order_request_notes n WHERE n.order_request_id=r.id ORDER BY n.created_at DESC LIMIT 1) AS latest_note,
+      f.method AS shipping_method, f.status AS shipping_status, f.tracking_number, f.tracking_url,
+      f.service_level, f.package_count, f.shipping_cost_cents, f.estimated_delivery_date,
+      f.shipped_at, f.delivered_at, f.driver_notes, f.customer_notes,
+      f.proof_filename, f.proof_uploaded_at, f.last_notified_status
+      FROM order_requests r
+      JOIN organizations o ON o.id=r.organization_id
+      LEFT JOIN order_request_items i ON i.order_request_id=r.id
+      LEFT JOIN order_fulfillments f ON f.order_request_id=r.id
+      GROUP BY r.id,o.display_name,f.id
+      ORDER BY r.submitted_at DESC LIMIT 200`),
     database.query(`SELECT o.id, o.display_name, o.status, o.resale_id, o.primary_territory, u.email, u.display_name AS contact, COUNT(DISTINCT r.id)::int AS orders, COALESCE(l.points_balance,0)::int AS points, COALESCE(l.tier,'MEMBER') AS tier FROM organizations o LEFT JOIN organization_memberships m ON m.organization_id=o.id LEFT JOIN users u ON u.id=m.user_id AND u.system_role='BUYER' LEFT JOIN order_requests r ON r.organization_id=o.id LEFT JOIN loyalty_accounts l ON l.organization_id=o.id WHERE o.organization_type='WHOLESALE_BUYER' GROUP BY o.id,u.email,u.display_name,l.points_balance,l.tier ORDER BY o.created_at DESC`),
     database.query(`SELECT id, brand_name AS brand, contact_name AS contact, email, website_url AS website, categories, markets, monthly_volume AS volume, message, status, notes, submitted_at FROM brand_applications ORDER BY submitted_at DESC`),
     database.query(`SELECT points_per_dollar, redemption_cents_per_point, promotional_multiplier, tiers_json FROM loyalty_rules WHERE id='default'`),
