@@ -1715,6 +1715,50 @@ textarea {
   display: block;
   font-size: 8px;
 }
+
+.customer-account-create {
+  margin-bottom: 1.5rem;
+}
+
+.customer-account-create h3,
+.customer-account-create p {
+  grid-column: 1 / -1;
+}
+
+.customer-account-create h3 {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  margin: 0;
+}
+
+.customer-license-check {
+  grid-column: 1 / -1;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center;
+  gap: .65rem;
+}
+
+.customer-license-check input {
+  width: auto !important;
+}
+
+.activation-link {
+  display: grid;
+  gap: .55rem;
+  overflow-wrap: anywhere;
+}
+
+.activation-link .admin-button {
+  width: max-content;
+}
+
+.customer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .6rem;
+}
 .customer-stats b {
   font-size: 12px;
   margin-top: 3px;

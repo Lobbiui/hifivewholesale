@@ -1,0 +1,145 @@
+import { randomBytes, randomUUID } from "node:crypto";
+import { NextResponse } from "next/server";
+import { z } from "zod";
+import { getAdminIdentity, hasValidRequestOrigin } from "@/lib/server/admin-auth";
+import { hashBuyerToken } from "@/lib/server/buyer-auth";
+import { getDatabase } from "@/lib/server/database";
+import { queueAndSendEmail } from "@/lib/server/email";
+import { isTennesseeTerritory } from "@/lib/us-states";
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+const requestSchema = z.discriminatedUnion("action", [
+  z.object({
+    action: z.literal("create"),
+    companyName: z.string().trim().min(2).max(200),
+    contactName: z.string().trim().min(2).max(160),
+    email: z.string().trim().email().max(320).transform((value) => value.toLowerCase()),
+    phone: z.string().trim().min(7).max(40),
+    resaleId: z.string().trim().min(2).max(100),
+    territory: z.string().trim().min(2).max(100),
+    businessType: z.string().trim().min(2).max(100),
+    websiteUrl: z.string().trim().url().max(500).or(z.literal("")),
+    tnLicenseVerified: z.boolean(),
+  }).strict(),
+  z.object({ action: z.literal("resend_activation"), organizationId: z.string().min(1) }).strict(),
+]);
+
+function publicOrigin(request: Request) {
+  const configured = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  if (configured) return configured.replace(/\/$/, "");
+  const proto = request.headers.get("x-forwarded-proto") || new URL(request.url).protocol.replace(":", "");
+  const host = request.headers.get("x-forwarded-host") || request.headers.get("host") || new URL(request.url).host;
+  return `${proto}://${host}`;
+}
+
+export async function POST(request: Request) {
+  if (!hasValidRequestOrigin(request)) return NextResponse.json({ ok: false }, { status: 403 });
+  const admin = await getAdminIdentity();
+  if (!admin) return NextResponse.json({ ok: false }, { status: 401 });
+  const parsed = requestSchema.safeParse(await request.json().catch(() => null));
+  if (!parsed.success) return NextResponse.json({ ok: false, message: "Complete all required wholesale account fields." }, { status: 422 });
+
+  const database = await getDatabase();
+  const activationToken = randomBytes(32).toString("base64url");
+  const activationUrl = `${publicOrigin(request)}/activate?token=${encodeURIComponent(activationToken)}`;
+
+  try {
+    const created = await database.transaction(async (transaction) => {
+      if (parsed.data.action === "resend_activation") {
+        const found = await transaction.query<{ user_id: string; email: string; display_name: string }>(
+          `SELECT u.id AS user_id, u.email, u.display_name
+             FROM organizations o
+             JOIN organization_memberships m ON m.organization_id = o.id AND m.membership_role = 'OWNER'
+             JOIN users u ON u.id = m.user_id AND u.system_role = 'BUYER'
+            WHERE o.id = $1 AND o.organization_type = 'WHOLESALE_BUYER' AND u.status = 'INVITED'
+            LIMIT 1`,
+          [parsed.data.organizationId],
+        );
+        const buyer = found.rows[0];
+        if (!buyer) throw new Error("Only invited buyer accounts can receive a new activation link.");
+        await transaction.query(
+          `UPDATE user_credentials SET reset_token_hash=$2, reset_token_expires_at=CURRENT_TIMESTAMP+INTERVAL '7 days',
+             failed_attempts=0, locked_until=NULL WHERE user_id=$1`,
+          [buyer.user_id, hashBuyerToken(activationToken)],
+        );
+        await transaction.query(
+          `INSERT INTO audit_events (id,actor_user_id,organization_id,action,aggregate_type,aggregate_id,after_json)
+           VALUES ($1,$2,$3,'BUYER_ACTIVATION_REISSUED','WHOLESALE_ACCOUNT',$3,$4)`,
+          [randomUUID(), admin.id, parsed.data.organizationId, { email: buyer.email }],
+        );
+        return { organizationId: parsed.data.organizationId, email: buyer.email, contactName: buyer.display_name, companyName: "your business" };
+      }
+
+      if (isTennesseeTerritory(parsed.data.territory) && !parsed.data.tnLicenseVerified) {
+        throw new Error("Confirm the TN HDCP license before creating a Tennessee wholesale account.");
+      }
+      const duplicate = await transaction.query<{ id: string }>(
+        `SELECT id FROM users WHERE LOWER(email)=LOWER($1)
+         UNION ALL SELECT id FROM buyer_applications WHERE LOWER(business_email)=LOWER($1) LIMIT 1`,
+        [parsed.data.email],
+      );
+      if (duplicate.rows[0]) throw new Error("An account with that email already exists.");
+
+      const organizationId = `org_${randomUUID()}`;
+      const userId = `usr_${randomUUID()}`;
+      const applicationId = `app_${randomUUID()}`;
+      await transaction.query(
+        `INSERT INTO organizations (id,legal_name,display_name,organization_type,status,resale_id,primary_territory,website_url)
+         VALUES ($1,$2,$2,'WHOLESALE_BUYER','APPROVED',$3,$4,$5)`,
+        [organizationId, parsed.data.companyName, parsed.data.resaleId, parsed.data.territory, parsed.data.websiteUrl || null],
+      );
+      await transaction.query(
+        `INSERT INTO users (id,email,display_name,system_role,status) VALUES ($1,$2,$3,'BUYER','INVITED')`,
+        [userId, parsed.data.email, parsed.data.contactName],
+      );
+      await transaction.query(
+        `INSERT INTO user_credentials (user_id,password_hash,reset_token_hash,reset_token_expires_at)
+         VALUES ($1,'pending-activation',$2,CURRENT_TIMESTAMP+INTERVAL '7 days')`,
+        [userId, hashBuyerToken(activationToken)],
+      );
+      await transaction.query(
+        `INSERT INTO organization_memberships (id,organization_id,user_id,membership_role) VALUES ($1,$2,$3,'OWNER')`,
+        [randomUUID(), organizationId, userId],
+      );
+      await transaction.query(
+        `INSERT INTO buyer_applications
+          (id,legal_business_name,contact_name,business_email,business_phone,resale_id,primary_territory,business_type,website_url,
+           certification_accepted_at,status,organization_id,reviewed_at,reviewed_by,review_notes)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,CURRENT_TIMESTAMP,'APPROVED',$10,CURRENT_TIMESTAMP,$11,$12)`,
+        [applicationId, parsed.data.companyName, parsed.data.contactName, parsed.data.email, parsed.data.phone, parsed.data.resaleId,
+          parsed.data.territory, parsed.data.businessType, parsed.data.websiteUrl || null, organizationId, admin.id,
+          isTennesseeTerritory(parsed.data.territory) ? "Manually created by administrator; TN HDCP license verified." : "Manually created by administrator."],
+      );
+      await transaction.query(
+        "INSERT INTO loyalty_accounts (organization_id) VALUES ($1) ON CONFLICT (organization_id) DO NOTHING",
+        [organizationId],
+      );
+      await transaction.query(
+        `INSERT INTO audit_events (id,actor_user_id,organization_id,action,aggregate_type,aggregate_id,after_json)
+         VALUES ($1,$2,$3,'WHOLESALE_ACCOUNT_CREATED','WHOLESALE_ACCOUNT',$3,$4)`,
+        [randomUUID(), admin.id, organizationId, { email: parsed.data.email, contactName: parsed.data.contactName, status: "INVITED", tnLicenseVerified: parsed.data.tnLicenseVerified }],
+      );
+      return { organizationId, email: parsed.data.email, contactName: parsed.data.contactName, companyName: parsed.data.companyName };
+    });
+
+    let emailDelivery = "failed";
+    try {
+      const email = await queueAndSendEmail(database, {
+        templateKey: "buyer_invitation",
+        to: created.email,
+        subject: "Activate your HiFive wholesale account",
+        text: `Hello ${created.contactName},\n\n${created.companyName} has been approved for a HiFive wholesale account. Set your password within 7 days:\n\n${activationUrl}\n\nIf you did not expect this invitation, contact HiFive Supply.`,
+      });
+      emailDelivery = email.delivered ? "sent" : email.configurationRequired ? "configuration_required" : "failed";
+    } catch {
+      // The account and activation link remain valid if the optional email service is unavailable.
+    }
+    return NextResponse.json({ ok: true, organizationId: created.organizationId, activationUrl, emailDelivery }, { status: parsed.data.action === "create" ? 201 : 200 });
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : "";
+    const safeMessage = /already exists|TN HDCP|Only invited/i.test(detail) ? detail : "The wholesale account could not be created.";
+    return NextResponse.json({ ok: false, message: safeMessage }, { status: 422 });
+  }
+}

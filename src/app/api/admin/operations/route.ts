@@ -40,7 +40,19 @@ export async function GET() {
       LEFT JOIN order_fulfillments f ON f.order_request_id=r.id
       GROUP BY r.id,o.display_name,f.id
       ORDER BY r.submitted_at DESC LIMIT 200`),
-    database.query(`SELECT o.id, o.display_name, o.status, o.resale_id, o.primary_territory, u.email, u.display_name AS contact, COUNT(DISTINCT r.id)::int AS orders, COALESCE(l.points_balance,0)::int AS points, COALESCE(l.tier,'MEMBER') AS tier FROM organizations o LEFT JOIN organization_memberships m ON m.organization_id=o.id LEFT JOIN users u ON u.id=m.user_id AND u.system_role='BUYER' LEFT JOIN order_requests r ON r.organization_id=o.id LEFT JOIN loyalty_accounts l ON l.organization_id=o.id WHERE o.organization_type='WHOLESALE_BUYER' GROUP BY o.id,u.email,u.display_name,l.points_balance,l.tier ORDER BY o.created_at DESC`),
+    database.query(`SELECT o.id, o.display_name, o.status, o.resale_id, o.primary_territory,
+      owner.email, owner.display_name AS contact, owner.status AS user_status,
+      COUNT(DISTINCT r.id)::int AS orders, COALESCE(l.points_balance,0)::int AS points, COALESCE(l.tier,'MEMBER') AS tier
+      FROM organizations o
+      LEFT JOIN LATERAL (
+        SELECT u.email,u.display_name,u.status FROM organization_memberships m
+        JOIN users u ON u.id=m.user_id AND u.system_role='BUYER'
+        WHERE m.organization_id=o.id ORDER BY CASE WHEN m.membership_role='OWNER' THEN 0 ELSE 1 END,m.created_at LIMIT 1
+      ) owner ON TRUE
+      LEFT JOIN order_requests r ON r.organization_id=o.id
+      LEFT JOIN loyalty_accounts l ON l.organization_id=o.id
+      WHERE o.organization_type='WHOLESALE_BUYER'
+      GROUP BY o.id,owner.email,owner.display_name,owner.status,l.points_balance,l.tier ORDER BY o.created_at DESC`),
     database.query(`SELECT id, brand_name AS brand, contact_name AS contact, email, website_url AS website, categories, markets, monthly_volume AS volume, message, status, notes, submitted_at FROM brand_applications ORDER BY submitted_at DESC`),
     database.query(`SELECT points_per_dollar, redemption_cents_per_point, promotional_multiplier, tiers_json FROM loyalty_rules WHERE id='default'`),
     database.query(`SELECT id, code, description, discount_type, discount_value, status, starts_at, ends_at FROM promotions ORDER BY created_at DESC`),
