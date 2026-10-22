@@ -2,7 +2,7 @@ import { getAdminIdentity } from "@/lib/server/admin-auth";
 import { getDatabase } from "@/lib/server/database";
 export const runtime="nodejs";export const dynamic="force-dynamic";
 const queries:Record<string,string>={
- orders:`SELECT r.order_number,r.state,r.fulfillment_method,o.display_name AS customer,r.contact_email,r.purchase_order_number,r.estimated_total_cents,r.submitted_at FROM order_requests r JOIN organizations o ON o.id=r.organization_id ORDER BY r.submitted_at DESC`,
+ orders:`SELECT r.order_number,r.state,r.fulfillment_method,o.display_name AS customer,r.contact_email,r.purchase_order_number,r.estimated_total_cents,r.payment_status,r.amount_paid_cents,r.amount_refunded_cents,r.payment_provider,r.payment_provider_reference,r.paid_at,r.submitted_at FROM order_requests r JOIN organizations o ON o.id=r.organization_id ORDER BY r.submitted_at DESC`,
  customers:`SELECT o.display_name,o.status,o.resale_id,o.primary_territory,u.display_name AS contact,u.email,o.created_at FROM organizations o LEFT JOIN organization_memberships m ON m.organization_id=o.id LEFT JOIN users u ON u.id=m.user_id WHERE o.organization_type='WHOLESALE_BUYER' ORDER BY o.created_at DESC`,
  inventory:`SELECT p.name,p.brand,p.category,p.status,v.sku,v.upc,v.variant_name,v.units_per_case,v.wholesale_price_cents,v.safety_stock_units,COALESCE((SELECT on_hand_units FROM inventory_snapshots s WHERE s.product_variant_id=v.id ORDER BY observed_at DESC LIMIT 1),0) AS on_hand_units FROM products p JOIN product_variants v ON v.product_id=p.id ORDER BY p.brand,p.name`,
  shipments:`SELECT r.order_number,o.display_name AS customer,r.contact_email,f.method,f.status,

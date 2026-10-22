@@ -28,7 +28,15 @@ export async function GET() {
   const [orders, customers, brands, loyalty, promotions, blogs, distributors, tiers, markets, emails, contacts] = await Promise.all([
     database.query(`SELECT r.id, r.order_number, r.state, r.fulfillment_method, r.contact_email,
       r.purchase_order_number, r.estimated_total_cents, r.pricing_pending, r.submitted_at,
+      r.payment_status, r.amount_paid_cents, r.amount_refunded_cents,
+      r.payment_provider, r.payment_provider_reference, r.paid_at,
       o.display_name AS customer, COALESCE(SUM(i.quantity_cases),0)::int AS cases,
+      (SELECT p.account_type FROM payment_transactions p WHERE p.order_request_id=r.id AND p.operation='CHARGE' AND p.status='APPROVED' ORDER BY p.created_at DESC LIMIT 1) AS payment_account_type,
+      (SELECT p.masked_account_number FROM payment_transactions p WHERE p.order_request_id=r.id AND p.operation='CHARGE' AND p.status='APPROVED' ORDER BY p.created_at DESC LIMIT 1) AS payment_masked_account,
+      (SELECT COALESCE(jsonb_agg(jsonb_build_object(
+        'id',p.id,'operation',p.operation,'status',p.status,'amountCents',p.amount_cents,
+        'transactionId',p.provider_transaction_id,'message',p.response_message,'createdAt',p.created_at
+      ) ORDER BY p.created_at DESC),'[]'::jsonb) FROM payment_transactions p WHERE p.order_request_id=r.id) AS payment_transactions,
       (SELECT note FROM order_request_notes n WHERE n.order_request_id=r.id ORDER BY n.created_at DESC LIMIT 1) AS latest_note,
       f.method AS shipping_method, f.status AS shipping_status, f.tracking_number, f.tracking_url,
       f.service_level, f.package_count, f.shipping_cost_cents, f.estimated_delivery_date,

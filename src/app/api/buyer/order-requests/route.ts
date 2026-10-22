@@ -49,6 +49,9 @@ type OrderRequestRow = {
   shipped_at?: Date | string | null;
   delivered_at?: Date | string | null;
   customer_notes?: string | null;
+  payment_status?: string;
+  amount_paid_cents?: number;
+  amount_refunded_cents?: number;
 };
 
 export async function GET() {
@@ -57,7 +60,8 @@ export async function GET() {
   const database = await getDatabase();
   const result = await database.query<OrderRequestRow>(
     `SELECT r.id, r.order_number, r.state, r.fulfillment_method, r.estimated_total_cents,
-            r.pricing_pending, r.submitted_at, COALESCE(SUM(i.quantity_cases), 0)::int AS item_count,
+            r.pricing_pending, r.submitted_at, r.payment_status, r.amount_paid_cents,
+            r.amount_refunded_cents, COALESCE(SUM(i.quantity_cases), 0)::int AS item_count,
             f.method AS shipping_method, f.status AS shipping_status, f.tracking_number,
             f.tracking_url, f.service_level, f.package_count, f.estimated_delivery_date,
             f.shipped_at, f.delivered_at, f.customer_notes
@@ -232,6 +236,12 @@ function serializeOrder(row: OrderRequestRow) {
         ? null
         : row.estimated_total_cents / 100,
     pricingPending: row.pricing_pending,
+    paymentStatus: (row.payment_status ?? "UNPAID")
+      .replaceAll("_", " ")
+      .toLowerCase()
+      .replace(/^./, (value) => value.toUpperCase()),
+    amountPaid: (row.amount_paid_cents ?? 0) / 100,
+    amountRefunded: (row.amount_refunded_cents ?? 0) / 100,
     submitted: new Date(row.submitted_at).toISOString(),
     itemCount: row.item_count ?? 0,
     shipment: row.shipping_method ? {

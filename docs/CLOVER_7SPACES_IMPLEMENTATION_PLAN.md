@@ -545,7 +545,7 @@ The current Hi-Five build is transitioning from a client preview to a production
 - Protected catalog routes are intercepted before rendering when no valid approved-buyer session exists.
 - Persistent carts and idempotent wholesale order-request history are implemented without prematurely decrementing Clover or Seven Spaces inventory.
 - A server-only Clover client is implemented and verified against the sandbox merchant for merchant and inventory reads.
-- Clover order writes, production OAuth, Authorize.net, and Resend are not implemented yet.
+- Clover order writes, production OAuth, and Resend are not implemented yet. Authorize.net hosted card entry, live transaction records, duplicate protection, and administrator void/refund controls are implemented behind a disabled-by-default production flag pending the controlled live transaction test.
 - There is no durable webhook receiver, queue, reconciliation job, or inventory lock.
 - The current DigitalOcean app has a storefront service but no managed database or worker.
 

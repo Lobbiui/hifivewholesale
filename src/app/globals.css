@@ -1554,6 +1554,36 @@ textarea {
 .fulfillment-editor {
   padding: 24px;
 }
+.payment-manager {
+  margin: 24px 24px 0;
+  padding: 20px;
+  border: 1px solid rgba(95, 46, 147, 0.18);
+  border-radius: 16px;
+  background: #fff;
+}
+.payment-manager h3,
+.payment-manager p {
+  margin: 4px 0;
+}
+.payment-manager > div:first-child > small {
+  color: #6d6572;
+}
+.payment-history {
+  display: grid;
+  gap: 8px;
+  margin-top: 16px;
+}
+.payment-history > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 0;
+  border-top: 1px solid rgba(17, 12, 20, 0.1);
+}
+.payment-history small {
+  display: block;
+  color: #6d6572;
+}
 .fulfillment-editor-head,
 .fulfillment-editor-head > div,
 .fulfillment-actions {

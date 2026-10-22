@@ -14,7 +14,7 @@ export function LiveOrders(){
   return <>
     <Head eyebrow="Orders & fulfillment" title="EVERY ORDER. ONE FLOW." copy="Manage order review, UPS shipments, direct delivery, pickup, buyer notifications, and proof of delivery."/>
     {message&&<div className="gate-message">{message}</div>}
-    <div className="admin-table-wrap fulfillment-table"><table><thead><tr><th>Order</th><th>Customer</th><th>Cases</th><th>Total</th><th>Order status</th><th>Shipment</th><th>Manage</th></tr></thead><tbody>{data.orders.map(row=><FragmentOrder key={text(row.id)} row={row} open={expanded===text(row.id)} toggle={()=>setExpanded(current=>current===text(row.id)?"":text(row.id))} mutate={mutate} note={note} reload={load}/>)}</tbody></table></div>
+    <div className="admin-table-wrap fulfillment-table"><table><thead><tr><th>Order</th><th>Customer</th><th>Cases</th><th>Total</th><th>Payment</th><th>Order status</th><th>Shipment</th><th>Manage</th></tr></thead><tbody>{data.orders.map(row=><FragmentOrder key={text(row.id)} row={row} open={expanded===text(row.id)} toggle={()=>setExpanded(current=>current===text(row.id)?"":text(row.id))} mutate={mutate} note={note} reload={load}/>)}</tbody></table></div>
   </>
 }
 
@@ -23,13 +23,35 @@ function FragmentOrder({row,open,toggle,mutate,note,reload}:{row:Row;open:boolea
     <tr>
       <td><b>{text(row.order_number)}</b><small>{date(row.submitted_at)} · PO {text(row.purchase_order_number)||"—"}</small></td>
       <td>{text(row.customer)}<small>{text(row.contact_email)}</small></td>
-      <td>{text(row.cases)}</td><td>{money(row.estimated_total_cents)}</td>
+      <td>{text(row.cases)}</td><td>{money(row.estimated_total_cents)}</td><td><b>{text(row.payment_status).replaceAll("_"," ")||"UNPAID"}</b><small>{text(row.payment_account_type)} {text(row.payment_masked_account)}</small></td>
       <td><select value={text(row.state)} onChange={event=>void mutate({action:"order_status",id:row.id,state:event.target.value})}><option>SUBMITTED_FOR_REVIEW</option><option>PRICING_REVIEW</option><option>READY_FOR_CHECKOUT</option><option>CONVERTED</option><option>DECLINED</option></select></td>
       <td><b>{text(row.shipping_status).replaceAll("_"," ")||"Not scheduled"}</b><small>{text(row.shipping_method).replaceAll("_"," ")||text(row.fulfillment_method)}</small></td>
       <td><button className="admin-button fulfillment-manage" onClick={toggle} aria-expanded={open}>Fulfillment <ChevronDown className={open?"rotate":""}/></button><button className="link-button" onClick={()=>note(row)}>{text(row.latest_note)||"Add note"}</button></td>
     </tr>
-    {open?<tr className="fulfillment-editor-row"><td colSpan={7}><FulfillmentEditor row={row} reload={reload}/></td></tr>:null}
+    {open?<tr className="fulfillment-editor-row"><td colSpan={8}><PaymentManager row={row} reload={reload}/><FulfillmentEditor row={row} reload={reload}/></td></tr>:null}
   </>
+}
+
+function PaymentManager({row,reload}:{row:Row;reload:()=>Promise<void>}){
+  const [notice,setNotice]=useState("");
+  const [busy,setBusy]=useState(false);
+  const paid=Number(row.amount_paid_cents??0),refunded=Number(row.amount_refunded_cents??0),remaining=Math.max(0,paid-refunded),status=text(row.payment_status)||"UNPAID";
+  const act=async(action:"VOID"|"REFUND")=>{
+    let amountCents:number|undefined;
+    if(action==="VOID"){
+      if(!window.confirm(`VOID the live Authorize.net transaction for ${text(row.order_number)}? Use this only before settlement.`))return;
+    }else{
+      const value=window.prompt(`Refund amount in dollars. Maximum ${(remaining/100).toFixed(2)}`,(remaining/100).toFixed(2));
+      if(value===null)return;amountCents=Math.round(Number(value)*100);
+      if(!Number.isFinite(amountCents)||amountCents<1||amountCents>remaining){setNotice("Enter a valid refund amount within the remaining balance.");return}
+      if(!window.confirm(`Submit a live refund of ${(amountCents/100).toLocaleString("en-US",{style:"currency",currency:"USD"})}?`))return;
+    }
+    setBusy(true);setNotice("");
+    const response=await fetch("/api/admin/payments",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action,orderId:row.id,...(amountCents?{amountCents}:{})})});
+    const result=await response.json() as {message?:string};setBusy(false);setNotice(result.message||"Payment action completed.");if(response.ok)await reload();
+  };
+  const transactions=Array.isArray(row.payment_transactions)?row.payment_transactions as Row[]:[];
+  return <section className="payment-manager"><div><span className="eyebrow">Authorize.net payment</span><h3>{status.replaceAll("_"," ")}</h3><p>{paid?`${money(paid)} charged · ${money(refunded)} returned · ${money(remaining)} remaining`:"No successful online charge is attached to this order."}</p><small>{text(row.payment_account_type)} {text(row.payment_masked_account)} {text(row.payment_provider_reference)?`· Transaction ${text(row.payment_provider_reference)}`:""}</small></div>{notice?<div className="gate-message">{notice}</div>:null}{transactions.length?<div className="payment-history">{transactions.map(item=><div key={text(item.id)}><span><b>{text(item.operation)}</b> · {money(item.amountCents)}<small>{date(item.createdAt)} · {text(item.message)}</small></span><span className="admin-pill">{text(item.status)}{text(item.transactionId)?` · ${text(item.transactionId)}`:""}</span></div>)}</div>:null}{remaining>0&&text(row.payment_provider_reference)?<div className="fulfillment-actions"><button type="button" className="admin-button danger" disabled={busy||status!=="PAID"} onClick={()=>void act("VOID")}>Void unsettled payment</button><button type="button" className="admin-button" disabled={busy||status==="VOIDED"} onClick={()=>void act("REFUND")}>Refund payment</button></div>:null}</section>
 }
 
 function FulfillmentEditor({row,reload}:{row:Row;reload:()=>Promise<void>}){

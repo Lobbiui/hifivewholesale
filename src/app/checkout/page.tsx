@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import {
   Check,
   CheckCircle2,
@@ -24,6 +24,29 @@ type BuyerIdentity = {
   email: string;
 };
 
+type PaymentConfig = {
+  configured: boolean;
+  enabled: boolean;
+  environment: "sandbox" | "production";
+  apiLoginId: string;
+  publicClientKey: string;
+  scriptUrl: string;
+};
+
+type AcceptResponse = {
+  opaqueData?: { dataDescriptor: string; dataValue: string };
+  messages?: {
+    resultCode?: string;
+    message?: { code?: string; text?: string }[];
+  };
+};
+
+declare global {
+  interface Window {
+    hiFiveAuthorizeNetResponse?: (response: AcceptResponse) => void;
+  }
+}
+
 export default function CheckoutPage() {
   const { items, total, remove, setQuantity, clear, pricingPending, notice } =
     useCart();
@@ -31,9 +54,13 @@ export default function CheckoutPage() {
   const [method, setMethod] = useState<"pickup" | "delivery">("pickup");
   const [buyer, setBuyer] = useState<BuyerIdentity | null>(null);
   const [email, setEmail] = useState("");
+  const [purchaseOrder, setPurchaseOrder] = useState("");
   const [message, setMessage] = useState("");
   const [submittedOrder, setSubmittedOrder] = useState("");
+  const [submittedPayment, setSubmittedPayment] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [paymentConfig, setPaymentConfig] = useState<PaymentConfig | null>(null);
+  const paymentAttemptKey = useRef("");
 
   useEffect(() => {
     let active = true;
@@ -49,6 +76,32 @@ export default function CheckoutPage() {
       active = false;
     };
   }, []);
+
+  useEffect(() => {
+    if (!buyer) return;
+    let active = true;
+    void fetch("/api/buyer/payments/authorize-net/config", {
+      cache: "no-store",
+    }).then(async (response) => {
+      if (!active) return;
+      if (!response.ok) {
+        setPaymentConfig({
+          configured: false,
+          enabled: false,
+          environment: "production",
+          apiLoginId: "",
+          publicClientKey: "",
+          scriptUrl: "",
+        });
+        return;
+      }
+      const result = (await response.json()) as PaymentConfig;
+      setPaymentConfig(result);
+    });
+    return () => {
+      active = false;
+    };
+  }, [buyer]);
 
   const submitOrder = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -92,6 +145,86 @@ export default function CheckoutPage() {
     }
   };
 
+  const processHostedPayment = useCallback(
+    async (opaqueData: { dataDescriptor: string; dataValue: string }) => {
+      const approvedBuyer = buyer;
+      if (!approvedBuyer || !items.length || pricingPending || !email) {
+        setMessage("Complete the checkout details before opening payment.");
+        return;
+      }
+      paymentAttemptKey.current ||= crypto.randomUUID();
+      setSubmitting(true);
+      setMessage("");
+      try {
+        const response = await fetch("/api/buyer/payments/authorize-net", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            items: items.map(({ id, variantId, quantity }) => ({
+              id,
+              variantId,
+              quantity,
+            })),
+            method,
+            contactEmail: email,
+            purchaseOrder,
+            idempotencyKey: paymentAttemptKey.current,
+            opaqueData,
+          }),
+        });
+        const result = (await response.json()) as {
+          message?: string;
+          order?: { orderNumber: string; paymentStatus: string };
+        };
+        if (!response.ok || !result.order) {
+          setMessage(result.message || "The payment could not be completed.");
+          if (response.status !== 409 && response.status !== 502)
+            paymentAttemptKey.current = "";
+          return;
+        }
+        clear();
+        setSubmittedPayment(result.order.paymentStatus);
+        setSubmittedOrder(result.order.orderNumber);
+      } catch {
+        setMessage(
+          "The payment response could not be confirmed. Do not submit again; contact HiFive so the transaction can be checked.",
+        );
+      } finally {
+        setSubmitting(false);
+      }
+    }, [buyer, clear, email, items, method, pricingPending, purchaseOrder],
+  );
+
+  useEffect(() => {
+    window.hiFiveAuthorizeNetResponse = (response: AcceptResponse) => {
+      if (response.messages?.resultCode === "Error" || !response.opaqueData) {
+        setMessage(
+          response.messages?.message?.[0]?.text ||
+            "The secure card form could not tokenize this payment.",
+        );
+        return;
+      }
+      void processHostedPayment(response.opaqueData);
+    };
+    return () => {
+      delete window.hiFiveAuthorizeNetResponse;
+    };
+  }, [processHostedPayment]);
+
+  useEffect(() => {
+    if (!paymentConfig?.enabled || !paymentConfig.scriptUrl) return;
+    const previous = document.getElementById("authorize-net-accept-ui");
+    previous?.remove();
+    const script = document.createElement("script");
+    script.id = "authorize-net-accept-ui";
+    script.src = paymentConfig.scriptUrl;
+    script.async = false;
+    script.onerror = () =>
+      setMessage("The secure Authorize.net card form could not be loaded.");
+    document.body.appendChild(script);
+    return () => script.remove();
+  }, [paymentConfig]);
+
   if (submittedOrder)
     return (
       <main className="page-shell light-page checkout-page">
@@ -105,8 +238,11 @@ export default function CheckoutPage() {
           </h1>
           <p>
             <strong>{submittedOrder}</strong> has been sent for wholesale
-            review. Your account representative will confirm pricing and
-            fulfillment before payment.
+            review. {submittedPayment === "APPROVED"
+              ? "Payment was approved and the order is confirmed."
+              : submittedPayment === "HELD"
+                ? "Payment is being reviewed before fulfillment."
+                : "Your account representative will confirm pricing and fulfillment."}
           </p>
           <div>
             <Link className="button primary" href="/account">
@@ -243,7 +379,12 @@ export default function CheckoutPage() {
           </label>
           <label>
             {copy.checkout.po}
-            <input name="purchaseOrder" placeholder={copy.checkout.optional} />
+            <input
+              name="purchaseOrder"
+              placeholder={copy.checkout.optional}
+              value={purchaseOrder}
+              onChange={(event) => setPurchaseOrder(event.target.value)}
+            />
           </label>
           <div className="total-row">
             <span>
@@ -260,15 +401,43 @@ export default function CheckoutPage() {
               {message}
             </div>
           )}
-          <button
-            className="button primary full"
-            disabled={!buyer || !items.length || submitting}
-          >
-            {submitting ? "Submitting…" : copy.checkout.submit}
-          </button>
+          {paymentConfig === null ? (
+            <button className="button primary full" type="button" disabled>
+              Loading secure checkout…
+            </button>
+          ) : paymentConfig.enabled && !pricingPending ? (
+            <button
+              type="button"
+              className="button primary full AcceptUI"
+              disabled={!buyer || !items.length || !email || submitting}
+              data-apiLoginID={paymentConfig.apiLoginId}
+              data-clientKey={paymentConfig.publicClientKey}
+              data-billingAddressOptions={JSON.stringify({
+                show: true,
+                required: true,
+              })}
+              data-paymentOptions={JSON.stringify({
+                showCreditCard: true,
+                showBankAccount: false,
+              })}
+              data-acceptUIFormBtnTxt="Pay securely"
+              data-acceptUIFormHeaderTxt="HiFive secure payment"
+              data-responseHandler="hiFiveAuthorizeNetResponse"
+            >
+              {submitting ? "Processing payment…" : `Pay $${total.toFixed(2)} securely`}
+            </button>
+          ) : (
+            <button
+              className="button primary full"
+              disabled={!buyer || !items.length || submitting}
+            >
+              {submitting ? "Submitting…" : copy.checkout.submit}
+            </button>
+          )}
           <small className="integration-note">
-            Approval is re-validated when the order is submitted. Account
-            pricing is confirmed before Authorize.net payment.
+            {paymentConfig?.enabled && !pricingPending
+              ? "Card details are collected securely by Authorize.net and are never stored by HiFive. The final amount is recalculated by the server before charging."
+              : "Approval is re-validated when the order is submitted. Account pricing is confirmed before payment."}
           </small>
         </form>
       </section>
