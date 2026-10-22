@@ -64,7 +64,7 @@ type ImportRecord = {
   drafts: number;
   createdAt: string;
 };
-type ArchivedProduct={id:string;name:string;brand:string;category:string;archived_at:string|null;archive_delete_after:string|null};
+type ArchivedProduct={id:string;name:string;brand:string;category:string;archived_at:string|null;archive_delete_after:string|null;deletion_eligible:boolean};
 type Preview = {
   importType: "CLOVER_INVENTORY" | "FULL_CATALOG";
   filename: string;
@@ -698,7 +698,7 @@ export function AdminCatalogManager() {
     if (removed) setMessage("Image replaced and set as primary.");
   };
 
-  if(section==="archive")return <><div className="catalog-section-tabs"><button onClick={()=>setSection("products")}>Products</button><button onClick={()=>setSection("category")}>Categories</button><button onClick={()=>setSection("productType")}>Product types</button><button className="active">Archive</button></div><div className="admin-section-head"><div><span className="eyebrow">30-day recovery</span><h2>PRODUCT ARCHIVE.</h2><p>Restore archived products or permanently remove eligible records. Order history is always protected.</p></div><button className="admin-button" onClick={()=>void loadArchive()}>Refresh archive</button></div>{message&&<div className="gate-message">{message}</div>}<div className="admin-table-wrap"><table><thead><tr><th>Product</th><th>Archived</th><th>Recovery date</th><th>Controls</th></tr></thead><tbody>{archived.map(item=><tr key={item.id}><td><b>{item.name}</b><small>{item.brand} · {item.category}</small></td><td>{item.archived_at?new Date(item.archived_at).toLocaleString():"—"}</td><td>{item.archive_delete_after?new Date(item.archive_delete_after).toLocaleDateString():"—"}</td><td><div className="decision-actions"><button onClick={()=>void archiveAction(item.id,"RESTORE")}>Restore</button><button onClick={()=>void archiveAction(item.id,"PERMANENT_DELETE")}><Trash2/>Delete permanently</button></div></td></tr>)}</tbody></table></div></>;
+  if(section==="archive")return <><div className="catalog-section-tabs"><button onClick={()=>setSection("products")}>Products</button><button onClick={()=>setSection("category")}>Categories</button><button onClick={()=>setSection("productType")}>Product types</button><button className="active">Archive</button></div><div className="admin-section-head"><div><span className="eyebrow">30-day recovery</span><h2>PRODUCT ARCHIVE.</h2><p>Restore products during the recovery period. Permanent deletion unlocks after 30 days and never removes protected order history.</p></div><button className="admin-button" onClick={()=>void loadArchive()}>Refresh archive</button></div>{message&&<div className="gate-message">{message}</div>}<div className="admin-table-wrap"><table><thead><tr><th>Product</th><th>Archived</th><th>Permanent deletion available</th><th>Controls</th></tr></thead><tbody>{archived.map(item=><tr key={item.id}><td><b>{item.name}</b><small>{item.brand} · {item.category}</small></td><td>{item.archived_at?new Date(item.archived_at).toLocaleString():"—"}</td><td>{item.archive_delete_after?new Date(item.archive_delete_after).toLocaleDateString():"—"}</td><td><div className="decision-actions"><button onClick={()=>void archiveAction(item.id,"RESTORE")}>Restore</button><button disabled={!item.deletion_eligible} title={item.deletion_eligible?"Permanently delete":"Available after the 30-day recovery period"} onClick={()=>void archiveAction(item.id,"PERMANENT_DELETE")}><Trash2/>Delete permanently</button></div></td></tr>)}</tbody></table></div></>;
 
   if (section !== "products")
     return (
