@@ -5,6 +5,7 @@ import { getAdminIdentity, hasValidRequestOrigin } from "@/lib/server/admin-auth
 import { hashBuyerToken } from "@/lib/server/buyer-auth";
 import { getDatabase } from "@/lib/server/database";
 import { queueAndSendEmail } from "@/lib/server/email";
+import { hashPassword } from "@/lib/server/passwords";
 import { isTennesseeTerritory } from "@/lib/us-states";
 
 export const runtime = "nodejs";
@@ -22,6 +23,8 @@ const requestSchema = z.discriminatedUnion("action", [
     businessType: z.string().trim().min(2).max(100),
     websiteUrl: z.string().trim().url().max(500).or(z.literal("")),
     tnLicenseVerified: z.boolean(),
+    setupMethod: z.enum(["ACTIVATION_LINK","TEMPORARY_PASSWORD"]).default("ACTIVATION_LINK"),
+    temporaryPassword: z.string().max(200).optional().default(""),
   }).strict(),
   z.object({ action: z.literal("resend_activation"), organizationId: z.string().min(1) }).strict(),
 ]);
@@ -81,6 +84,7 @@ export async function POST(request: Request) {
         [parsed.data.email],
       );
       if (duplicate.rows[0]) throw new Error("An account with that email already exists.");
+      if(parsed.data.setupMethod==="TEMPORARY_PASSWORD"&&!/^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{12,200}$/.test(parsed.data.temporaryPassword))throw new Error("Temporary passwords need at least 12 characters with a letter, number, and special character.");
 
       const organizationId = `org_${randomUUID()}`;
       const userId = `usr_${randomUUID()}`;
@@ -91,13 +95,14 @@ export async function POST(request: Request) {
         [organizationId, parsed.data.companyName, parsed.data.resaleId, parsed.data.territory, parsed.data.websiteUrl || null],
       );
       await transaction.query(
-        `INSERT INTO users (id,email,display_name,system_role,status) VALUES ($1,$2,$3,'BUYER','INVITED')`,
-        [userId, parsed.data.email, parsed.data.contactName],
+        `INSERT INTO users (id,email,display_name,system_role,status,must_change_password) VALUES ($1,$2,$3,'BUYER',$4,$5)`,
+        [userId, parsed.data.email, parsed.data.contactName,parsed.data.setupMethod==="TEMPORARY_PASSWORD"?"ACTIVE":"INVITED",parsed.data.setupMethod==="TEMPORARY_PASSWORD"],
       );
+      const credentialHash=parsed.data.setupMethod==="TEMPORARY_PASSWORD"?await hashPassword(parsed.data.temporaryPassword):"pending-activation";
       await transaction.query(
         `INSERT INTO user_credentials (user_id,password_hash,reset_token_hash,reset_token_expires_at)
-         VALUES ($1,'pending-activation',$2,CURRENT_TIMESTAMP+INTERVAL '7 days')`,
-        [userId, hashBuyerToken(activationToken)],
+         VALUES ($1,$2,$3,CASE WHEN $3 IS NULL THEN NULL ELSE CURRENT_TIMESTAMP+INTERVAL '7 days' END)`,
+        [userId,credentialHash,parsed.data.setupMethod==="ACTIVATION_LINK"?hashBuyerToken(activationToken):null],
       );
       await transaction.query(
         `INSERT INTO organization_memberships (id,organization_id,user_id,membership_role) VALUES ($1,$2,$3,'OWNER')`,
@@ -119,11 +124,12 @@ export async function POST(request: Request) {
       await transaction.query(
         `INSERT INTO audit_events (id,actor_user_id,organization_id,action,aggregate_type,aggregate_id,after_json)
          VALUES ($1,$2,$3,'WHOLESALE_ACCOUNT_CREATED','WHOLESALE_ACCOUNT',$3,$4)`,
-        [randomUUID(), admin.id, organizationId, { email: parsed.data.email, contactName: parsed.data.contactName, status: "INVITED", tnLicenseVerified: parsed.data.tnLicenseVerified }],
+        [randomUUID(), admin.id, organizationId, { email: parsed.data.email, contactName: parsed.data.contactName, status: parsed.data.setupMethod==="TEMPORARY_PASSWORD"?"ACTIVE":"INVITED",mustChangePassword:parsed.data.setupMethod==="TEMPORARY_PASSWORD",tnLicenseVerified: parsed.data.tnLicenseVerified }],
       );
       return { organizationId, email: parsed.data.email, contactName: parsed.data.contactName, companyName: parsed.data.companyName };
     });
 
+    if(parsed.data.action==="create"&&parsed.data.setupMethod==="TEMPORARY_PASSWORD")return NextResponse.json({ok:true,organizationId:created.organizationId,emailDelivery:"not_sent",mustChangePassword:true},{status:201});
     let emailDelivery = "failed";
     try {
       const email = await queueAndSendEmail(database, {

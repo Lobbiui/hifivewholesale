@@ -64,6 +64,7 @@ type ImportRecord = {
   drafts: number;
   createdAt: string;
 };
+type ArchivedProduct={id:string;name:string;brand:string;category:string;archived_at:string|null;archive_delete_after:string|null};
 type Preview = {
   importType: "CLOVER_INVENTORY" | "FULL_CATALOG";
   filename: string;
@@ -91,6 +92,7 @@ type ImageManagerProps = {
   onRemove: (url: string) => void;
   onReorder: (urls: string[]) => void;
 };
+type StoredAsset={id:string;asset_type:"IMAGE"|"COA";filename:string;display_name:string;mime_type:string;hidden:boolean;url:string};
 
 type CoaListProps = {
   urls: string[];
@@ -251,6 +253,8 @@ function ImageManager({
   );
 }
 
+function StoredMediaLibrary({productId,variantId,onChanged}:{productId:string;variantId?:string;onChanged:()=>Promise<void>}){const [assets,setAssets]=useState<StoredAsset[]>([]),[open,setOpen]=useState(false),[notice,setNotice]=useState("");const load=useCallback(async()=>{const query=new URLSearchParams({productId});if(variantId)query.set("variantId",variantId);const response=await fetch(`/api/admin/product-assets?${query}`,{cache:"no-store"}),result=await response.json() as {assets?:StoredAsset[]};if(response.ok)setAssets(result.assets??[])},[productId,variantId]);const toggle=async()=>{const next=!open;setOpen(next);if(next)await load()};const mutate=async(asset:StoredAsset,operation:"RENAME"|"HIDE"|"SHOW")=>{const displayName=operation==="RENAME"?window.prompt("Media name",asset.display_name):undefined;if(operation==="RENAME"&&!displayName)return;const response=await fetch("/api/admin/product-assets",{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({operation,productId,variantId,assetType:asset.asset_type,url:asset.url,displayName})}),result=await response.json() as {message?:string};setNotice(response.ok?"Media updated.":result.message||"Media could not be updated.");if(response.ok){await load();await onChanged()}};const remove=async(asset:StoredAsset)=>{if(!window.confirm(`Delete ${asset.display_name}?`))return;const response=await fetch(`/api/admin/product-assets?id=${encodeURIComponent(asset.id)}`,{method:"DELETE"});setNotice(response.ok?"Media deleted.":"Media could not be deleted.");if(response.ok){await load();await onChanged()}};return <section className="stored-media-library"><button type="button" className="link-button" onClick={()=>void toggle()}>{open?"Close":"Open"} uploaded media library ({assets.length||"…"})</button>{open?<><p>Rename files or hide them from buyers without deleting the upload.</p>{notice?<small>{notice}</small>:null}<div>{assets.map(asset=><article key={asset.id}><a href={asset.url} target="_blank" rel="noreferrer">{asset.mime_type.startsWith("image/")?<img src={asset.url} alt=""/>:<FileText/>}</a><span><b>{asset.display_name}</b><small>{asset.asset_type} · {asset.hidden?"Hidden":"Visible"}</small></span><button type="button" onClick={()=>void mutate(asset,"RENAME")}><Pencil/>Rename</button><button type="button" onClick={()=>void mutate(asset,asset.hidden?"SHOW":"HIDE")}>{asset.hidden?"Show":"Hide"}</button><button type="button" onClick={()=>void remove(asset)}><Trash2/>Delete</button></article>)}</div></>:null}</section>}
+
 export function AdminCatalogManager() {
   const input = useRef<HTMLInputElement>(null);
   const [products, setProducts] = useState<CatalogProduct[]>([]);
@@ -267,9 +271,13 @@ export function AdminCatalogManager() {
   const [categories, setCategories] = useState<string[]>([]);
   const [productTypes, setProductTypes] = useState<string[]>([]);
   const [section, setSection] = useState<
-    "products" | "category" | "productType"
+    "products" | "category" | "productType" | "archive"
   >("products");
   const [view, setView] = useState<"detail" | "list">("detail");
+  const [archived,setArchived]=useState<ArchivedProduct[]>([]);
+
+  const loadArchive=useCallback(async()=>{const response=await fetch("/api/admin/products/archive",{cache:"no-store"}),result=await response.json() as {products?:ArchivedProduct[];message?:string};if(!response.ok)throw new Error(result.message||"Archive could not be loaded.");setArchived(result.products??[])},[]);
+  const archiveAction=async(id:string,action:"RESTORE"|"PERMANENT_DELETE")=>{if(action==="PERMANENT_DELETE"&&!window.confirm("Permanently delete this archived product? This cannot be undone."))return;const response=await fetch("/api/admin/products/archive",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id,action})}),result=await response.json() as {message?:string};setMessage(response.ok?action==="RESTORE"?"Product restored as a draft.":"Product permanently deleted.":result.message||"Archive action failed.");if(response.ok){await loadArchive();await load()}};
 
   const load = useCallback(async () => {
     const response = await fetch("/api/admin/products", { cache: "no-store" });
@@ -303,8 +311,6 @@ export function AdminCatalogManager() {
   }, []);
 
   useEffect(() => {
-    // Loading is intentionally triggered once when the authenticated workspace mounts.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     void load().catch((error: Error) => setMessage(error.message));
   }, [load]);
 
@@ -489,6 +495,7 @@ export function AdminCatalogManager() {
     );
     setEditor(product);
   };
+  const refreshEditor=async(productId:string)=>{const refreshed=await load();const saved=refreshed.find(product=>product.id===productId);if(saved)openEditor(saved)};
 
   const setTargetImages = (urls: string[], variantId?: string) => {
     if (!variantId) {
@@ -691,6 +698,8 @@ export function AdminCatalogManager() {
     if (removed) setMessage("Image replaced and set as primary.");
   };
 
+  if(section==="archive")return <><div className="catalog-section-tabs"><button onClick={()=>setSection("products")}>Products</button><button onClick={()=>setSection("category")}>Categories</button><button onClick={()=>setSection("productType")}>Product types</button><button className="active">Archive</button></div><div className="admin-section-head"><div><span className="eyebrow">30-day recovery</span><h2>PRODUCT ARCHIVE.</h2><p>Restore archived products or permanently remove eligible records. Order history is always protected.</p></div><button className="admin-button" onClick={()=>void loadArchive()}>Refresh archive</button></div>{message&&<div className="gate-message">{message}</div>}<div className="admin-table-wrap"><table><thead><tr><th>Product</th><th>Archived</th><th>Recovery date</th><th>Controls</th></tr></thead><tbody>{archived.map(item=><tr key={item.id}><td><b>{item.name}</b><small>{item.brand} · {item.category}</small></td><td>{item.archived_at?new Date(item.archived_at).toLocaleString():"—"}</td><td>{item.archive_delete_after?new Date(item.archive_delete_after).toLocaleDateString():"—"}</td><td><div className="decision-actions"><button onClick={()=>void archiveAction(item.id,"RESTORE")}>Restore</button><button onClick={()=>void archiveAction(item.id,"PERMANENT_DELETE")}><Trash2/>Delete permanently</button></div></td></tr>)}</tbody></table></div></>;
+
   if (section !== "products")
     return (
       <>
@@ -702,6 +711,7 @@ export function AdminCatalogManager() {
           >
             Categories
           </button>
+          <button onClick={()=>{setSection("archive");void loadArchive()}}>Archive</button>
           <button
             className={section === "productType" ? "active" : ""}
             onClick={() => setSection("productType")}
@@ -719,6 +729,7 @@ export function AdminCatalogManager() {
         <button className="active">Products</button>
         <button onClick={() => setSection("category")}>Categories</button>
         <button onClick={() => setSection("productType")}>Product types</button>
+        <button onClick={()=>{setSection("archive");void loadArchive()}}>Archive</button>
         <span />
         <button
           className={view === "detail" ? "active" : ""}
@@ -1084,6 +1095,7 @@ export function AdminCatalogManager() {
                           )
                         }
                       />
+                      <StoredMediaLibrary productId={editor.id} variantId={option.id} onChanged={()=>refreshEditor(editor.id)}/>
                     </div>
                   )}
                 </div>
@@ -1170,6 +1182,7 @@ export function AdminCatalogManager() {
                     void mutateImages(editor.id, "REORDER", urls)
                   }
                 />
+                <StoredMediaLibrary productId={editor.id} onChanged={()=>refreshEditor(editor.id)}/>
               </div>
             )}
             <label className="full-field">

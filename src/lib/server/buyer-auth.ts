@@ -12,6 +12,7 @@ export type BuyerIdentity = {
   organizationId: string;
   company: string;
   applicationId: string | null;
+  mustChangePassword: boolean;
 };
 
 type BuyerRow = {
@@ -22,6 +23,7 @@ type BuyerRow = {
   organization_id: string;
   company: string;
   application_id: string | null;
+  must_change_password: boolean;
 };
 
 export function buyerSessionCookieName() {
@@ -55,7 +57,8 @@ export async function getBuyerIdentityForToken(token: string, touch = false): Pr
   const result = await database.query<BuyerRow>(
     `SELECT s.id AS session_id, u.id AS user_id, u.email, u.display_name,
             o.id AS organization_id, o.display_name AS company,
-            (SELECT ba.id FROM buyer_applications ba WHERE ba.organization_id = o.id ORDER BY ba.submitted_at DESC LIMIT 1) AS application_id
+            (SELECT ba.id FROM buyer_applications ba WHERE ba.organization_id = o.id ORDER BY ba.submitted_at DESC LIMIT 1) AS application_id,
+            u.must_change_password
        FROM sessions s
        JOIN users u ON u.id = s.user_id
        JOIN organization_memberships om ON om.user_id = u.id
@@ -79,6 +82,7 @@ export async function getBuyerIdentityForToken(token: string, touch = false): Pr
     organizationId: row.organization_id,
     company: row.company,
     applicationId: row.application_id,
+    mustChangePassword: row.must_change_password,
   };
 }
 

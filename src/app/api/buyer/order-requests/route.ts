@@ -84,6 +84,7 @@ export async function POST(request: Request) {
       { ok: false, message: "Approved buyer access is required." },
       { status: 401 },
     );
+  if (buyer.mustChangePassword) return NextResponse.json({ok:false,message:"Change the temporary password before submitting an order."},{status:403});
   const parsed = submitSchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success)
     return NextResponse.json(

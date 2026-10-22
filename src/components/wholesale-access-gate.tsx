@@ -25,13 +25,13 @@ export function WholesaleAccessGate() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: String(form.get("email") || ""), password: String(form.get("password") || "") }),
       });
-      const result = await response.json() as { message?: string };
+      const result = await response.json() as { message?: string; mustChangePassword?: boolean };
       if (!response.ok) {
         setMessage(result.message || "Buyer sign-in failed.");
         return;
       }
       const requested = new URLSearchParams(window.location.search).get("returnTo");
-      router.replace(requested?.startsWith("/") && !requested.startsWith("//") ? requested : "/");
+      router.replace(result.mustChangePassword ? "/account?passwordChange=required" : requested?.startsWith("/") && !requested.startsWith("//") ? requested : "/");
       router.refresh();
     } catch {
       setMessage("The buyer sign-in service is temporarily unavailable.");

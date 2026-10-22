@@ -365,7 +365,7 @@ export async function DELETE(request: Request) {
   const database = await getDatabase();
   await database.transaction(async (tx) => {
     await tx.query(
-      "UPDATE products SET status='ARCHIVED',updated_at=CURRENT_TIMESTAMP WHERE id=$1",
+      "UPDATE products SET status='ARCHIVED',archived_at=CURRENT_TIMESTAMP,archive_delete_after=CURRENT_TIMESTAMP+INTERVAL '30 days',updated_at=CURRENT_TIMESTAMP WHERE id=$1",
       [id],
     );
     await tx.query(

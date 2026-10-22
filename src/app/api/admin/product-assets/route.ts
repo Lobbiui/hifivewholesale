@@ -26,6 +26,7 @@ const mediaMutation = z.discriminatedUnion("operation", [
     assetType,
     url: z.string().min(1).max(1000),
   }),
+  z.object({operation:z.enum(["RENAME","HIDE","SHOW"]),productId:z.string().min(1),variantId:z.string().min(1).optional(),assetType,url:z.string().min(1).max(1000),displayName:z.string().trim().min(1).max(200).optional()}),
 ]);
 const allowed = new Set([
   "image/jpeg",
@@ -33,6 +34,8 @@ const allowed = new Set([
   "image/webp",
   "application/pdf",
 ]);
+
+export async function GET(request:Request){if(!await getAdminIdentity())return NextResponse.json({ok:false},{status:401});const url=new URL(request.url),productId=url.searchParams.get("productId"),variantId=url.searchParams.get("variantId");if(!productId)return NextResponse.json({ok:false},{status:422});const db=await getDatabase(),assets=await db.query("SELECT id,asset_type,filename,COALESCE(display_name,filename) AS display_name,mime_type,hidden,sort_order,created_at FROM product_assets WHERE product_id=$1 AND product_variant_id IS NOT DISTINCT FROM $2 ORDER BY asset_type,sort_order,created_at",[productId,variantId]);return NextResponse.json({ok:true,assets:assets.rows.map(row=>({...row,url:`/api/catalog/assets/${row.id}`}))})}
 
 export async function POST(request: Request) {
   if (!hasValidRequestOrigin(request))
@@ -86,7 +89,7 @@ export async function POST(request: Request) {
         throw new Error("The shopper option was not found.");
     }
     await tx.query(
-      "INSERT INTO product_assets (id,product_id,product_variant_id,asset_type,filename,mime_type,file_bytes,uploaded_by) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)",
+      "INSERT INTO product_assets (id,product_id,product_variant_id,asset_type,filename,display_name,mime_type,file_bytes,uploaded_by) VALUES ($1,$2,$3,$4,$5,$5,$6,$7,$8)",
       [
         id,
         parsed.data.productId,
@@ -150,6 +153,13 @@ export async function PATCH(request: Request) {
       { ok: false, message: "The product media record was not found." },
       { status: 404 },
     );
+
+  if(data.operation==="RENAME"||data.operation==="HIDE"||data.operation==="SHOW"){
+    const storedId=storedAssetId(data.url);if(!storedId)return NextResponse.json({ok:false,message:"Only uploaded media can use this control."},{status:422});
+    if(data.operation==="RENAME"){if(!data.displayName)return NextResponse.json({ok:false},{status:422});await database.query("UPDATE product_assets SET display_name=$2 WHERE id=$1 AND product_id=$3",[storedId,data.displayName,data.productId]);return NextResponse.json({ok:true})}
+    const next=data.operation==="HIDE"?existing.filter(url=>url!==data.url):existing.includes(data.url)?existing:[...existing,data.url];
+    await database.transaction(async tx=>{await tx.query("UPDATE product_assets SET hidden=$2 WHERE id=$1 AND product_id=$3",[storedId,data.operation==="HIDE",data.productId]);if(data.variantId)await tx.query(`UPDATE product_variants SET ${column}=$2::jsonb,updated_at=CURRENT_TIMESTAMP WHERE id=$1`,[data.variantId,JSON.stringify(next)]);else await tx.query(`UPDATE product_catalog_details SET ${column}=$2::jsonb,updated_at=CURRENT_TIMESTAMP WHERE product_id=$1`,[data.productId,JSON.stringify(next)])});return NextResponse.json({ok:true,urls:next});
+  }
 
   let next: string[];
   if (data.operation === "REORDER") {

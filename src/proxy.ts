@@ -4,7 +4,12 @@ import { buyerSessionCookieName, getBuyerIdentityForToken } from "@/lib/server/b
 export async function proxy(request: NextRequest) {
   const token = request.cookies.get(buyerSessionCookieName())?.value;
   const buyer = token ? await getBuyerIdentityForToken(token) : null;
-  if (buyer) return NextResponse.next();
+  if (buyer) {
+    if (buyer.mustChangePassword && request.nextUrl.pathname !== "/account") {
+      return NextResponse.redirect(new URL("/account?passwordChange=required", request.url));
+    }
+    return NextResponse.next();
+  }
 
   const accessUrl = new URL("/access", request.url);
   accessUrl.searchParams.set("returnTo", `${request.nextUrl.pathname}${request.nextUrl.search}`);

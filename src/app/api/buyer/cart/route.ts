@@ -30,6 +30,7 @@ type CartItemRow = { product_snapshot_json: unknown; quantity_cases: number };
 export async function GET() {
   const buyer = await getBuyerIdentity();
   if (!buyer) return NextResponse.json({ ok: false }, { status: 401 });
+  if (buyer.mustChangePassword) return NextResponse.json({ok:false,message:"Change the temporary password before using the cart."},{status:403});
   const database = await getDatabase();
   const result = await database.query<CartItemRow>(
     `SELECT ci.product_snapshot_json, ci.quantity_cases
@@ -80,6 +81,7 @@ export async function PUT(request: Request) {
     return NextResponse.json({ ok: false }, { status: 403 });
   const buyer = await getBuyerIdentity();
   if (!buyer) return NextResponse.json({ ok: false }, { status: 401 });
+  if (buyer.mustChangePassword) return NextResponse.json({ok:false,message:"Change the temporary password before using the cart."},{status:403});
   const parsed = cartSchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success)
     return NextResponse.json(

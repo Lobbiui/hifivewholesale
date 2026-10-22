@@ -20,6 +20,7 @@ type BuyerCredential = {
   password_hash: string;
   failed_attempts: number;
   locked_until: Date | string | null;
+  must_change_password: boolean;
 };
 
 export async function POST(request: Request) {
@@ -29,7 +30,7 @@ export async function POST(request: Request) {
 
   const database = await getDatabase();
   const result = await database.query<BuyerCredential>(
-    `SELECT DISTINCT u.id, c.password_hash, c.failed_attempts, c.locked_until
+    `SELECT DISTINCT u.id, c.password_hash, c.failed_attempts, c.locked_until, u.must_change_password
        FROM users u
        JOIN user_credentials c ON c.user_id = u.id
        JOIN organization_memberships om ON om.user_id = u.id
@@ -61,7 +62,7 @@ export async function POST(request: Request) {
   }
 
   await database.query("UPDATE user_credentials SET failed_attempts = 0, locked_until = NULL WHERE user_id = $1", [user.id]);
-  const response = NextResponse.json({ ok: true });
+  const response = NextResponse.json({ ok: true, mustChangePassword: user.must_change_password });
   await createBuyerSession(user.id, request, response);
   return response;
 }

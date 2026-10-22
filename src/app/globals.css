@@ -1759,6 +1759,47 @@ textarea {
   flex-wrap: wrap;
   gap: .6rem;
 }
+
+.account-search {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: .9rem 1rem;
+  margin: 0 0 1.25rem;
+  background: #fff;
+  border: 1px solid rgba(31,16,46,.12);
+  border-radius: 10px;
+}
+.account-search input { border: 0; padding: 0; width: 100%; }
+.customer-account-card { text-align: left; cursor: pointer; color: inherit; width: 100%; }
+.customer-account-card .text-link { display: inline-flex; align-items: center; gap: .35rem; margin-top: .75rem; }
+.account-profile-head > div:last-child { display: flex; align-items: center; flex-wrap: wrap; gap: .65rem; }
+.account-profile-tabs { display: flex; gap: .35rem; overflow-x: auto; margin: 0 0 1.25rem; border-bottom: 1px solid rgba(31,16,46,.14); }
+.account-profile-tabs button { border: 0; background: transparent; padding: .8rem 1rem; white-space: nowrap; cursor: pointer; font-weight: 700; }
+.account-profile-tabs button.active { color: #7134c7; box-shadow: inset 0 -3px #9d59ef; }
+.account-profile-form { margin-bottom: 1.5rem; }
+.document-manager { display: grid; grid-template-columns: 190px minmax(0,1fr); gap: 1rem; }
+.document-folders { align-self: start; display: grid; gap: .35rem; }
+.document-folders h3 { display: flex; align-items: center; gap: .4rem; }
+.document-folders button { text-align: left; border: 0; background: transparent; padding: .6rem; border-radius: 6px; cursor: pointer; }
+.document-folders button.active { background: #efe1ff; color: #6120b6; font-weight: 700; }
+.document-upload { margin-bottom: 1rem; }
+.document-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(220px,1fr)); gap: 1rem; }
+.document-grid article > svg { width: 30px; height: 30px; color: #8d42dc; }
+.document-grid h3 { overflow-wrap: anywhere; }
+.account-timeline { display: grid; gap: .75rem; margin-top: 1rem; }
+.account-timeline article { display: grid; grid-template-columns: auto 1fr auto; gap: 1rem; align-items: start; }
+.required-password-change { max-width: 760px; padding-top: 5rem; min-height: 80vh; }
+.required-password-change .admin-card { padding: 2rem; }
+@media (max-width: 760px) { .document-manager { grid-template-columns: 1fr; } .document-folders { grid-template-columns: repeat(2,minmax(0,1fr)); } .document-folders h3 { grid-column: 1/-1; } }
+
+.stored-media-library { margin-top: .75rem; padding-top: .75rem; border-top: 1px solid rgba(31,16,46,.12); }
+.stored-media-library > div { display: grid; gap: .5rem; margin-top: .75rem; }
+.stored-media-library article { display: grid; grid-template-columns: 52px minmax(0,1fr) auto auto auto; align-items: center; gap: .6rem; padding: .55rem; border: 1px solid rgba(31,16,46,.12); border-radius: 8px; }
+.stored-media-library article img { width: 48px; height: 48px; object-fit: contain; }
+.stored-media-library article span { display: grid; overflow-wrap: anywhere; }
+.stored-media-library article button { border: 0; background: #f1e8fb; padding: .45rem .6rem; border-radius: 5px; cursor: pointer; display: inline-flex; gap: .3rem; align-items: center; }
+@media (max-width: 700px) { .stored-media-library article { grid-template-columns: 48px 1fr; } }
 .customer-stats b {
   font-size: 12px;
   margin-top: 3px;
