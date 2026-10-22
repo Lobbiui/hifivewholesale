@@ -45,6 +45,7 @@ export function getAuthorizeNetConfig() {
   const transactionKey = clean(process.env.AUTHORIZE_NET_TRANSACTION_KEY);
   const publicClientKey = clean(process.env.AUTHORIZE_NET_PUBLIC_CLIENT_KEY);
   const configured = Boolean(apiLoginId && transactionKey && publicClientKey);
+  const testBuyerEmail = clean(process.env.AUTHORIZE_NET_TEST_BUYER_EMAIL).toLowerCase();
   return {
     environment,
     apiLoginId,
@@ -52,6 +53,7 @@ export function getAuthorizeNetConfig() {
     publicClientKey,
     configured,
     enabled: configured && process.env.AUTHORIZE_NET_ENABLED === "true",
+    testBuyerEmail,
     apiUrl:
       environment === "production"
         ? "https://api.authorize.net/xml/v1/request.api"
@@ -61,6 +63,15 @@ export function getAuthorizeNetConfig() {
         ? "https://js.authorize.net/v3/AcceptUI.js"
         : "https://jstest.authorize.net/v3/AcceptUI.js",
   };
+}
+
+export function canProcessAuthorizeNetFor(email: string) {
+  const config = getAuthorizeNetConfig();
+  return (
+    config.configured &&
+    (config.enabled ||
+      Boolean(config.testBuyerEmail && config.testBuyerEmail === email.trim().toLowerCase()))
+  );
 }
 
 function asMessages(value: GatewayMessage | GatewayMessage[] | undefined) {
@@ -172,6 +183,8 @@ export async function chargeAuthorizeNet(input: {
   });
   return parseGatewayResponse(raw);
 }
+
+// Webhook verification remains disabled until a valid Signature Key is configured.
 export async function voidAuthorizeNet(transactionId: string) {
   const raw = await authorizeNetRequest({
     createTransactionRequest: {
@@ -201,4 +214,5 @@ export async function refundAuthorizeNet(
   });
   return parseGatewayResponse(raw);
 }
+
 

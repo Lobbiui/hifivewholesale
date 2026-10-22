@@ -33,7 +33,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false }, { status: 403 });
   const admin = await getAdminIdentity();
   if (!admin) return NextResponse.json({ ok: false }, { status: 401 });
-  if (!getAuthorizeNetConfig().enabled)
+  if (!getAuthorizeNetConfig().configured)
     return NextResponse.json(
       { ok: false, message: "Authorize.net payment actions are disabled." },
       { status: 503 },

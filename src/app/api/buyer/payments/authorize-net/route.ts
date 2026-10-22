@@ -2,7 +2,7 @@ import { randomBytes, randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { hasValidRequestOrigin } from "@/lib/server/admin-auth";
-import { chargeAuthorizeNet, getAuthorizeNetConfig, type AuthorizeNetResult } from "@/lib/server/authorize-net";
+import { canProcessAuthorizeNetFor, chargeAuthorizeNet, type AuthorizeNetResult } from "@/lib/server/authorize-net";
 import { getBuyerIdentity } from "@/lib/server/buyer-auth";
 import { getStorefrontProductsByIds } from "@/lib/server/catalog";
 import { getDatabase, type Database } from "@/lib/server/database";
@@ -98,7 +98,7 @@ export async function POST(request: Request) {
       { ok: false, message: "Change the temporary password before paying." },
       { status: 403 },
     );
-  if (!getAuthorizeNetConfig().enabled)
+  if (!canProcessAuthorizeNetFor(buyer.email))
     return NextResponse.json(
       { ok: false, message: "Online payment is not enabled yet." },
       { status: 503 },
