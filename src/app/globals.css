@@ -3862,7 +3862,7 @@ body {
   }
 }
 .product-detail-page {
-  background: linear-gradient(#08060b 0 102px, var(--paper) 102px);
+  background: linear-gradient(#f2eff4 0 102px, var(--paper) 102px);
 }
 
 /* Supplied brand catalog media */
@@ -4031,6 +4031,9 @@ body {
   background: rgba(247, 245, 242, 0.96);
   backdrop-filter: blur(14px);
   position: absolute;
+}
+.site-header-product {
+  background: rgba(242, 239, 244, 0.96);
 }
 .site-header-light .header-inner {
   border-bottom-color: var(--line);

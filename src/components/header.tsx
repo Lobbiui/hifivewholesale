@@ -13,10 +13,16 @@ export function Header() {
   const { count } = useCart();
   const { language, setLanguage, copy } = useLanguage();
   const pathname = usePathname();
-  const lightHeader = pathname === "/checkout" || pathname === "/account";
+  const productHeader = pathname.startsWith("/shop/");
+  const lightHeader =
+    pathname === "/checkout" || pathname === "/account" || productHeader;
   return (
     <header
-      className={lightHeader ? "site-header site-header-light" : "site-header"}
+      className={
+        lightHeader
+          ? `site-header site-header-light${productHeader ? " site-header-product" : ""}`
+          : "site-header"
+      }
     >
       <div className="header-inner">
         <Link href="/" className="brand">
