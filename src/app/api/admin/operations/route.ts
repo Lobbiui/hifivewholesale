@@ -28,6 +28,8 @@ export async function GET() {
   const [orders, customers, brands, loyalty, promotions, blogs, distributors, tiers, markets, emails, contacts] = await Promise.all([
     database.query(`SELECT r.id, r.order_number, r.state, r.fulfillment_method, r.contact_email,
       r.purchase_order_number, r.estimated_total_cents, r.pricing_pending, r.submitted_at,
+      r.submitted_at + INTERVAL '30 days' AS invoice_expires_at,
+      CURRENT_TIMESTAMP < r.submitted_at + INTERVAL '30 days' AS invoice_available,
       r.payment_status, r.amount_paid_cents, r.amount_refunded_cents,
       r.payment_provider, r.payment_provider_reference, r.paid_at,
       o.display_name AS customer, COALESCE(SUM(i.quantity_cases),0)::int AS cases,

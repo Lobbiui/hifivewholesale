@@ -2622,6 +2622,30 @@ body {
   line-height: 1.5;
   margin-bottom: 15px;
 }
+.invoice-retention-notice {
+  display: grid;
+  gap: 4px;
+  background: #f2edf7;
+  border-left-color: #76508f;
+}
+.invoice-retention-notice b {
+  font-size: 11px;
+}
+.invoice-retention-notice span {
+  color: #514758;
+}
+.invoice-download,
+.invoice-download-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+.invoice-download svg,
+.invoice-download-link svg {
+  width: 13px;
+  height: 13px;
+}
 .gate-card form label {
   margin-bottom: 12px;
 }

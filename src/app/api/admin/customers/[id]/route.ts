@@ -44,6 +44,8 @@ export async function GET(_request:Request,context:{params:Promise<{id:string}>}
     db.query("SELECT id,name,location_type,line1,line2,city,region,postal_code,phone,is_primary,created_at FROM customer_locations WHERE organization_id=$1 ORDER BY is_primary DESC,name",[id]),
     db.query(`SELECT c.id,c.channel,c.subject,c.notes,c.contacted_at,c.created_at,u.display_name AS created_by FROM customer_contact_logs c JOIN users u ON u.id=c.created_by WHERE c.organization_id=$1 ORDER BY c.contacted_at DESC`,[id]),
     db.query(`SELECT r.id,r.order_number,r.state,r.fulfillment_method,r.purchase_order_number,r.estimated_total_cents,r.pricing_pending,r.submitted_at,
+      r.submitted_at + INTERVAL '30 days' AS invoice_expires_at,
+      CURRENT_TIMESTAMP < r.submitted_at + INTERVAL '30 days' AS invoice_available,
       r.payment_status,r.amount_paid_cents,r.amount_refunded_cents,r.payment_provider_reference,
       COALESCE(jsonb_agg(jsonb_build_object('name',i.product_name_snapshot,'cases',i.quantity_cases,'casePriceCents',i.case_price_cents) ORDER BY i.created_at) FILTER (WHERE i.id IS NOT NULL),'[]'::jsonb) AS items
       FROM order_requests r LEFT JOIN order_request_items i ON i.order_request_id=r.id WHERE r.organization_id=$1 GROUP BY r.id ORDER BY r.submitted_at DESC`,[id]),
