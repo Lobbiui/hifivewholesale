@@ -29,6 +29,7 @@ type ProductOption = {
   upc: string;
   unitsPerCase: number;
   price: number | null;
+  cost: number | null;
   stock: number;
   lowAt: number;
   active: boolean;
@@ -45,6 +46,8 @@ type CatalogProduct = {
   productLine: string;
   category: string;
   description: string;
+  tnRegisteredUpc: string;
+  defaultCost: number | null;
   variants: ProductOption[];
   status: string;
   productStats: string;
@@ -93,6 +96,17 @@ type ImageManagerProps = {
   onReorder: (urls: string[]) => void;
 };
 type StoredAsset={id:string;asset_type:"IMAGE"|"COA";filename:string;display_name:string;mime_type:string;hidden:boolean;url:string};
+
+function productCoaStatus(product: CatalogProduct) {
+  if (product.coaUrls.length > 0) return "Complete";
+  const activeOptions = product.variants.filter((option) => option.active);
+  const relevantOptions = activeOptions.length ? activeOptions : product.variants;
+  const linkedOptions = relevantOptions.filter(
+    (option) => (option.coaUrls?.length ?? 0) > 0,
+  ).length;
+  if (linkedOptions === 0) return "Missing";
+  return linkedOptions === relevantOptions.length ? "Complete" : "Partial";
+}
 
 type CoaListProps = {
   urls: string[];
@@ -270,6 +284,8 @@ export function AdminCatalogManager() {
   const [mainImages, setMainImages] = useState<string[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [productTypes, setProductTypes] = useState<string[]>([]);
+  const [editorCategory, setEditorCategory] = useState("Uncategorized");
+  const [editorProductType, setEditorProductType] = useState("Uncategorized");
   const [section, setSection] = useState<
     "products" | "category" | "productType" | "archive"
   >("products");
@@ -299,8 +315,18 @@ export function AdminCatalogManager() {
         categories: string[];
         productTypes: string[];
       };
-      setCategories(taxonomy.categories);
-      setProductTypes(taxonomy.productTypes);
+      setCategories(
+        [...new Set([
+          ...taxonomy.categories,
+          ...catalogProducts.map((product) => product.category),
+        ])].sort((a, b) => a.localeCompare(b)),
+      );
+      setProductTypes(
+        [...new Set([
+          ...taxonomy.productTypes,
+          ...catalogProducts.map((product) => product.productType),
+        ])].sort((a, b) => a.localeCompare(b)),
+      );
     }
     setMessage(
       (result.products?.length ?? 0)
@@ -401,11 +427,16 @@ export function AdminCatalogManager() {
       id: editing ? editor.id : undefined,
       name: editorName.trim(),
       alternateName: String(form.get("alternateName") || ""),
-      productType: String(form.get("productType") || "Uncategorized"),
+      productType: editorProductType,
       brand: String(form.get("brand") || ""),
       productLine: String(form.get("productLine") || ""),
-      category: String(form.get("category") || ""),
+      category: editorCategory,
       description: String(form.get("description") || ""),
+      tnRegisteredUpc: String(form.get("tnRegisteredUpc") || ""),
+      defaultCost:
+        String(form.get("defaultCost") || "") === ""
+          ? null
+          : Number(form.get("defaultCost")),
       status: String(form.get("status") || "DRAFT"),
       variants: options.map((option) => ({
         id: option.id,
@@ -413,6 +444,7 @@ export function AdminCatalogManager() {
         upc: option.upc,
         unitsPerCase: option.unitsPerCase,
         price: option.price,
+        cost: option.cost,
         stock: option.stock,
         lowAt: option.lowAt,
         active: option.active,
@@ -477,6 +509,10 @@ export function AdminCatalogManager() {
 
   const openEditor = (product: CatalogProduct | "new") => {
     setEditorName(product === "new" ? "" : product.name);
+    setEditorProductType(
+      product === "new" ? "Uncategorized" : product.productType,
+    );
+    setEditorCategory(product === "new" ? "Uncategorized" : product.category);
     setMainImages(product === "new" ? [] : product.imageUrls);
     setOptions(
       product === "new"
@@ -486,6 +522,7 @@ export function AdminCatalogManager() {
               upc: "",
               unitsPerCase: 1,
               price: null,
+              cost: null,
               stock: 0,
               lowAt: 0,
               active: true,
@@ -842,9 +879,8 @@ export function AdminCatalogManager() {
               Product type
               <select
                 name="productType"
-                defaultValue={
-                  editor === "new" ? "Uncategorized" : editor.productType
-                }
+                value={editorProductType}
+                onChange={(event) => setEditorProductType(event.target.value)}
                 required
               >
                 {productTypes.map((item) => (
@@ -872,9 +908,8 @@ export function AdminCatalogManager() {
               Category
               <select
                 name="category"
-                defaultValue={
-                  editor === "new" ? "Uncategorized" : editor.category
-                }
+                value={editorCategory}
+                onChange={(event) => setEditorCategory(event.target.value)}
                 required
               >
                 {categories.map((item) => (
@@ -966,6 +1001,26 @@ export function AdminCatalogManager() {
                         )
                       }
                     />
+                  </label>
+                  <label>
+                    Case cost
+                    <input
+                      name="optionCost"
+                      type="number"
+                      min="0"
+                      step=".01"
+                      value={option.cost ?? ""}
+                      onChange={(event) =>
+                        updateOption(
+                          index,
+                          "cost",
+                          event.target.value === ""
+                            ? null
+                            : Number(event.target.value),
+                        )
+                      }
+                    />
+                    <small>Admin only</small>
                   </label>
                   <label>
                     On hand
@@ -1111,6 +1166,7 @@ export function AdminCatalogManager() {
                       upc: "",
                       unitsPerCase: 1,
                       price: null,
+                      cost: null,
                       stock: 0,
                       lowAt: 0,
                       active: true,
@@ -1131,6 +1187,31 @@ export function AdminCatalogManager() {
               <small>
                 Strength, count, size, or other key specifications shown to
                 buyers.
+              </small>
+            </label>
+            <label>
+              TN Registered UPC
+              <input
+                name="tnRegisteredUpc"
+                defaultValue={editor === "new" ? "" : editor.tnRegisteredUpc}
+                inputMode="numeric"
+                autoComplete="off"
+              />
+              <small>Shown to approved buyers in the product details.</small>
+            </label>
+            <label>
+              Default case cost
+              <input
+                name="defaultCost"
+                type="number"
+                min="0"
+                step=".01"
+                defaultValue={
+                  editor === "new" ? "" : (editor.defaultCost ?? "")
+                }
+              />
+              <small>
+                Admin only. An option-level cost above overrides this value.
               </small>
             </label>
             <label>
@@ -1457,6 +1538,7 @@ export function AdminCatalogManager() {
                   <col className="option-coa-column" />
                   <col className="option-stock-column" />
                   <col className="option-price-column" />
+                  <col className="option-cost-column" />
                   <col className="option-status-column" />
                 </colgroup>
                 <thead>
@@ -1467,6 +1549,7 @@ export function AdminCatalogManager() {
                     <th>COA</th>
                     <th>On hand</th>
                     <th>Case price</th>
+                    <th>Case cost</th>
                     <th>Availability</th>
                   </tr>
                 </thead>
@@ -1514,6 +1597,19 @@ export function AdminCatalogManager() {
                             }).format(option.price)}
                       </td>
                       <td>
+                        {option.cost === null
+                          ? product.defaultCost === null
+                            ? "—"
+                            : `${new Intl.NumberFormat("en-US", {
+                                style: "currency",
+                                currency: "USD",
+                              }).format(product.defaultCost)} default`
+                          : new Intl.NumberFormat("en-US", {
+                              style: "currency",
+                              currency: "USD",
+                            }).format(option.cost)}
+                      </td>
+                      <td>
                         <span
                           className={`admin-pill ${option.active ? "good" : "warn"}`}
                         >
@@ -1555,7 +1651,7 @@ export function AdminCatalogManager() {
               </span>
               <span>
                 <small>COA</small>
-                <b>{product.coaUrls.length ? "Linked" : "Missing"}</b>
+                <b>{productCoaStatus(product)}</b>
               </span>
             </div>
             <div className="decision-actions">

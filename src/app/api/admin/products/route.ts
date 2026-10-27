@@ -20,6 +20,8 @@ type ProductRow = {
   product_line: string | null;
   category: string;
   description: string;
+  tn_registered_upc: string | null;
+  case_cost_cents: number | null;
   status: string;
   strength: string;
   flavor: string;
@@ -37,6 +39,7 @@ type VariantRow = {
   variant_name: string;
   units_per_case: number | null;
   wholesale_price_cents: number | null;
+  case_cost_cents: number | null;
   safety_stock_units: number;
   online_sellable: boolean;
   on_hand_units: number;
@@ -70,6 +73,8 @@ const productInput = z.object({
   productLine: z.string().trim().max(150).optional().default(""),
   category: z.string().trim().min(2).max(120),
   description: z.string().trim().max(10000).default(""),
+  tnRegisteredUpc: z.string().trim().max(120).optional().default(""),
+  defaultCost: z.number().min(0).max(1000000).nullable(),
   status: z.enum(["DRAFT", "SCHEDULED", "PUBLISHED", "ARCHIVED"]),
   variants: z
     .array(
@@ -79,6 +84,7 @@ const productInput = z.object({
         upc: z.string().trim().max(120).default(""),
         unitsPerCase: z.number().int().min(1).max(10000),
         price: z.number().min(0).max(1000000).nullable(),
+        cost: z.number().min(0).max(1000000).nullable(),
         stock: z.number().int().min(0).max(100000000),
         lowAt: z.number().int().min(0).max(100000000),
         active: z.boolean().default(true),
@@ -108,10 +114,10 @@ export async function GET() {
     const database = await getDatabase();
     const [products, variants, imports] = await Promise.all([
       database.query<ProductRow>(
-        `SELECT p.id,p.name,p.alternate_name,p.product_type,p.brand,p.product_line,p.category,p.description,p.status,COALESCE(d.strength,'') AS strength,COALESCE(d.flavor,'') AS flavor,COALESCE(d.format,'') AS format,COALESCE(d.image_urls,'[]'::jsonb) AS image_urls,COALESCE(d.coa_urls,'[]'::jsonb) AS coa_urls,COALESCE(d.color,'#39244d') AS color,COALESCE(d.accent,'#b67cff') AS accent FROM products p LEFT JOIN product_catalog_details d ON d.product_id=p.id WHERE p.status <> 'ARCHIVED' ORDER BY p.brand,p.name`,
+        `SELECT p.id,p.name,p.alternate_name,p.product_type,p.brand,p.product_line,p.category,p.description,p.tn_registered_upc,p.case_cost_cents,p.status,COALESCE(d.strength,'') AS strength,COALESCE(d.flavor,'') AS flavor,COALESCE(d.format,'') AS format,COALESCE(d.image_urls,'[]'::jsonb) AS image_urls,COALESCE(d.coa_urls,'[]'::jsonb) AS coa_urls,COALESCE(d.color,'#39244d') AS color,COALESCE(d.accent,'#b67cff') AS accent FROM products p LEFT JOIN product_catalog_details d ON d.product_id=p.id WHERE p.status <> 'ARCHIVED' ORDER BY p.brand,p.name`,
       ),
       database.query<VariantRow>(
-        `SELECT v.id,v.product_id,v.sku,v.upc,v.variant_name,v.units_per_case,v.wholesale_price_cents,v.safety_stock_units,v.online_sellable,COALESCE(latest.on_hand_units,0)::int AS on_hand_units,COALESCE(v.image_urls,'[]'::jsonb) AS image_urls,COALESCE(v.coa_urls,'[]'::jsonb) AS coa_urls FROM product_variants v LEFT JOIN LATERAL (SELECT on_hand_units FROM inventory_snapshots s WHERE s.product_variant_id=v.id ORDER BY observed_at DESC LIMIT 1) latest ON TRUE ORDER BY v.created_at`,
+        `SELECT v.id,v.product_id,v.sku,v.upc,v.variant_name,v.units_per_case,v.wholesale_price_cents,v.case_cost_cents,v.safety_stock_units,v.online_sellable,COALESCE(latest.on_hand_units,0)::int AS on_hand_units,COALESCE(v.image_urls,'[]'::jsonb) AS image_urls,COALESCE(v.coa_urls,'[]'::jsonb) AS coa_urls FROM product_variants v LEFT JOIN LATERAL (SELECT on_hand_units FROM inventory_snapshots s WHERE s.product_variant_id=v.id ORDER BY observed_at DESC LIMIT 1) latest ON TRUE ORDER BY v.created_at`,
       ),
       database.query<ImportRow>(
         "SELECT id,filename,import_type,row_count,total_units,draft_products,created_at FROM catalog_imports ORDER BY created_at DESC LIMIT 8",
@@ -131,6 +137,10 @@ export async function GET() {
               variant.wholesale_price_cents === null
                 ? null
                 : variant.wholesale_price_cents / 100,
+            cost:
+              variant.case_cost_cents === null
+                ? null
+                : variant.case_cost_cents / 100,
             stock: variant.on_hand_units,
             lowAt: variant.safety_stock_units,
             active: variant.online_sellable,
@@ -148,6 +158,9 @@ export async function GET() {
           productLine: row.product_line ?? "",
           category: row.category,
           description: row.description,
+          tnRegisteredUpc: row.tn_registered_upc ?? "",
+          defaultCost:
+            row.case_cost_cents === null ? null : row.case_cost_cents / 100,
           status: title(row.status),
           variants: productVariants,
           productStats: row.strength,
@@ -215,7 +228,7 @@ async function save(request: Request, updating: boolean) {
     await database.transaction(async (tx) => {
       if (updating) {
         await tx.query(
-          "UPDATE products SET name=$2,alternate_name=NULLIF($3,''),product_type=$4,brand=$5,product_line=NULLIF($6,''),category=$7,description=$8,status=$9,published_at=CASE WHEN $9='PUBLISHED' THEN COALESCE(published_at,CURRENT_TIMESTAMP) ELSE published_at END,updated_at=CURRENT_TIMESTAMP WHERE id=$1",
+          "UPDATE products SET name=$2,alternate_name=NULLIF($3,''),product_type=$4,brand=$5,product_line=NULLIF($6,''),category=$7,description=$8,tn_registered_upc=NULLIF($9,''),case_cost_cents=$10,status=$11,published_at=CASE WHEN $11='PUBLISHED' THEN COALESCE(published_at,CURRENT_TIMESTAMP) ELSE published_at END,updated_at=CURRENT_TIMESTAMP WHERE id=$1",
           [
             productId,
             data.name,
@@ -225,12 +238,16 @@ async function save(request: Request, updating: boolean) {
             data.productLine,
             data.category,
             data.description,
+            data.tnRegisteredUpc,
+            data.defaultCost === null
+              ? null
+              : Math.round(data.defaultCost * 100),
             data.status,
           ],
         );
       } else {
         await tx.query(
-          "INSERT INTO products (id,name,alternate_name,product_type,brand,product_line,category,description,status,published_at) VALUES ($1,$2,NULLIF($3,''),$4,$5,NULLIF($6,''),$7,$8,$9,CASE WHEN $9='PUBLISHED' THEN CURRENT_TIMESTAMP ELSE NULL END)",
+          "INSERT INTO products (id,name,alternate_name,product_type,brand,product_line,category,description,tn_registered_upc,case_cost_cents,status,published_at) VALUES ($1,$2,NULLIF($3,''),$4,$5,NULLIF($6,''),$7,$8,NULLIF($9,''),$10,$11,CASE WHEN $11='PUBLISHED' THEN CURRENT_TIMESTAMP ELSE NULL END)",
           [
             productId,
             data.name,
@@ -240,10 +257,22 @@ async function save(request: Request, updating: boolean) {
             data.productLine,
             data.category,
             data.description,
+            data.tnRegisteredUpc,
+            data.defaultCost === null
+              ? null
+              : Math.round(data.defaultCost * 100),
             data.status,
           ],
         );
       }
+      await tx.query(
+        "INSERT INTO catalog_product_types (name) VALUES ($1) ON CONFLICT (name) DO NOTHING",
+        [data.productType],
+      );
+      await tx.query(
+        "INSERT INTO catalog_categories (name) VALUES ($1) ON CONFLICT (name) DO NOTHING",
+        [data.category],
+      );
       const existing = updating
         ? await tx.query<{ id: string }>(
             "SELECT id FROM product_variants WHERE product_id=$1",
@@ -258,22 +287,25 @@ async function save(request: Request, updating: boolean) {
         retained.add(variantId);
         const priceCents =
           option.price === null ? null : Math.round(option.price * 100);
+        const costCents =
+          option.cost === null ? null : Math.round(option.cost * 100);
         if (found)
           await tx.query(
-            "UPDATE product_variants SET variant_name=$2,upc=NULLIF($3,''),units_per_case=$4,wholesale_price_cents=$5,safety_stock_units=$6,online_sellable=$7,updated_at=CURRENT_TIMESTAMP WHERE id=$1",
+            "UPDATE product_variants SET variant_name=$2,upc=NULLIF($3,''),units_per_case=$4,wholesale_price_cents=$5,case_cost_cents=$6,safety_stock_units=$7,online_sellable=$8,updated_at=CURRENT_TIMESTAMP WHERE id=$1",
             [
               variantId,
               option.name,
               option.upc,
               option.unitsPerCase,
               priceCents,
+              costCents,
               option.lowAt,
               option.active,
             ],
           );
         else
           await tx.query(
-            "INSERT INTO product_variants (id,product_id,variant_name,upc,units_per_case,wholesale_price_cents,safety_stock_units,online_sellable) VALUES ($1,$2,$3,NULLIF($4,''),$5,$6,$7,$8)",
+            "INSERT INTO product_variants (id,product_id,variant_name,upc,units_per_case,wholesale_price_cents,case_cost_cents,safety_stock_units,online_sellable) VALUES ($1,$2,$3,NULLIF($4,''),$5,$6,$7,$8,$9)",
             [
               variantId,
               productId,
@@ -281,6 +313,7 @@ async function save(request: Request, updating: boolean) {
               option.upc,
               option.unitsPerCase,
               priceCents,
+              costCents,
               option.lowAt,
               option.active,
             ],

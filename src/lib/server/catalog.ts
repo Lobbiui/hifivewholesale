@@ -11,6 +11,7 @@ type CatalogRow = {
   category: string;
   product_type: string;
   description: string;
+  tn_registered_upc: string | null;
   strength: string;
   flavor: string;
   format: string;
@@ -31,6 +32,7 @@ type CatalogRow = {
 
 const catalogQuery = `
   SELECT p.id, p.name, p.brand, p.category, p.product_type, p.description,
+         p.tn_registered_upc,
          COALESCE(d.strength, '') AS strength,
          COALESCE(d.flavor, '') AS flavor,
          COALESCE(d.format, 'Standard') AS format, v.id AS variant_id, v.variant_name,
@@ -95,6 +97,7 @@ function toProduct(row: CatalogRow, rows: CatalogRow[]): Product {
     flavor: row.flavor || row.name,
     format: row.format,
     description: row.description,
+    tnRegisteredUpc: row.tn_registered_upc ?? undefined,
     price: unitPrice,
     casePrice:
       row.wholesale_price_cents === null

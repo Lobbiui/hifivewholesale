@@ -134,6 +134,12 @@ export function ProductDetail({
             </div>
             <h1>{product.name}</h1>
             <p className="detail-lead">{product.description}</p>
+            {product.tnRegisteredUpc && (
+              <div className="tn-registered-upc">
+                <small>TN Registered UPC</small>
+                <strong>{product.tnRegisteredUpc}</strong>
+              </div>
+            )}
             {product.variants && product.variants.length > 0 && (
               <label className="product-option-picker">
                 <span>Choose flavor / option</span>
@@ -182,7 +188,7 @@ export function ProductDetail({
                     ? "Pricing and COA appear after selection"
                     : selectedProduct.price === null
                     ? "Visible after wholesale account approval"
-                    : `$${selectedProduct.price.toFixed(2)} estimated unit cost`}
+                    : `$${selectedProduct.price.toFixed(2)} estimated unit price`}
                 </span>
               </div>
               <span className="stock-status">

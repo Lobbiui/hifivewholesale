@@ -10,6 +10,7 @@ export type Product = {
   flavor: string;
   format: string;
   description: string;
+  tnRegisteredUpc?: string;
   price: number | null;
   casePrice: number | null;
   color: string;

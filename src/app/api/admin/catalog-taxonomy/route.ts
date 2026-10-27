@@ -37,10 +37,16 @@ export async function GET() {
       "SELECT id,name,category,product_type FROM products WHERE status <> 'ARCHIVED' ORDER BY name",
     ),
   ]);
+  const categoryNames = new Set(categories.rows.map((row) => row.name));
+  const productTypeNames = new Set(productTypes.rows.map((row) => row.name));
+  for (const product of products.rows) {
+    categoryNames.add(product.category);
+    productTypeNames.add(product.product_type);
+  }
   return NextResponse.json({
     ok: true,
-    categories: categories.rows.map((row) => row.name),
-    productTypes: productTypes.rows.map((row) => row.name),
+    categories: [...categoryNames].sort((a, b) => a.localeCompare(b)),
+    productTypes: [...productTypeNames].sort((a, b) => a.localeCompare(b)),
     products: products.rows.map((row) => ({
       id: row.id,
       name: row.name,

@@ -184,6 +184,11 @@ export async function commitCatalogImport(
         existing?.product_variant_id ?? `variant_${stableId(row.sourceName)}`;
       const status = row.status;
 
+      await transaction.query(
+        "INSERT INTO catalog_categories (name) VALUES ($1) ON CONFLICT (name) DO NOTHING",
+        [row.product.category],
+      );
+
       if (existing) {
         updatedProducts += 1;
         await transaction.query(
