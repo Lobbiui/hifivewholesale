@@ -12,7 +12,7 @@ const applicationSchema = z.object({
   contact: z.string().trim().min(2).max(120),
   email: z.string().trim().toLowerCase().email().max(254),
   phone: z.string().trim().min(7).max(40),
-  resaleId: z.string().trim().min(2).max(100),
+  resaleId: z.string().trim().max(100).optional().default(""),
   territory: z.string().trim().min(2).max(120),
   businessType: z.string().trim().min(2).max(80),
   website: z.union([z.literal(""), z.string().trim().url().max(500)]).optional().default(""),
@@ -35,7 +35,7 @@ export async function POST(request: Request) {
 
   const parsed = applicationSchema.safeParse({
     company: form.get("company"), contact: form.get("contact"), email: form.get("email"),
-    phone: form.get("phone"), resaleId: form.get("resaleId"), territory: form.get("territory"),
+    phone: form.get("phone"), resaleId: form.get("resaleId") ?? "", territory: form.get("territory"),
     businessType: form.get("businessType"), website: form.get("website") ?? "",
     certified: form.get("certified") === "on",
   });
@@ -85,7 +85,7 @@ export async function POST(request: Request) {
           submitted_at,
           updated_at
         )
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NULLIF($9, ''), $10, $11, $12, $13, CASE WHEN $13::BYTEA IS NULL THEN NULL ELSE CURRENT_TIMESTAMP END, CURRENT_TIMESTAMP, 'PENDING', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+        VALUES ($1, $2, $3, $4, $5, NULLIF($6, ''), $7, $8, NULLIF($9, ''), $10, $11, $12, $13, CASE WHEN $13::BYTEA IS NULL THEN NULL ELSE CURRENT_TIMESTAMP END, CURRENT_TIMESTAMP, 'PENDING', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
         ON CONFLICT ((LOWER(business_email))) DO UPDATE SET
           legal_business_name = EXCLUDED.legal_business_name,
           contact_name = EXCLUDED.contact_name,

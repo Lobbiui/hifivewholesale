@@ -609,7 +609,7 @@ function AccessApprovals() {
       <Head
         eyebrow="Private wholesale network"
         title="APPROVE WHO GETS IN."
-        copy="Review business identity, resale credentials, territory, and account fit before unlocking catalog, case pricing, and ordering."
+        copy="Review business identity, territory, licensing where applicable, and account fit before unlocking catalog, case pricing, and ordering."
         action={
           <Pill tone="warn">
             {applications.filter((item) => item.status === "Pending").length}{" "}
@@ -647,7 +647,7 @@ function AccessApprovals() {
                   </small>
                 </td>
                 <td>
-                  <b>{item.resaleId}</b>
+                  <b>{item.resaleId || "Not provided"}</b>
                   <small>
                     {item.status === "Approved"
                       ? "Business account approved"

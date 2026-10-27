@@ -16,7 +16,7 @@ type ApplicationRow = {
   legal_business_name: string;
   contact_name: string;
   business_email: string;
-  resale_id: string;
+  resale_id: string | null;
   primary_territory: string;
   website_url: string | null;
   status: string;

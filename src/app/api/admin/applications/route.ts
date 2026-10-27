@@ -11,7 +11,7 @@ type ApplicationRow = {
   contact_name: string;
   business_email: string;
   business_phone: string;
-  resale_id: string;
+  resale_id: string | null;
   primary_territory: string;
   business_type: string;
   website_url: string | null;
@@ -42,7 +42,7 @@ export async function GET() {
       contact: row.contact_name,
       email: row.business_email,
       phone: row.business_phone,
-      resaleId: row.resale_id,
+      resaleId: row.resale_id ?? "",
       territory: row.primary_territory,
       businessType: row.business_type,
       website: row.website_url ?? undefined,

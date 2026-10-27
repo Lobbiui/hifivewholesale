@@ -15,6 +15,7 @@
     "catalog": "node scripts/generate-catalog.mjs",
     "catalog:check": "tsx scripts/catalog-import-smoke.ts",
     "product:check": "node scripts/product-fields-smoke.mjs",
+    "account:check": "node scripts/account-application-smoke.mjs",
     "catalog:import": "tsx scripts/catalog-import.ts",
     "remotion": "remotion studio src/remotion/index.ts --no-open"
   },
