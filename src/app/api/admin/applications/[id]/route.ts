@@ -51,8 +51,8 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
     if (nextStatus === "APPROVED" && !organizationId) {
       organizationId = `org_${randomUUID()}`;
       await transaction.query(
-        `INSERT INTO organizations (id, legal_name, display_name, organization_type, status, resale_id, primary_territory, website_url)
-         VALUES ($1, $2, $2, 'WHOLESALE_BUYER', 'APPROVED', $3, $4, $5)`,
+        `INSERT INTO organizations (id, legal_name, display_name, organization_type, status, resale_id, resale_document_status, primary_territory, website_url)
+         VALUES ($1, $2, $2, 'WHOLESALE_BUYER', 'APPROVED', $3, CASE WHEN NULLIF($3, '') IS NULL THEN 'NOT_PROVIDED' ELSE 'PENDING' END, $4, $5)`,
         [organizationId, application.legal_business_name, application.resale_id, application.primary_territory, application.website_url],
       );
     }

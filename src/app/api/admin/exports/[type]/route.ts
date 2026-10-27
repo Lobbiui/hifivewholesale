@@ -13,7 +13,7 @@ const queries:Record<string,string>={
    JOIN organizations o ON o.id=r.organization_id
    LEFT JOIN order_request_items i ON i.order_request_id=r.id
    ORDER BY r.submitted_at DESC,i.created_at`,
- customers:`SELECT o.display_name,o.status,o.resale_id,o.primary_territory,u.display_name AS contact,u.email,o.created_at FROM organizations o LEFT JOIN organization_memberships m ON m.organization_id=o.id LEFT JOIN users u ON u.id=m.user_id WHERE o.organization_type='WHOLESALE_BUYER' ORDER BY o.created_at DESC`,
+  customers:`SELECT o.display_name,o.status,o.resale_id,o.resale_document_status,o.resale_document_reviewed_at,o.primary_territory,u.display_name AS contact,u.email,o.created_at FROM organizations o LEFT JOIN organization_memberships m ON m.organization_id=o.id LEFT JOIN users u ON u.id=m.user_id WHERE o.organization_type='WHOLESALE_BUYER' ORDER BY o.created_at DESC`,
  inventory:`SELECT p.name,p.brand,p.category,p.status,v.sku,v.upc,v.variant_name,v.units_per_case,v.wholesale_price_cents,v.safety_stock_units,COALESCE((SELECT on_hand_units FROM inventory_snapshots s WHERE s.product_variant_id=v.id ORDER BY observed_at DESC LIMIT 1),0) AS on_hand_units FROM products p JOIN product_variants v ON v.product_id=p.id ORDER BY p.brand,p.name`,
  shipments:`SELECT r.order_number,o.display_name AS customer,r.contact_email,f.method,f.status,
    f.tracking_number,f.service_level,f.package_count,f.shipping_cost_cents,

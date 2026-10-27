@@ -90,8 +90,8 @@ export async function POST(request: Request) {
       const userId = `usr_${randomUUID()}`;
       const applicationId = `app_${randomUUID()}`;
       await transaction.query(
-        `INSERT INTO organizations (id,legal_name,display_name,organization_type,status,resale_id,primary_territory,website_url)
-         VALUES ($1,$2,$2,'WHOLESALE_BUYER','APPROVED',NULLIF($3,''),$4,$5)`,
+        `INSERT INTO organizations (id,legal_name,display_name,organization_type,status,resale_id,resale_document_status,primary_territory,website_url)
+         VALUES ($1,$2,$2,'WHOLESALE_BUYER','APPROVED',NULLIF($3,''),CASE WHEN NULLIF($3,'') IS NULL THEN 'NOT_PROVIDED' ELSE 'PENDING' END,$4,$5)`,
         [organizationId, parsed.data.companyName, parsed.data.resaleId, parsed.data.territory, parsed.data.websiteUrl || null],
       );
       await transaction.query(

@@ -17,6 +17,8 @@ const profile = z.object({
   businessType: z.string().trim().max(100),
   resaleId: z.string().trim().max(100),
   resaleAuthorization: z.string().trim().max(500),
+  resaleDocumentStatus: z.enum(["NOT_PROVIDED", "PENDING", "VERIFIED", "REJECTED", "EXPIRED"]),
+  resaleDocumentNotes: z.string().trim().max(2000),
   territory: z.string().trim().max(100),
   websiteUrl: z.string().trim().url().max(500).or(z.literal("")),
   licenseNumber: z.string().trim().max(150),
@@ -37,8 +39,10 @@ export async function GET(_request:Request,context:{params:Promise<{id:string}>}
   const {id}=await context.params,db=await getDatabase();
   const [account,documents,locations,contacts,orders]=await Promise.all([
     db.query(`SELECT o.*,u.id AS user_id,u.email,u.display_name AS contact_name,u.status AS user_status,u.must_change_password,
+      reviewer.display_name AS resale_document_reviewed_by_name,
       COALESCE(l.points_balance,0)::int AS points,COALESCE(l.tier,'MEMBER') AS loyalty_tier
       FROM organizations o LEFT JOIN LATERAL (SELECT u.* FROM organization_memberships m JOIN users u ON u.id=m.user_id AND u.system_role='BUYER' WHERE m.organization_id=o.id ORDER BY CASE WHEN m.membership_role='OWNER' THEN 0 ELSE 1 END,m.created_at LIMIT 1) u ON TRUE
+      LEFT JOIN users reviewer ON reviewer.id=o.resale_document_reviewed_by
       LEFT JOIN loyalty_accounts l ON l.organization_id=o.id WHERE o.id=$1 AND o.organization_type='WHOLESALE_BUYER'`,[id]),
     db.query("SELECT id,folder,display_name,filename,mime_type,size_bytes,created_at FROM customer_documents WHERE organization_id=$1 ORDER BY folder,created_at DESC",[id]),
     db.query("SELECT id,name,location_type,line1,line2,city,region,postal_code,phone,is_primary,created_at FROM customer_locations WHERE organization_id=$1 ORDER BY is_primary DESC,name",[id]),
@@ -61,8 +65,17 @@ export async function PATCH(request:Request,context:{params:Promise<{id:string}>
   const {id}=await context.params;if(!await ensureAccount(id))return NextResponse.json({ok:false,message:"Wholesale account not found."},{status:404});
   const db=await getDatabase(),data=parsed.data;
   try{const result=await db.transaction(async tx=>{
+    let auditData:Record<string,unknown>=data;
     if(data.action==="profile"){
-      await tx.query(`UPDATE organizations SET legal_name=$2,display_name=$2,business_phone=NULLIF($3,''),business_type=NULLIF($4,''),resale_id=NULLIF($5,''),resale_authorization=NULLIF($6,''),primary_territory=NULLIF($7,''),website_url=NULLIF($8,''),license_number=NULLIF($9,''),license_expires_at=$10::date,account_manager_name=NULLIF($11,''),account_manager_phone=NULLIF($12,''),internal_notes=$13,updated_at=CURRENT_TIMESTAMP WHERE id=$1`,[id,data.companyName,data.phone,data.businessType,data.resaleId,data.resaleAuthorization,data.territory,data.websiteUrl,data.licenseNumber,data.licenseExpiresAt||null,data.accountManagerName,data.accountManagerPhone,data.internalNotes]);
+      const existing=await tx.query<{resale_id:string|null;resale_document_status:string}>("SELECT resale_id,resale_document_status FROM organizations WHERE id=$1 FOR UPDATE",[id]);
+      const prior=existing.rows[0];
+      const normalizedResaleId=data.resaleId.trim();
+      let resaleDocumentStatus=normalizedResaleId?data.resaleDocumentStatus:"NOT_PROVIDED";
+      if(normalizedResaleId&&resaleDocumentStatus==="NOT_PROVIDED")resaleDocumentStatus="PENDING";
+      if(prior?.resale_document_status==="VERIFIED"&&(prior.resale_id??"")!==normalizedResaleId)resaleDocumentStatus="PENDING";
+      const reviewComplete=["VERIFIED","REJECTED","EXPIRED"].includes(resaleDocumentStatus);
+      auditData={...data,resaleId:normalizedResaleId,resaleDocumentStatus};
+      await tx.query(`UPDATE organizations SET legal_name=$2,display_name=$2,business_phone=NULLIF($3,''),business_type=NULLIF($4,''),resale_id=NULLIF($5,''),resale_authorization=NULLIF($6,''),resale_document_status=$7,resale_document_notes=$8,resale_document_reviewed_at=CASE WHEN $9 THEN CURRENT_TIMESTAMP ELSE NULL END,resale_document_reviewed_by=CASE WHEN $9 THEN $10 ELSE NULL END,primary_territory=NULLIF($11,''),website_url=NULLIF($12,''),license_number=NULLIF($13,''),license_expires_at=$14::date,account_manager_name=NULLIF($15,''),account_manager_phone=NULLIF($16,''),internal_notes=$17,updated_at=CURRENT_TIMESTAMP WHERE id=$1`,[id,data.companyName,data.phone,data.businessType,normalizedResaleId,data.resaleAuthorization,resaleDocumentStatus,data.resaleDocumentNotes,reviewComplete,admin.id,data.territory,data.websiteUrl,data.licenseNumber,data.licenseExpiresAt||null,data.accountManagerName,data.accountManagerPhone,data.internalNotes]);
       const owner=await tx.query<{id:string}>("SELECT u.id FROM organization_memberships m JOIN users u ON u.id=m.user_id AND u.system_role='BUYER' WHERE m.organization_id=$1 ORDER BY CASE WHEN m.membership_role='OWNER' THEN 0 ELSE 1 END LIMIT 1",[id]);
       if(owner.rows[0])await tx.query("UPDATE users SET email=$2,display_name=$3,updated_at=CURRENT_TIMESTAMP WHERE id=$1",[owner.rows[0].id,data.email,data.contactName]);
     }else if(data.action==="location"){
@@ -78,7 +91,7 @@ export async function PATCH(request:Request,context:{params:Promise<{id:string}>
       await tx.query("UPDATE user_credentials SET password_hash=$2,password_updated_at=CURRENT_TIMESTAMP,reset_token_hash=NULL,reset_token_expires_at=NULL,failed_attempts=0,locked_until=NULL WHERE user_id=$1",[owner.rows[0].id,hash]);
       await tx.query("UPDATE sessions SET revoked_at=CURRENT_TIMESTAMP WHERE user_id=$1 AND revoked_at IS NULL",[owner.rows[0].id]);
     }
-    await tx.query("INSERT INTO audit_events (id,actor_user_id,organization_id,action,aggregate_type,aggregate_id,after_json) VALUES ($1,$2,$3,$4,'WHOLESALE_ACCOUNT',$3,$5)",[randomUUID(),admin.id,id,`CUSTOMER_${data.action.toUpperCase()}`,data]);
+    await tx.query("INSERT INTO audit_events (id,actor_user_id,organization_id,action,aggregate_type,aggregate_id,after_json) VALUES ($1,$2,$3,$4,'WHOLESALE_ACCOUNT',$3,$5)",[randomUUID(),admin.id,id,`CUSTOMER_${data.action.toUpperCase()}`,auditData]);
     return data.action;
   });return NextResponse.json({ok:true,action:result});}catch(error){const message=error instanceof Error&&/buyer login/i.test(error.message)?error.message:/unique|duplicate/i.test(String(error))?"That email is already assigned to another account.":"The account change could not be saved.";return NextResponse.json({ok:false,message},{status:422})}
 }

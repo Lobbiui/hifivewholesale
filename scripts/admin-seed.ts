@@ -48,8 +48,8 @@ async function seedPreviewApplications() {
        ) ON CONFLICT ((LOWER(business_email))) DO NOTHING`,
     );
     await transaction.query(
-      `INSERT INTO organizations (id, legal_name, display_name, organization_type, status, resale_id, primary_territory)
-       VALUES ('org_preview_lakeview', 'Lakeview Smoke', 'Lakeview Smoke', 'WHOLESALE_BUYER', 'APPROVED', 'IL-210084', 'Illinois')
+      `INSERT INTO organizations (id, legal_name, display_name, organization_type, status, resale_id, resale_document_status, primary_territory)
+       VALUES ('org_preview_lakeview', 'Lakeview Smoke', 'Lakeview Smoke', 'WHOLESALE_BUYER', 'APPROVED', 'IL-210084', 'PENDING', 'Illinois')
        ON CONFLICT (id) DO NOTHING`,
     );
     await transaction.query(
@@ -70,8 +70,8 @@ async function seedPreviewBuyer() {
   const passwordHash = await hashPassword("HiFiveBuyer!2026");
   await database.transaction(async (transaction) => {
     await transaction.query(
-      `INSERT INTO organizations (id, legal_name, display_name, organization_type, status, resale_id, primary_territory)
-       VALUES ('org_preview_buyer', 'HiFive Preview Retailer', 'HiFive Preview Retailer', 'WHOLESALE_BUYER', 'APPROVED', 'DEMO-RESALE', 'Tennessee')
+      `INSERT INTO organizations (id, legal_name, display_name, organization_type, status, resale_id, resale_document_status, primary_territory)
+       VALUES ('org_preview_buyer', 'HiFive Preview Retailer', 'HiFive Preview Retailer', 'WHOLESALE_BUYER', 'APPROVED', 'DEMO-RESALE', 'PENDING', 'Tennessee')
        ON CONFLICT (id) DO UPDATE SET status = 'APPROVED', updated_at = CURRENT_TIMESTAMP`,
     );
     await transaction.query(

@@ -50,7 +50,7 @@ export async function GET() {
       LEFT JOIN order_fulfillments f ON f.order_request_id=r.id
       GROUP BY r.id,o.display_name,f.id
       ORDER BY r.submitted_at DESC LIMIT 200`),
-    database.query(`SELECT o.id, o.display_name, o.status, o.resale_id, o.primary_territory,
+    database.query(`SELECT o.id, o.display_name, o.status, o.resale_id, o.resale_document_status, o.primary_territory,
       owner.email, owner.display_name AS contact, owner.status AS user_status,
       COUNT(DISTINCT r.id)::int AS orders, COALESCE(l.points_balance,0)::int AS points, COALESCE(l.tier,'MEMBER') AS tier
       FROM organizations o

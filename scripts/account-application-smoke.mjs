@@ -39,7 +39,41 @@ try {
   if (!result.rows[0] || result.rows[0].resale_id !== null) {
     throw new Error("An application without a resale ID did not round-trip.");
   }
-  console.log("Wholesale application without a resale ID passed.");
+
+  await database.query(
+    `INSERT INTO users (id,email,display_name,system_role,status)
+     VALUES ('resale_review_admin','resale-review-admin@example.test','Resale Reviewer','ADMIN','ACTIVE')`,
+  );
+  await database.query(
+    `INSERT INTO organizations (
+      id,legal_name,display_name,organization_type,status,resale_id,
+      resale_document_status,primary_territory
+    ) VALUES ($1,$2,$2,'WHOLESALE_BUYER','APPROVED',$3,'PENDING',$4)`,
+    ["resale_review_org", "Resale Review Test", "TEST-RESALE-123", "TN"],
+  );
+  await database.query(
+    `UPDATE organizations
+        SET resale_document_status='VERIFIED',
+            resale_document_reviewed_at=CURRENT_TIMESTAMP,
+            resale_document_reviewed_by='resale_review_admin',
+            resale_document_notes='Verified during automated test.'
+      WHERE id='resale_review_org'`,
+  );
+  const verification = await database.query(
+    `SELECT resale_document_status,resale_document_reviewed_at,
+            resale_document_reviewed_by,resale_document_notes
+       FROM organizations WHERE id='resale_review_org'`,
+  );
+  const verified = verification.rows[0];
+  if (
+    verified?.resale_document_status !== "VERIFIED" ||
+    !verified.resale_document_reviewed_at ||
+    verified.resale_document_reviewed_by !== "resale_review_admin" ||
+    verified.resale_document_notes !== "Verified during automated test."
+  ) {
+    throw new Error("Resale-document verification did not round-trip.");
+  }
+  console.log("Optional resale ID and tax-document verification passed.");
 } finally {
   await database.close();
 }
