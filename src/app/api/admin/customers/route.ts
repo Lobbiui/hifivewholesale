@@ -57,9 +57,6 @@ export async function POST(request: Request) {
         return { organizationId: parsed.data.organizationId, email: buyer.email, contactName: buyer.display_name, companyName: "your business" };
       }
 
-      if (isTennesseeTerritory(parsed.data.territory) && !parsed.data.tnLicenseVerified) {
-        throw new Error("Confirm the TN HDCP license before creating a Tennessee wholesale account.");
-      }
       const duplicate = await transaction.query<{ id: string }>(
         `SELECT id FROM users WHERE LOWER(email)=LOWER($1)
          UNION ALL SELECT id FROM buyer_applications WHERE LOWER(business_email)=LOWER($1) LIMIT 1`,
@@ -97,7 +94,7 @@ export async function POST(request: Request) {
          VALUES ($1,$2,$3,$4,$5,NULLIF($6,''),$7,$8,$9,CURRENT_TIMESTAMP,'APPROVED',$10,CURRENT_TIMESTAMP,$11,$12)`,
         [applicationId, parsed.data.companyName, parsed.data.contactName, parsed.data.email, parsed.data.phone, parsed.data.resaleId,
           parsed.data.territory, parsed.data.businessType, parsed.data.websiteUrl || null, organizationId, admin.id,
-          isTennesseeTerritory(parsed.data.territory) ? "Manually created by administrator; TN HDCP license verified." : "Manually created by administrator."],
+          isTennesseeTerritory(parsed.data.territory) ? "Manually created by administrator; Tennessee compliance documents may be uploaded from the customer profile." : "Manually created by administrator."],
       );
       await transaction.query(
         "INSERT INTO loyalty_accounts (organization_id) VALUES ($1) ON CONFLICT (organization_id) DO NOTHING",
@@ -106,7 +103,7 @@ export async function POST(request: Request) {
       await transaction.query(
         `INSERT INTO audit_events (id,actor_user_id,organization_id,action,aggregate_type,aggregate_id,after_json)
          VALUES ($1,$2,$3,'WHOLESALE_ACCOUNT_CREATED','WHOLESALE_ACCOUNT',$3,$4)`,
-        [randomUUID(), admin.id, organizationId, { email: parsed.data.email, contactName: parsed.data.contactName, status: parsed.data.setupMethod==="TEMPORARY_PASSWORD"?"ACTIVE":"INVITED",mustChangePassword:parsed.data.setupMethod==="TEMPORARY_PASSWORD",tnLicenseVerified: parsed.data.tnLicenseVerified }],
+        [randomUUID(), admin.id, organizationId, { email: parsed.data.email, contactName: parsed.data.contactName, status: parsed.data.setupMethod==="TEMPORARY_PASSWORD"?"ACTIVE":"INVITED",mustChangePassword:parsed.data.setupMethod==="TEMPORARY_PASSWORD",complianceDocumentsPending:true }],
       );
       return { organizationId, email: parsed.data.email, contactName: parsed.data.contactName, companyName: parsed.data.companyName };
     });
@@ -127,7 +124,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true, organizationId: created.organizationId, activationUrl, emailDelivery }, { status: parsed.data.action === "create" ? 201 : 200 });
   } catch (error) {
     const detail = error instanceof Error ? error.message : "";
-    const safeMessage = /already exists|TN HDCP|Only invited/i.test(detail) ? detail : "The wholesale account could not be created.";
+    const safeMessage = /already exists|Only invited/i.test(detail) ? detail : "The wholesale account could not be created.";
     return NextResponse.json({ ok: false, message: safeMessage }, { status: 422 });
   }
 }

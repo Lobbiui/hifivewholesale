@@ -10,7 +10,6 @@ const activationLinkRequest = customerAccountRequestSchema.safeParse({
   territory: "KY",
   businessType: "Retailer",
   websiteUrl: null,
-  tnLicenseVerified: false,
   setupMethod: "ACTIVATION_LINK",
   temporaryPassword: null,
 });

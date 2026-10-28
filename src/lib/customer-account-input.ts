@@ -20,7 +20,7 @@ export const customerAccountRequestSchema = z.discriminatedUnion("action", [
       (value) => value ?? "",
       z.string().trim().url().max(500).or(z.literal("")),
     ),
-    tnLicenseVerified: z.boolean(),
+    tnLicenseVerified: z.boolean().optional().default(false),
     setupMethod: z.enum(["ACTIVATION_LINK", "TEMPORARY_PASSWORD"]).default("ACTIVATION_LINK"),
     temporaryPassword: optionalText(200),
   }).strict(),

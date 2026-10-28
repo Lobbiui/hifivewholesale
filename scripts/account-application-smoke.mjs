@@ -73,7 +73,36 @@ try {
   ) {
     throw new Error("Resale-document verification did not round-trip.");
   }
-  console.log("Optional resale ID and tax-document verification passed.");
+  await database.query(
+    `INSERT INTO customer_documents (
+      id,organization_id,folder,display_name,filename,mime_type,size_bytes,
+      file_bytes,uploaded_by
+    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`,
+    [
+      "tn_hdcp_document_smoke",
+      "resale_review_org",
+      "Licenses",
+      "TN HDCP License",
+      "tn-hdcp-license.pdf",
+      "application/pdf",
+      4,
+      new Uint8Array([37, 80, 68, 70]),
+      "resale_review_admin",
+    ],
+  );
+  const document = await database.query(
+    `SELECT organization_id,folder,display_name,size_bytes
+       FROM customer_documents WHERE id='tn_hdcp_document_smoke'`,
+  );
+  if (
+    document.rows[0]?.organization_id !== "resale_review_org" ||
+    document.rows[0]?.folder !== "Licenses" ||
+    document.rows[0]?.display_name !== "TN HDCP License" ||
+    document.rows[0]?.size_bytes !== 4
+  ) {
+    throw new Error("Customer compliance document was not associated with the business.");
+  }
+  console.log("Optional resale ID, tax verification, and customer document storage passed.");
 } finally {
   await database.close();
 }
