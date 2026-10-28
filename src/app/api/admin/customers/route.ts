@@ -1,6 +1,6 @@
 import { randomBytes, randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
-import { z } from "zod";
+import { customerAccountRequestSchema } from "@/lib/customer-account-input";
 import { getAdminIdentity, hasValidRequestOrigin } from "@/lib/server/admin-auth";
 import { hashBuyerToken } from "@/lib/server/buyer-auth";
 import { getDatabase } from "@/lib/server/database";
@@ -10,24 +10,6 @@ import { isTennesseeTerritory } from "@/lib/us-states";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-
-const requestSchema = z.discriminatedUnion("action", [
-  z.object({
-    action: z.literal("create"),
-    companyName: z.string().trim().min(2).max(200),
-    contactName: z.string().trim().min(2).max(160),
-    email: z.string().trim().email().max(320).transform((value) => value.toLowerCase()),
-    phone: z.string().trim().min(7).max(40),
-    resaleId: z.string().trim().max(100).optional().default(""),
-    territory: z.string().trim().min(2).max(100),
-    businessType: z.string().trim().min(2).max(100),
-    websiteUrl: z.string().trim().url().max(500).or(z.literal("")),
-    tnLicenseVerified: z.boolean(),
-    setupMethod: z.enum(["ACTIVATION_LINK","TEMPORARY_PASSWORD"]).default("ACTIVATION_LINK"),
-    temporaryPassword: z.string().max(200).optional().default(""),
-  }).strict(),
-  z.object({ action: z.literal("resend_activation"), organizationId: z.string().min(1) }).strict(),
-]);
 
 function publicOrigin(request: Request) {
   const configured = process.env.NEXT_PUBLIC_SITE_URL?.trim();
@@ -41,7 +23,7 @@ export async function POST(request: Request) {
   if (!hasValidRequestOrigin(request)) return NextResponse.json({ ok: false }, { status: 403 });
   const admin = await getAdminIdentity();
   if (!admin) return NextResponse.json({ ok: false }, { status: 401 });
-  const parsed = requestSchema.safeParse(await request.json().catch(() => null));
+  const parsed = customerAccountRequestSchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ ok: false, message: "Complete all required wholesale account fields." }, { status: 422 });
 
   const database = await getDatabase();
