@@ -1,4 +1,7 @@
-import { customerAccountRequestSchema } from "../src/lib/customer-account-input";
+import {
+  customerAccountRequestSchema,
+  temporaryBuyerPasswordError,
+} from "../src/lib/customer-account-input";
 
 const activationLinkRequest = customerAccountRequestSchema.safeParse({
   action: "create",
@@ -28,3 +31,33 @@ if (
 }
 
 console.log("Administrator activation-link account input passed.");
+
+const peterFormRequest = customerAccountRequestSchema.safeParse({
+  action: "create",
+  companyName: "Discount Vape",
+  contactName: "Jason Knowles",
+  email: "buyer@example.test",
+  phone: "+19316460900",
+  resaleId: "0p",
+  territory: "TN",
+  businessType: "Smoke / vape shop",
+  websiteUrl: "https://",
+  tnLicenseVerified: false,
+  setupMethod: "TEMPORARY_PASSWORD",
+  temporaryPassword: "ValidExample1!",
+});
+
+if (!peterFormRequest.success || peterFormRequest.data.action !== "create") {
+  throw new Error("Peter's administrator account form shape was rejected.");
+}
+if (peterFormRequest.data.websiteUrl !== "") {
+  throw new Error("A bare website protocol was not normalized to an empty optional field.");
+}
+if (temporaryBuyerPasswordError(peterFormRequest.data.temporaryPassword)) {
+  throw new Error("A compliant administrator-created temporary password was rejected.");
+}
+if (!temporaryBuyerPasswordError("twelvecharacters")) {
+  throw new Error("A temporary password without a number and symbol was accepted.");
+}
+
+console.log("Administrator temporary-password account input passed.");

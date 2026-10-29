@@ -1,6 +1,6 @@
 import { randomBytes, randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
-import { customerAccountRequestSchema } from "@/lib/customer-account-input";
+import { customerAccountRequestSchema, temporaryBuyerPasswordError } from "@/lib/customer-account-input";
 import { getAdminIdentity, hasValidRequestOrigin } from "@/lib/server/admin-auth";
 import { hashBuyerToken } from "@/lib/server/buyer-auth";
 import { getDatabase } from "@/lib/server/database";
@@ -24,7 +24,15 @@ export async function POST(request: Request) {
   const admin = await getAdminIdentity();
   if (!admin) return NextResponse.json({ ok: false }, { status: 401 });
   const parsed = customerAccountRequestSchema.safeParse(await request.json().catch(() => null));
-  if (!parsed.success) return NextResponse.json({ ok: false, message: "Complete all required wholesale account fields." }, { status: 422 });
+  if (!parsed.success) {
+    const websiteError = parsed.error.issues.some((issue) => issue.path.includes("websiteUrl"));
+    return NextResponse.json({
+      ok: false,
+      message: websiteError
+        ? "Enter a complete website address, or leave the optional website field blank."
+        : "Complete all required wholesale account fields.",
+    }, { status: 422 });
+  }
 
   const database = await getDatabase();
   const activationToken = randomBytes(32).toString("base64url");
@@ -63,7 +71,10 @@ export async function POST(request: Request) {
         [parsed.data.email],
       );
       if (duplicate.rows[0]) throw new Error("An account with that email already exists.");
-      if(parsed.data.setupMethod==="TEMPORARY_PASSWORD"&&!/^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{12,200}$/.test(parsed.data.temporaryPassword))throw new Error("Temporary passwords need at least 12 characters with a letter, number, and special character.");
+      const passwordError = parsed.data.setupMethod === "TEMPORARY_PASSWORD"
+        ? temporaryBuyerPasswordError(parsed.data.temporaryPassword)
+        : null;
+      if (passwordError) throw new Error(passwordError);
 
       const organizationId = `org_${randomUUID()}`;
       const userId = `usr_${randomUUID()}`;
@@ -124,7 +135,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true, organizationId: created.organizationId, activationUrl, emailDelivery }, { status: parsed.data.action === "create" ? 201 : 200 });
   } catch (error) {
     const detail = error instanceof Error ? error.message : "";
-    const safeMessage = /already exists|Only invited/i.test(detail) ? detail : "The wholesale account could not be created.";
+    console.error("[admin-customers] account creation failed", {
+      name: error instanceof Error ? error.name : "UnknownError",
+      message: detail,
+    });
+    const safeMessage = /already exists|Only invited|Temporary password/i.test(detail) ? detail : "The wholesale account could not be created.";
     return NextResponse.json({ ok: false, message: safeMessage }, { status: 422 });
   }
 }
