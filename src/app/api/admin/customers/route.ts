@@ -20,6 +20,8 @@ function publicOrigin(request: Request) {
 }
 
 export async function POST(request: Request) {
+  const requestId = randomUUID();
+  let accountCreationStage = "request-validation";
   if (!hasValidRequestOrigin(request)) return NextResponse.json({ ok: false }, { status: 403 });
   const admin = await getAdminIdentity();
   if (!admin) return NextResponse.json({ ok: false }, { status: 401 });
@@ -41,6 +43,7 @@ export async function POST(request: Request) {
   try {
     const created = await database.transaction(async (transaction) => {
       if (parsed.data.action === "resend_activation") {
+        accountCreationStage = "activation-account-lookup";
         const found = await transaction.query<{ user_id: string; email: string; display_name: string }>(
           `SELECT u.id AS user_id, u.email, u.display_name
              FROM organizations o
@@ -52,11 +55,13 @@ export async function POST(request: Request) {
         );
         const buyer = found.rows[0];
         if (!buyer) throw new Error("Only invited buyer accounts can receive a new activation link.");
+        accountCreationStage = "activation-credential-update";
         await transaction.query(
           `UPDATE user_credentials SET reset_token_hash=$2, reset_token_expires_at=CURRENT_TIMESTAMP+INTERVAL '7 days',
              failed_attempts=0, locked_until=NULL WHERE user_id=$1`,
           [buyer.user_id, hashBuyerToken(activationToken)],
         );
+        accountCreationStage = "activation-audit-event";
         await transaction.query(
           `INSERT INTO audit_events (id,actor_user_id,organization_id,action,aggregate_type,aggregate_id,after_json)
            VALUES ($1,$2,$3,'BUYER_ACTIVATION_REISSUED','WHOLESALE_ACCOUNT',$3,$4)`,
@@ -65,6 +70,7 @@ export async function POST(request: Request) {
         return { organizationId: parsed.data.organizationId, email: buyer.email, contactName: buyer.display_name, companyName: "your business" };
       }
 
+      accountCreationStage = "duplicate-account-check";
       const duplicate = await transaction.query<{ id: string }>(
         `SELECT id FROM users WHERE LOWER(email)=LOWER($1)
          UNION ALL SELECT id FROM buyer_applications WHERE LOWER(business_email)=LOWER($1) LIMIT 1`,
@@ -79,25 +85,30 @@ export async function POST(request: Request) {
       const organizationId = `org_${randomUUID()}`;
       const userId = `usr_${randomUUID()}`;
       const applicationId = `app_${randomUUID()}`;
+      accountCreationStage = "organization-insert";
       await transaction.query(
         `INSERT INTO organizations (id,legal_name,display_name,organization_type,status,resale_id,resale_document_status,primary_territory,website_url)
          VALUES ($1,$2,$2,'WHOLESALE_BUYER','APPROVED',NULLIF($3::text,''),CASE WHEN NULLIF($3::text,'') IS NULL THEN 'NOT_PROVIDED' ELSE 'PENDING' END,$4,$5)`,
         [organizationId, parsed.data.companyName, parsed.data.resaleId, parsed.data.territory, parsed.data.websiteUrl || null],
       );
+      accountCreationStage = "buyer-user-insert";
       await transaction.query(
         `INSERT INTO users (id,email,display_name,system_role,status,must_change_password) VALUES ($1,$2,$3,'BUYER',$4,$5)`,
         [userId, parsed.data.email, parsed.data.contactName,parsed.data.setupMethod==="TEMPORARY_PASSWORD"?"ACTIVE":"INVITED",parsed.data.setupMethod==="TEMPORARY_PASSWORD"],
       );
       const credentialHash=parsed.data.setupMethod==="TEMPORARY_PASSWORD"?await hashPassword(parsed.data.temporaryPassword):"pending-activation";
+      accountCreationStage = "buyer-credential-insert";
       await transaction.query(
         `INSERT INTO user_credentials (user_id,password_hash,reset_token_hash,reset_token_expires_at)
-         VALUES ($1,$2,$3,CASE WHEN $3 IS NULL THEN NULL ELSE CURRENT_TIMESTAMP+INTERVAL '7 days' END)`,
+         VALUES ($1,$2,$3::text,CASE WHEN $3::text IS NULL THEN NULL ELSE CURRENT_TIMESTAMP+INTERVAL '7 days' END)`,
         [userId,credentialHash,parsed.data.setupMethod==="ACTIVATION_LINK"?hashBuyerToken(activationToken):null],
       );
+      accountCreationStage = "organization-membership-insert";
       await transaction.query(
         `INSERT INTO organization_memberships (id,organization_id,user_id,membership_role) VALUES ($1,$2,$3,'OWNER')`,
         [randomUUID(), organizationId, userId],
       );
+      accountCreationStage = "buyer-application-insert";
       await transaction.query(
         `INSERT INTO buyer_applications
           (id,legal_business_name,contact_name,business_email,business_phone,resale_id,primary_territory,business_type,website_url,
@@ -107,10 +118,12 @@ export async function POST(request: Request) {
           parsed.data.territory, parsed.data.businessType, parsed.data.websiteUrl || null, organizationId, admin.id,
           isTennesseeTerritory(parsed.data.territory) ? "Manually created by administrator; Tennessee compliance documents may be uploaded from the customer profile." : "Manually created by administrator."],
       );
+      accountCreationStage = "loyalty-account-insert";
       await transaction.query(
         "INSERT INTO loyalty_accounts (organization_id) VALUES ($1) ON CONFLICT (organization_id) DO NOTHING",
         [organizationId],
       );
+      accountCreationStage = "account-creation-audit-event";
       await transaction.query(
         `INSERT INTO audit_events (id,actor_user_id,organization_id,action,aggregate_type,aggregate_id,after_json)
          VALUES ($1,$2,$3,'WHOLESALE_ACCOUNT_CREATED','WHOLESALE_ACCOUNT',$3,$4)`,
@@ -136,10 +149,14 @@ export async function POST(request: Request) {
   } catch (error) {
     const detail = error instanceof Error ? error.message : "";
     console.error("[admin-customers] account creation failed", {
+      requestId,
+      stage: accountCreationStage,
       name: error instanceof Error ? error.name : "UnknownError",
       message: detail,
     });
-    const safeMessage = /already exists|Only invited|Temporary password/i.test(detail) ? detail : "The wholesale account could not be created.";
+    const safeMessage = /already exists|Only invited|Temporary password/i.test(detail)
+      ? detail
+      : `The wholesale account could not be created. Reference: ${requestId.slice(0, 8).toUpperCase()}.`;
     return NextResponse.json({ ok: false, message: safeMessage }, { status: 422 });
   }
 }

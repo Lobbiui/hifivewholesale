@@ -45,6 +45,40 @@ try {
      VALUES ('resale_review_admin','resale-review-admin@example.test','Resale Reviewer','ADMIN','ACTIVE')`,
   );
   await database.query(
+    `INSERT INTO users (id,email,display_name,system_role,status,must_change_password)
+     VALUES ('temporary_password_buyer','temporary-password@example.test','Temporary Password Buyer','BUYER','ACTIVE',TRUE),
+            ('activation_link_buyer','activation-link@example.test','Activation Link Buyer','BUYER','INVITED',FALSE)`,
+  );
+  const credentialInsertSql = `INSERT INTO user_credentials
+    (user_id,password_hash,reset_token_hash,reset_token_expires_at)
+    VALUES ($1,$2,$3::text,CASE WHEN $3::text IS NULL THEN NULL ELSE CURRENT_TIMESTAMP+INTERVAL '7 days' END)`;
+  await database.query(credentialInsertSql, [
+    "temporary_password_buyer",
+    "temporary-password-hash",
+    null,
+  ]);
+  await database.query(credentialInsertSql, [
+    "activation_link_buyer",
+    "pending-activation",
+    "activation-token-hash",
+  ]);
+  const credentials = await database.query(
+    `SELECT user_id,reset_token_hash,reset_token_expires_at
+       FROM user_credentials
+      WHERE user_id IN ('temporary_password_buyer','activation_link_buyer')
+      ORDER BY user_id`,
+  );
+  const activationCredential = credentials.rows.find((row) => row.user_id === "activation_link_buyer");
+  const temporaryCredential = credentials.rows.find((row) => row.user_id === "temporary_password_buyer");
+  if (
+    activationCredential?.reset_token_hash !== "activation-token-hash" ||
+    !activationCredential.reset_token_expires_at ||
+    temporaryCredential?.reset_token_hash !== null ||
+    temporaryCredential.reset_token_expires_at !== null
+  ) {
+    throw new Error("Buyer credential creation did not preserve activation-token semantics.");
+  }
+  await database.query(
     `INSERT INTO organizations (
       id,legal_name,display_name,organization_type,status,resale_id,
       resale_document_status,primary_territory
@@ -102,7 +136,7 @@ try {
   ) {
     throw new Error("Customer compliance document was not associated with the business.");
   }
-  console.log("Optional resale ID, tax verification, and customer document storage passed.");
+  console.log("Optional resale ID, buyer credentials, tax verification, and customer document storage passed.");
 } finally {
   await database.close();
 }
