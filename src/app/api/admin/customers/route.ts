@@ -87,9 +87,23 @@ export async function POST(request: Request) {
       const applicationId = `app_${randomUUID()}`;
       accountCreationStage = "organization-insert";
       await transaction.query(
-        `INSERT INTO organizations (id,legal_name,display_name,organization_type,status,resale_id,resale_document_status,primary_territory,website_url)
-         VALUES ($1,$2,$2,'WHOLESALE_BUYER','APPROVED',NULLIF($3::text,''),CASE WHEN NULLIF($3::text,'') IS NULL THEN 'NOT_PROVIDED' ELSE 'PENDING' END,$4,$5)`,
-        [organizationId, parsed.data.companyName, parsed.data.resaleId, parsed.data.territory, parsed.data.websiteUrl || null],
+        `INSERT INTO organizations (
+           id,legal_name,display_name,organization_type,status,resale_id,
+           resale_document_status,primary_territory,website_url,business_phone,business_type
+         ) VALUES (
+           $1,$2,$2,'WHOLESALE_BUYER','APPROVED',NULLIF($3::text,''),
+           CASE WHEN NULLIF($3::text,'') IS NULL THEN 'NOT_PROVIDED' ELSE 'PENDING' END,
+           $4,$5,$6,$7
+         )`,
+        [
+          organizationId,
+          parsed.data.companyName,
+          parsed.data.resaleId,
+          parsed.data.territory,
+          parsed.data.websiteUrl || null,
+          parsed.data.phone,
+          parsed.data.businessType,
+        ],
       );
       accountCreationStage = "buyer-user-insert";
       await transaction.query(

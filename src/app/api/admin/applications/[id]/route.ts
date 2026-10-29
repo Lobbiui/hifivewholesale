@@ -16,6 +16,8 @@ type ApplicationRow = {
   legal_business_name: string;
   contact_name: string;
   business_email: string;
+  business_phone: string;
+  business_type: string;
   resale_id: string | null;
   primary_territory: string;
   website_url: string | null;
@@ -37,7 +39,10 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
   const database = await getDatabase();
   const updated = await database.transaction(async (transaction) => {
     const existing = await transaction.query<ApplicationRow>(
-      "SELECT id, legal_business_name, contact_name, business_email, resale_id, primary_territory, website_url, status, organization_id, tn_hdcp_license_data FROM buyer_applications WHERE id = $1 FOR UPDATE",
+      `SELECT id, legal_business_name, contact_name, business_email, business_phone,
+              business_type, resale_id, primary_territory, website_url, status,
+              organization_id, tn_hdcp_license_data
+         FROM buyer_applications WHERE id = $1 FOR UPDATE`,
       [id],
     );
     const application = existing.rows[0];
@@ -51,13 +56,35 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
     if (nextStatus === "APPROVED" && !organizationId) {
       organizationId = `org_${randomUUID()}`;
       await transaction.query(
-        `INSERT INTO organizations (id, legal_name, display_name, organization_type, status, resale_id, resale_document_status, primary_territory, website_url)
-         VALUES ($1, $2, $2, 'WHOLESALE_BUYER', 'APPROVED', $3, CASE WHEN NULLIF($3, '') IS NULL THEN 'NOT_PROVIDED' ELSE 'PENDING' END, $4, $5)`,
-        [organizationId, application.legal_business_name, application.resale_id, application.primary_territory, application.website_url],
+        `INSERT INTO organizations (
+           id, legal_name, display_name, organization_type, status, resale_id,
+           resale_document_status, primary_territory, website_url, business_phone, business_type
+         ) VALUES (
+           $1, $2, $2, 'WHOLESALE_BUYER', 'APPROVED', $3,
+           CASE WHEN NULLIF($3, '') IS NULL THEN 'NOT_PROVIDED' ELSE 'PENDING' END,
+           $4, $5, $6, $7
+         )`,
+        [
+          organizationId,
+          application.legal_business_name,
+          application.resale_id,
+          application.primary_territory,
+          application.website_url,
+          application.business_phone,
+          application.business_type,
+        ],
       );
     }
     if (nextStatus === "APPROVED" && organizationId) {
-      await transaction.query("UPDATE organizations SET status = 'APPROVED', updated_at = CURRENT_TIMESTAMP WHERE id = $1", [organizationId]);
+      await transaction.query(
+        `UPDATE organizations
+            SET status = 'APPROVED',
+                business_phone = COALESCE(NULLIF(business_phone, ''), NULLIF($2, '')),
+                business_type = COALESCE(NULLIF(business_type, ''), NULLIF($3, '')),
+                updated_at = CURRENT_TIMESTAMP
+          WHERE id = $1`,
+        [organizationId, application.business_phone, application.business_type],
+      );
     }
 
     let includeActivationLink = false;

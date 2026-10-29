@@ -41,6 +41,46 @@ try {
   }
 
   await database.query(
+    `INSERT INTO organizations (
+      id,legal_name,display_name,organization_type,status,primary_territory
+    ) VALUES ($1,$2,$2,'WHOLESALE_BUYER','APPROVED',$3)`,
+    ["application_profile_backfill_org", "Application Profile Backfill", "TN"],
+  );
+  await database.query(
+    `INSERT INTO buyer_applications (
+      id,legal_business_name,contact_name,business_email,business_phone,
+      resale_id,primary_territory,business_type,certification_accepted_at,
+      status,organization_id
+    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,CURRENT_TIMESTAMP,'APPROVED',$9)`,
+    [
+      "application_profile_backfill",
+      "Application Profile Backfill",
+      "Backfill Buyer",
+      "application-profile-backfill@example.test",
+      "615-555-0199",
+      null,
+      "TN",
+      "Smoke / vape shop",
+      "application_profile_backfill_org",
+    ],
+  );
+  const backfillMigration = await readFile(
+    path.join(migrationDirectory, "0019_backfill_customer_application_profile.sql"),
+    "utf8",
+  );
+  await database.exec(backfillMigration);
+  const backfilledProfile = await database.query(
+    `SELECT business_phone,business_type FROM organizations WHERE id=$1`,
+    ["application_profile_backfill_org"],
+  );
+  if (
+    backfilledProfile.rows[0]?.business_phone !== "615-555-0199" ||
+    backfilledProfile.rows[0]?.business_type !== "Smoke / vape shop"
+  ) {
+    throw new Error("Approved application contact fields were not carried into the customer profile.");
+  }
+
+  await database.query(
     `INSERT INTO users (id,email,display_name,system_role,status)
      VALUES ('resale_review_admin','resale-review-admin@example.test','Resale Reviewer','ADMIN','ACTIVE')`,
   );
