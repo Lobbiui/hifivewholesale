@@ -81,7 +81,7 @@ export async function POST(request: Request) {
       const applicationId = `app_${randomUUID()}`;
       await transaction.query(
         `INSERT INTO organizations (id,legal_name,display_name,organization_type,status,resale_id,resale_document_status,primary_territory,website_url)
-         VALUES ($1,$2,$2,'WHOLESALE_BUYER','APPROVED',NULLIF($3,''),CASE WHEN NULLIF($3,'') IS NULL THEN 'NOT_PROVIDED' ELSE 'PENDING' END,$4,$5)`,
+         VALUES ($1,$2,$2,'WHOLESALE_BUYER','APPROVED',NULLIF($3::text,''),CASE WHEN NULLIF($3::text,'') IS NULL THEN 'NOT_PROVIDED' ELSE 'PENDING' END,$4,$5)`,
         [organizationId, parsed.data.companyName, parsed.data.resaleId, parsed.data.territory, parsed.data.websiteUrl || null],
       );
       await transaction.query(
@@ -102,7 +102,7 @@ export async function POST(request: Request) {
         `INSERT INTO buyer_applications
           (id,legal_business_name,contact_name,business_email,business_phone,resale_id,primary_territory,business_type,website_url,
            certification_accepted_at,status,organization_id,reviewed_at,reviewed_by,review_notes)
-         VALUES ($1,$2,$3,$4,$5,NULLIF($6,''),$7,$8,$9,CURRENT_TIMESTAMP,'APPROVED',$10,CURRENT_TIMESTAMP,$11,$12)`,
+         VALUES ($1,$2,$3,$4,$5,NULLIF($6::text,''),$7,$8,$9,CURRENT_TIMESTAMP,'APPROVED',$10,CURRENT_TIMESTAMP,$11,$12)`,
         [applicationId, parsed.data.companyName, parsed.data.contactName, parsed.data.email, parsed.data.phone, parsed.data.resaleId,
           parsed.data.territory, parsed.data.businessType, parsed.data.websiteUrl || null, organizationId, admin.id,
           isTennesseeTerritory(parsed.data.territory) ? "Manually created by administrator; Tennessee compliance documents may be uploaded from the customer profile." : "Manually created by administrator."],
