@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import type { Product, ProductVariant } from "@/lib/data";
+import { calculateHdcpTax } from "@/lib/hdcp-tax";
 
 export type CartItem = Product & {
   quantity: number;
@@ -15,6 +16,8 @@ type CartContextValue = {
   setQuantity: (key: string, quantity: number) => void;
   clear: () => void;
   count: number;
+  subtotal: number;
+  hdcpTax: number;
   total: number;
   pricingPending: boolean;
   notice: string | null;
@@ -99,6 +102,23 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           ),
     );
   const clear = () => setItems([]);
+  const subtotalCents = items.reduce(
+    (sum, item) =>
+      sum + Math.round((item.casePrice ?? 0) * 100) * item.quantity,
+    0,
+  );
+  const hdcpTaxCents = items.reduce(
+    (sum, item) =>
+      sum +
+      calculateHdcpTax({
+        profile: item.hdcpTaxProfile,
+        value: item.hdcpTaxValue,
+        unitsPerCase: item.unitsPerCase,
+        quantityCases: item.quantity,
+        casePriceCents: Math.round((item.casePrice ?? 0) * 100),
+      }).totalTaxCents,
+    0,
+  );
   const value = useMemo(
     () => ({
       items,
@@ -107,14 +127,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       setQuantity,
       clear,
       count: items.reduce((sum, item) => sum + item.quantity, 0),
-      total: items.reduce(
-        (sum, item) => sum + (item.casePrice ?? 0) * item.quantity,
-        0,
-      ),
+      subtotal: subtotalCents / 100,
+      hdcpTax: hdcpTaxCents / 100,
+      total: (subtotalCents + hdcpTaxCents) / 100,
       pricingPending: items.some((item) => item.casePrice === null),
       notice,
     }),
-    [items, notice],
+    [hdcpTaxCents, items, notice, subtotalCents],
   );
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

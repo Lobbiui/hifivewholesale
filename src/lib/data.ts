@@ -1,4 +1,5 @@
 import catalog from "./catalog.generated.json";
+import type { HdcpTaxProfile } from "./hdcp-tax";
 
 export type Product = {
   id: string;
@@ -13,6 +14,9 @@ export type Product = {
   tnRegisteredUpc?: string;
   price: number | null;
   casePrice: number | null;
+  hdcpTaxProfile?: HdcpTaxProfile;
+  hdcpTaxValue?: number;
+  unitsPerCase?: number;
   color: string;
   accent: string;
   badge?: string;
@@ -29,6 +33,8 @@ export type ProductVariant = {
   unitsPerCase: number;
   price: number | null;
   casePrice: number | null;
+  hdcpTaxProfile?: HdcpTaxProfile;
+  hdcpTaxValue?: number;
   images?: string[];
   coa?: string[];
 };

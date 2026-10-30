@@ -2,19 +2,29 @@ import { getAdminIdentity } from "@/lib/server/admin-auth";
 import { getDatabase } from "@/lib/server/database";
 export const runtime="nodejs";export const dynamic="force-dynamic";
 const queries:Record<string,string>={
- orders:`SELECT r.order_number,r.state,r.fulfillment_method,o.display_name AS customer,r.contact_email,r.purchase_order_number,r.estimated_total_cents,r.payment_status,r.amount_paid_cents,r.amount_refunded_cents,r.payment_provider,r.payment_provider_reference,r.paid_at,r.submitted_at FROM order_requests r JOIN organizations o ON o.id=r.organization_id ORDER BY r.submitted_at DESC`,
+ orders:`SELECT r.order_number,r.state,r.fulfillment_method,o.display_name AS customer,r.contact_email,r.purchase_order_number,r.subtotal_cents,r.hdcp_tax_cents,r.sales_tax_cents,r.shipping_cents,r.estimated_total_cents,r.payment_status,r.amount_paid_cents,r.amount_refunded_cents,r.payment_provider,r.payment_provider_reference,r.paid_at,r.submitted_at FROM order_requests r JOIN organizations o ON o.id=r.organization_id ORDER BY r.submitted_at DESC`,
  "order-history":`SELECT r.order_number,r.submitted_at,o.display_name AS customer,r.contact_email,
    r.purchase_order_number,r.fulfillment_method,r.state,
    i.product_name_snapshot AS product,i.quantity_cases,i.case_price_cents,
-   CASE WHEN i.case_price_cents IS NULL THEN NULL ELSE i.case_price_cents*i.quantity_cases END AS line_total_cents,
+   i.line_subtotal_cents,i.hdcp_tax_profile,i.hdcp_tax_value,i.hdcp_tax_cents,
+   CASE WHEN i.line_subtotal_cents IS NULL THEN NULL ELSE i.line_subtotal_cents+i.hdcp_tax_cents END AS line_total_cents,
+   r.subtotal_cents,r.hdcp_tax_cents AS order_hdcp_tax_cents,r.sales_tax_cents,r.shipping_cents,
    r.estimated_total_cents,r.payment_status,r.amount_paid_cents,r.amount_refunded_cents,
    r.payment_provider,r.payment_provider_reference,r.paid_at
    FROM order_requests r
    JOIN organizations o ON o.id=r.organization_id
    LEFT JOIN order_request_items i ON i.order_request_id=r.id
    ORDER BY r.submitted_at DESC,i.created_at`,
+ "hdcp-tax":`SELECT r.order_number,r.submitted_at,o.display_name AS customer,
+   i.product_name_snapshot AS product,i.quantity_cases,i.hdcp_tax_profile,
+   i.hdcp_tax_value,i.line_subtotal_cents,i.hdcp_tax_cents,
+   i.hdcp_tax_snapshot_json
+   FROM order_request_items i
+   JOIN order_requests r ON r.id=i.order_request_id
+   JOIN organizations o ON o.id=r.organization_id
+   ORDER BY r.submitted_at DESC,i.created_at`,
   customers:`SELECT o.display_name,o.status,o.resale_id,o.resale_document_status,o.resale_document_reviewed_at,o.primary_territory,u.display_name AS contact,u.email,o.created_at FROM organizations o LEFT JOIN organization_memberships m ON m.organization_id=o.id LEFT JOIN users u ON u.id=m.user_id WHERE o.organization_type='WHOLESALE_BUYER' ORDER BY o.created_at DESC`,
- inventory:`SELECT p.name,p.brand,p.category,p.status,v.sku,v.upc,v.variant_name,v.units_per_case,v.wholesale_price_cents,v.safety_stock_units,COALESCE((SELECT on_hand_units FROM inventory_snapshots s WHERE s.product_variant_id=v.id ORDER BY observed_at DESC LIMIT 1),0) AS on_hand_units FROM products p JOIN product_variants v ON v.product_id=p.id ORDER BY p.brand,p.name`,
+ inventory:`SELECT p.name,p.brand,p.category,p.status,v.sku,v.upc,v.variant_name,v.units_per_case,v.wholesale_price_cents,COALESCE(v.hdcp_tax_profile,p.hdcp_tax_profile) AS hdcp_tax_profile,COALESCE(v.hdcp_tax_value,p.hdcp_tax_value) AS hdcp_tax_value,v.safety_stock_units,COALESCE((SELECT on_hand_units FROM inventory_snapshots s WHERE s.product_variant_id=v.id ORDER BY observed_at DESC LIMIT 1),0) AS on_hand_units FROM products p JOIN product_variants v ON v.product_id=p.id ORDER BY p.brand,p.name`,
  shipments:`SELECT r.order_number,o.display_name AS customer,r.contact_email,f.method,f.status,
    f.tracking_number,f.service_level,f.package_count,f.shipping_cost_cents,
    f.estimated_delivery_date,f.shipped_at,f.delivered_at,f.driver_notes,f.customer_notes,

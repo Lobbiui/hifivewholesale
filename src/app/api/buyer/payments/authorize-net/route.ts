@@ -6,6 +6,7 @@ import { canProcessAuthorizeNetFor, chargeAuthorizeNet, type AuthorizeNetResult 
 import { getBuyerIdentity } from "@/lib/server/buyer-auth";
 import { getStorefrontProductsByIds } from "@/lib/server/catalog";
 import { getDatabase, type Database } from "@/lib/server/database";
+import { priceRequestedCatalogItems } from "@/lib/server/order-pricing";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -45,15 +46,6 @@ type SavedAttempt = {
   amount_cents: number;
   provider_transaction_id: string | null;
   response_message: string | null;
-};
-
-type RequestedProduct = {
-  id: string;
-  variantId?: string;
-  name: string;
-  flavor: string;
-  casePrice: number | null;
-  [key: string]: unknown;
 };
 
 function statusCode(result: AuthorizeNetResult) {
@@ -141,25 +133,8 @@ export async function POST(request: Request) {
   const products = await getStorefrontProductsByIds(
     parsed.data.items.map((item) => item.id),
   );
-  const catalog = new Map(products.map((product) => [product.id, product]));
-  const requested = parsed.data.items.map((item) => {
-    const product = catalog.get(item.id);
-    const variant = item.variantId
-      ? product?.variants?.find((candidate) => candidate.id === item.variantId)
-      : product?.variants?.[0];
-    const resolved: RequestedProduct | undefined =
-      product && variant
-        ? {
-            ...product,
-            variantId: variant.id,
-            flavor: variant.name,
-            casePrice: variant.casePrice,
-          }
-        : product
-          ? ({ ...product, variantId: undefined } as RequestedProduct)
-          : undefined;
-    return { product: resolved, quantity: item.quantity };
-  });
+  const pricing = priceRequestedCatalogItems(products, parsed.data.items);
+  const requested = pricing.items;
   if (requested.some((item) => !item.product))
     return NextResponse.json(
       {
@@ -179,11 +154,7 @@ export async function POST(request: Request) {
       { status: 422 },
     );
 
-  const totalCents = requested.reduce(
-    (sum, item) =>
-      sum + Math.round(item.product!.casePrice! * 100) * item.quantity,
-    0,
-  );
+  const totalCents = pricing.totalCents ?? 0;
   if (totalCents < 1)
     return NextResponse.json(
       { ok: false, message: "The order total must be greater than zero." },
@@ -197,9 +168,10 @@ export async function POST(request: Request) {
     await transaction.query(
       `INSERT INTO order_requests (
          id,order_number,organization_id,buyer_user_id,state,fulfillment_method,
-         contact_email,purchase_order_number,estimated_total_cents,pricing_pending,
+         contact_email,purchase_order_number,subtotal_cents,hdcp_tax_cents,
+         estimated_total_cents,pricing_pending,
          idempotency_key,payment_status,payment_provider
-       ) VALUES ($1,$2,$3,$4,'READY_FOR_CHECKOUT',$5,$6,NULLIF($7,''),$8,FALSE,$9,'PENDING','AUTHORIZE_NET')`,
+       ) VALUES ($1,$2,$3,$4,'READY_FOR_CHECKOUT',$5,$6,NULLIF($7,''),$8,$9,$10,FALSE,$11,'PENDING','AUTHORIZE_NET')`,
       [
         orderId,
         orderNumber,
@@ -208,6 +180,8 @@ export async function POST(request: Request) {
         parsed.data.method.toUpperCase(),
         parsed.data.contactEmail,
         parsed.data.purchaseOrder,
+        pricing.subtotalCents ?? 0,
+        pricing.hdcpTaxCents ?? 0,
         totalCents,
         parsed.data.idempotencyKey,
       ],
@@ -216,8 +190,9 @@ export async function POST(request: Request) {
       await transaction.query(
         `INSERT INTO order_request_items (
            id,order_request_id,catalog_product_id,product_name_snapshot,
-           quantity_cases,case_price_cents,product_snapshot_json
-         ) VALUES ($1,$2,$3,$4,$5,$6,$7)`,
+           quantity_cases,case_price_cents,line_subtotal_cents,hdcp_tax_profile,
+           hdcp_tax_value,hdcp_tax_cents,hdcp_tax_snapshot_json,product_snapshot_json
+         ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)`,
         [
           randomUUID(),
           orderId,
@@ -225,6 +200,11 @@ export async function POST(request: Request) {
           `${item.product!.name} — ${item.product!.flavor}`,
           item.quantity,
           Math.round(item.product!.casePrice! * 100),
+          item.tax!.lineSubtotalCents,
+          item.tax!.profile,
+          item.tax!.configuredValue,
+          item.tax!.totalTaxCents,
+          item.tax!,
           item.product!,
         ],
       );
@@ -329,6 +309,8 @@ export async function POST(request: Request) {
         `AUTHORIZE_NET_${result.status}`,
         orderId,
         {
+          subtotalCents: pricing.subtotalCents,
+          hdcpTaxCents: pricing.hdcpTaxCents,
           amountCents: totalCents,
           transactionId: result.transactionId,
           responseCode: result.responseCode,

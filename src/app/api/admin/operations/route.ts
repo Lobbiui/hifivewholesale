@@ -27,7 +27,9 @@ export async function GET() {
   const database = await getDatabase();
   const [orders, customers, brands, loyalty, promotions, blogs, distributors, tiers, markets, emails, contacts] = await Promise.all([
     database.query(`SELECT r.id, r.order_number, r.state, r.fulfillment_method, r.contact_email,
-      r.purchase_order_number, r.estimated_total_cents, r.pricing_pending, r.submitted_at,
+      r.purchase_order_number, r.subtotal_cents, r.hdcp_tax_cents,
+      r.sales_tax_cents, r.shipping_cents, r.estimated_total_cents,
+      r.pricing_pending, r.submitted_at,
       r.submitted_at + INTERVAL '30 days' AS invoice_expires_at,
       CURRENT_TIMESTAMP < r.submitted_at + INTERVAL '30 days' AS invoice_available,
       r.payment_status, r.amount_paid_cents, r.amount_refunded_cents,

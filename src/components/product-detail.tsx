@@ -45,6 +45,9 @@ export function ProductDetail({
         flavor: selectedVariant.name,
         price: selectedVariant.price,
         casePrice: selectedVariant.casePrice,
+        unitsPerCase: selectedVariant.unitsPerCase,
+        hdcpTaxProfile: selectedVariant.hdcpTaxProfile,
+        hdcpTaxValue: selectedVariant.hdcpTaxValue,
         images: selectedVariant.images?.length
           ? selectedVariant.images
           : product.images,

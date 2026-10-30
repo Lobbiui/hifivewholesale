@@ -5,6 +5,7 @@ import { hasValidRequestOrigin } from "@/lib/server/admin-auth";
 import { getBuyerIdentity } from "@/lib/server/buyer-auth";
 import { getDatabase } from "@/lib/server/database";
 import { getStorefrontProductsByIds } from "@/lib/server/catalog";
+import { priceRequestedCatalogItems } from "@/lib/server/order-pricing";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -99,33 +100,8 @@ export async function POST(request: Request) {
   const products = await getStorefrontProductsByIds(
     parsed.data.items.map((item) => item.id),
   );
-  const catalog = new Map(products.map((product) => [product.id, product]));
-  const requested = parsed.data.items.map((item) => {
-    const product = catalog.get(item.id);
-    const variant = item.variantId
-      ? product?.variants?.find((candidate) => candidate.id === item.variantId)
-      : product?.variants?.[0];
-    return {
-      product:
-        product && variant
-          ? {
-              ...product,
-              variantId: variant.id,
-              cartKey: `${product.id}:${variant.id}`,
-              flavor: variant.name,
-              price: variant.price,
-              casePrice: variant.casePrice,
-            }
-          : product
-            ? {
-                ...product,
-                variantId: undefined,
-                cartKey: `${product.id}:default`,
-              }
-            : undefined,
-      quantity: item.quantity,
-    };
-  });
+  const pricing = priceRequestedCatalogItems(products, parsed.data.items);
+  const requested = pricing.items;
   if (requested.some((item) => !item.product))
     return NextResponse.json(
       {
@@ -146,21 +122,14 @@ export async function POST(request: Request) {
 
     const id = `request_${randomUUID()}`;
     const orderNumber = `HF-${randomBytes(5).toString("hex").toUpperCase()}`;
-    const pricingPending = requested.some(
-      (item) => item.product!.casePrice === null,
-    );
-    const estimatedTotalCents = pricingPending
-      ? null
-      : requested.reduce(
-          (sum, item) =>
-            sum + Math.round(item.product!.casePrice! * 100) * item.quantity,
-          0,
-        );
+    const pricingPending = pricing.pricingPending;
+    const estimatedTotalCents = pricing.totalCents;
     const inserted = await transaction.query<OrderRequestRow>(
       `INSERT INTO order_requests (
          id, order_number, organization_id, buyer_user_id, fulfillment_method, contact_email,
-         purchase_order_number, estimated_total_cents, pricing_pending, idempotency_key
-       ) VALUES ($1, $2, $3, $4, $5, $6, NULLIF($7, ''), $8, $9, $10)
+         purchase_order_number, subtotal_cents, hdcp_tax_cents,
+         estimated_total_cents, pricing_pending, idempotency_key
+       ) VALUES ($1, $2, $3, $4, $5, $6, NULLIF($7, ''), $8, $9, $10, $11, $12)
        ON CONFLICT (idempotency_key) DO NOTHING
        RETURNING id, order_number, state, fulfillment_method, estimated_total_cents, pricing_pending, submitted_at`,
       [
@@ -171,6 +140,8 @@ export async function POST(request: Request) {
         parsed.data.method.toUpperCase(),
         parsed.data.contactEmail,
         parsed.data.purchaseOrder,
+        pricing.subtotalCents ?? 0,
+        pricing.hdcpTaxCents ?? 0,
         estimatedTotalCents,
         pricingPending,
         parsed.data.idempotencyKey,
@@ -189,8 +160,10 @@ export async function POST(request: Request) {
       await transaction.query(
         `INSERT INTO order_request_items (
            id, order_request_id, catalog_product_id, product_name_snapshot, quantity_cases,
-           case_price_cents, product_snapshot_json
-         ) VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+           case_price_cents, line_subtotal_cents, hdcp_tax_profile,
+           hdcp_tax_value, hdcp_tax_cents, hdcp_tax_snapshot_json,
+           product_snapshot_json
+         ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)`,
         [
           randomUUID(),
           id,
@@ -200,6 +173,11 @@ export async function POST(request: Request) {
           item.product!.casePrice === null
             ? null
             : Math.round(item.product!.casePrice * 100),
+          item.tax?.lineSubtotalCents ?? null,
+          item.tax?.profile ?? "NONE",
+          item.tax?.configuredValue ?? 0,
+          item.tax?.totalTaxCents ?? 0,
+          item.tax ?? {},
           item.product!,
         ],
       );

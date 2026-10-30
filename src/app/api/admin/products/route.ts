@@ -6,6 +6,7 @@ import {
   hasValidRequestOrigin,
 } from "@/lib/server/admin-auth";
 import { getDatabase } from "@/lib/server/database";
+import { hdcpTaxProfiles, type HdcpTaxProfile } from "@/lib/hdcp-tax";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -22,6 +23,8 @@ type ProductRow = {
   description: string;
   tn_registered_upc: string | null;
   case_cost_cents: number | null;
+  hdcp_tax_profile: HdcpTaxProfile;
+  hdcp_tax_value: number | string;
   status: string;
   strength: string;
   flavor: string;
@@ -40,6 +43,8 @@ type VariantRow = {
   units_per_case: number | null;
   wholesale_price_cents: number | null;
   case_cost_cents: number | null;
+  hdcp_tax_profile: HdcpTaxProfile | null;
+  hdcp_tax_value: number | string | null;
   safety_stock_units: number;
   online_sellable: boolean;
   on_hand_units: number;
@@ -64,6 +69,7 @@ const imageUrlInput = z
     "Use an https:// URL or a site path beginning with /.",
   )
   .default("");
+const hdcpTaxProfile = z.enum(hdcpTaxProfiles);
 const productInput = z.object({
   id: z.string().optional(),
   name: z.string().trim().min(2).max(200),
@@ -75,6 +81,8 @@ const productInput = z.object({
   description: z.string().trim().max(10000).default(""),
   tnRegisteredUpc: z.string().trim().max(120).optional().default(""),
   defaultCost: z.number().min(0).max(1000000).nullable(),
+  hdcpTaxProfile,
+  hdcpTaxValue: z.number().min(0).max(1000000000),
   status: z.enum(["DRAFT", "SCHEDULED", "PUBLISHED", "ARCHIVED"]),
   variants: z
     .array(
@@ -85,6 +93,8 @@ const productInput = z.object({
         unitsPerCase: z.number().int().min(1).max(10000),
         price: z.number().min(0).max(1000000).nullable(),
         cost: z.number().min(0).max(1000000).nullable(),
+        hdcpTaxProfile: z.enum(["INHERIT", ...hdcpTaxProfiles]),
+        hdcpTaxValue: z.number().min(0).max(1000000000),
         stock: z.number().int().min(0).max(100000000),
         lowAt: z.number().int().min(0).max(100000000),
         active: z.boolean().default(true),
@@ -114,10 +124,10 @@ export async function GET() {
     const database = await getDatabase();
     const [products, variants, imports] = await Promise.all([
       database.query<ProductRow>(
-        `SELECT p.id,p.name,p.alternate_name,p.product_type,p.brand,p.product_line,p.category,p.description,p.tn_registered_upc,p.case_cost_cents,p.status,COALESCE(d.strength,'') AS strength,COALESCE(d.flavor,'') AS flavor,COALESCE(d.format,'') AS format,COALESCE(d.image_urls,'[]'::jsonb) AS image_urls,COALESCE(d.coa_urls,'[]'::jsonb) AS coa_urls,COALESCE(d.color,'#39244d') AS color,COALESCE(d.accent,'#b67cff') AS accent FROM products p LEFT JOIN product_catalog_details d ON d.product_id=p.id WHERE p.status <> 'ARCHIVED' ORDER BY p.brand,p.name`,
+        `SELECT p.id,p.name,p.alternate_name,p.product_type,p.brand,p.product_line,p.category,p.description,p.tn_registered_upc,p.case_cost_cents,p.hdcp_tax_profile,p.hdcp_tax_value,p.status,COALESCE(d.strength,'') AS strength,COALESCE(d.flavor,'') AS flavor,COALESCE(d.format,'') AS format,COALESCE(d.image_urls,'[]'::jsonb) AS image_urls,COALESCE(d.coa_urls,'[]'::jsonb) AS coa_urls,COALESCE(d.color,'#39244d') AS color,COALESCE(d.accent,'#b67cff') AS accent FROM products p LEFT JOIN product_catalog_details d ON d.product_id=p.id WHERE p.status <> 'ARCHIVED' ORDER BY p.brand,p.name`,
       ),
       database.query<VariantRow>(
-        `SELECT v.id,v.product_id,v.sku,v.upc,v.variant_name,v.units_per_case,v.wholesale_price_cents,v.case_cost_cents,v.safety_stock_units,v.online_sellable,COALESCE(latest.on_hand_units,0)::int AS on_hand_units,COALESCE(v.image_urls,'[]'::jsonb) AS image_urls,COALESCE(v.coa_urls,'[]'::jsonb) AS coa_urls FROM product_variants v LEFT JOIN LATERAL (SELECT on_hand_units FROM inventory_snapshots s WHERE s.product_variant_id=v.id ORDER BY observed_at DESC LIMIT 1) latest ON TRUE ORDER BY v.created_at`,
+        `SELECT v.id,v.product_id,v.sku,v.upc,v.variant_name,v.units_per_case,v.wholesale_price_cents,v.case_cost_cents,v.hdcp_tax_profile,v.hdcp_tax_value,v.safety_stock_units,v.online_sellable,COALESCE(latest.on_hand_units,0)::int AS on_hand_units,COALESCE(v.image_urls,'[]'::jsonb) AS image_urls,COALESCE(v.coa_urls,'[]'::jsonb) AS coa_urls FROM product_variants v LEFT JOIN LATERAL (SELECT on_hand_units FROM inventory_snapshots s WHERE s.product_variant_id=v.id ORDER BY observed_at DESC LIMIT 1) latest ON TRUE ORDER BY v.created_at`,
       ),
       database.query<ImportRow>(
         "SELECT id,filename,import_type,row_count,total_units,draft_products,created_at FROM catalog_imports ORDER BY created_at DESC LIMIT 8",
@@ -141,6 +151,11 @@ export async function GET() {
               variant.case_cost_cents === null
                 ? null
                 : variant.case_cost_cents / 100,
+            hdcpTaxProfile: variant.hdcp_tax_profile ?? "INHERIT",
+            hdcpTaxValue:
+              variant.hdcp_tax_value === null
+                ? 0
+                : Number(variant.hdcp_tax_value),
             stock: variant.on_hand_units,
             lowAt: variant.safety_stock_units,
             active: variant.online_sellable,
@@ -161,6 +176,8 @@ export async function GET() {
           tnRegisteredUpc: row.tn_registered_upc ?? "",
           defaultCost:
             row.case_cost_cents === null ? null : row.case_cost_cents / 100,
+          hdcpTaxProfile: row.hdcp_tax_profile,
+          hdcpTaxValue: Number(row.hdcp_tax_value),
           status: title(row.status),
           variants: productVariants,
           productStats: row.strength,
@@ -221,6 +238,28 @@ async function save(request: Request, updating: boolean) {
       { ok: false, message: "The product record is missing its saved ID." },
       { status: 422 },
     );
+  const invalidTax = [
+    { profile: parsed.data.hdcpTaxProfile, value: parsed.data.hdcpTaxValue, label: "Product default" },
+    ...parsed.data.variants.map((variant, index) => ({
+      profile: variant.hdcpTaxProfile,
+      value: variant.hdcpTaxValue,
+      label: `Shopper option ${index + 1}`,
+    })),
+  ].find((rule) =>
+    (rule.profile !== "NONE" && rule.profile !== "INHERIT" && rule.value <= 0) ||
+    (rule.profile === "PERCENT_OF_LINE" && rule.value > 100),
+  );
+  if (invalidTax)
+    return NextResponse.json(
+      {
+        ok: false,
+        message:
+          invalidTax.profile === "PERCENT_OF_LINE" && invalidTax.value > 100
+            ? `${invalidTax.label} tax percentage cannot exceed 100%.`
+            : `${invalidTax.label} requires a tax value greater than zero.`,
+      },
+      { status: 422 },
+    );
   const data = parsed.data,
     database = await getDatabase();
   try {
@@ -266,6 +305,10 @@ async function save(request: Request, updating: boolean) {
         );
       }
       await tx.query(
+        "UPDATE products SET hdcp_tax_profile=$2,hdcp_tax_value=$3,updated_at=CURRENT_TIMESTAMP WHERE id=$1",
+        [productId, data.hdcpTaxProfile, data.hdcpTaxValue],
+      );
+      await tx.query(
         "INSERT INTO catalog_product_types (name) VALUES ($1) ON CONFLICT (name) DO NOTHING",
         [data.productType],
       );
@@ -291,7 +334,7 @@ async function save(request: Request, updating: boolean) {
           option.cost === null ? null : Math.round(option.cost * 100);
         if (found)
           await tx.query(
-            "UPDATE product_variants SET variant_name=$2,upc=NULLIF($3,''),units_per_case=$4,wholesale_price_cents=$5,case_cost_cents=$6,safety_stock_units=$7,online_sellable=$8,updated_at=CURRENT_TIMESTAMP WHERE id=$1",
+            "UPDATE product_variants SET variant_name=$2,upc=NULLIF($3,''),units_per_case=$4,wholesale_price_cents=$5,case_cost_cents=$6,hdcp_tax_profile=$7,hdcp_tax_value=$8,safety_stock_units=$9,online_sellable=$10,updated_at=CURRENT_TIMESTAMP WHERE id=$1",
             [
               variantId,
               option.name,
@@ -299,13 +342,15 @@ async function save(request: Request, updating: boolean) {
               option.unitsPerCase,
               priceCents,
               costCents,
+              option.hdcpTaxProfile === "INHERIT" ? null : option.hdcpTaxProfile,
+              option.hdcpTaxProfile === "INHERIT" ? null : option.hdcpTaxValue,
               option.lowAt,
               option.active,
             ],
           );
         else
           await tx.query(
-            "INSERT INTO product_variants (id,product_id,variant_name,upc,units_per_case,wholesale_price_cents,case_cost_cents,safety_stock_units,online_sellable) VALUES ($1,$2,$3,NULLIF($4,''),$5,$6,$7,$8,$9)",
+            "INSERT INTO product_variants (id,product_id,variant_name,upc,units_per_case,wholesale_price_cents,case_cost_cents,hdcp_tax_profile,hdcp_tax_value,safety_stock_units,online_sellable) VALUES ($1,$2,$3,NULLIF($4,''),$5,$6,$7,$8,$9,$10,$11)",
             [
               variantId,
               productId,
@@ -314,6 +359,8 @@ async function save(request: Request, updating: boolean) {
               option.unitsPerCase,
               priceCents,
               costCents,
+              option.hdcpTaxProfile === "INHERIT" ? null : option.hdcpTaxProfile,
+              option.hdcpTaxProfile === "INHERIT" ? null : option.hdcpTaxValue,
               option.lowAt,
               option.active,
             ],

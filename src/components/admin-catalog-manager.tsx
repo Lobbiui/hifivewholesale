@@ -22,6 +22,13 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AdminTaxonomyManager } from "@/components/admin-taxonomy-manager";
+import {
+  hdcpTaxProfileLabels,
+  hdcpTaxProfiles,
+  hdcpTaxValueLabels,
+  type HdcpTaxProfile,
+  type HdcpTaxSelection,
+} from "@/lib/hdcp-tax";
 
 type ProductOption = {
   id?: string;
@@ -30,6 +37,8 @@ type ProductOption = {
   unitsPerCase: number;
   price: number | null;
   cost: number | null;
+  hdcpTaxProfile: HdcpTaxSelection;
+  hdcpTaxValue: number;
   stock: number;
   lowAt: number;
   active: boolean;
@@ -48,6 +57,8 @@ type CatalogProduct = {
   description: string;
   tnRegisteredUpc: string;
   defaultCost: number | null;
+  hdcpTaxProfile: HdcpTaxProfile;
+  hdcpTaxValue: number;
   variants: ProductOption[];
   status: string;
   productStats: string;
@@ -437,6 +448,8 @@ export function AdminCatalogManager() {
         String(form.get("defaultCost") || "") === ""
           ? null
           : Number(form.get("defaultCost")),
+      hdcpTaxProfile: String(form.get("hdcpTaxProfile") || "NONE"),
+      hdcpTaxValue: Number(form.get("hdcpTaxValue") || 0),
       status: String(form.get("status") || "DRAFT"),
       variants: options.map((option) => ({
         id: option.id,
@@ -445,6 +458,8 @@ export function AdminCatalogManager() {
         unitsPerCase: option.unitsPerCase,
         price: option.price,
         cost: option.cost,
+        hdcpTaxProfile: option.hdcpTaxProfile,
+        hdcpTaxValue: option.hdcpTaxValue,
         stock: option.stock,
         lowAt: option.lowAt,
         active: option.active,
@@ -523,6 +538,8 @@ export function AdminCatalogManager() {
               unitsPerCase: 1,
               price: null,
               cost: null,
+              hdcpTaxProfile: "INHERIT",
+              hdcpTaxValue: 0,
               stock: 0,
               lowAt: 0,
               active: true,
@@ -1023,6 +1040,49 @@ export function AdminCatalogManager() {
                     <small>Admin only</small>
                   </label>
                   <label>
+                    TN HDCP tax
+                    <select
+                      value={option.hdcpTaxProfile}
+                      onChange={(event) =>
+                        updateOption(
+                          index,
+                          "hdcpTaxProfile",
+                          event.target.value as HdcpTaxSelection,
+                        )
+                      }
+                    >
+                      <option value="INHERIT">Use product default</option>
+                      {hdcpTaxProfiles.map((profile) => (
+                        <option key={profile} value={profile}>
+                          {hdcpTaxProfileLabels[profile]}
+                        </option>
+                      ))}
+                    </select>
+                    <small>Admin only; calculated per case ordered.</small>
+                  </label>
+                  <label>
+                    {option.hdcpTaxProfile === "INHERIT"
+                      ? "Tax value (inherited)"
+                      : hdcpTaxValueLabels[option.hdcpTaxProfile]}
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.0001"
+                      value={option.hdcpTaxValue}
+                      disabled={
+                        option.hdcpTaxProfile === "INHERIT" ||
+                        option.hdcpTaxProfile === "NONE"
+                      }
+                      onChange={(event) =>
+                        updateOption(
+                          index,
+                          "hdcpTaxValue",
+                          Number(event.target.value),
+                        )
+                      }
+                    />
+                  </label>
+                  <label>
                     On hand
                     <input
                       name="optionStock"
@@ -1167,6 +1227,8 @@ export function AdminCatalogManager() {
                       unitsPerCase: 1,
                       price: null,
                       cost: null,
+                      hdcpTaxProfile: "INHERIT",
+                      hdcpTaxValue: 0,
                       stock: 0,
                       lowAt: 0,
                       active: true,
@@ -1214,6 +1276,43 @@ export function AdminCatalogManager() {
                 Admin only. An option-level cost above overrides this value.
               </small>
             </label>
+            <fieldset className="full-field product-tax-settings">
+              <legend>Tennessee HDCP tax default</legend>
+              <p>
+                Admin only. Every shopper option inherits this rule unless it
+                has an override above. Tax is calculated again by the server at
+                checkout and saved with the order.
+              </p>
+              <label>
+                Tax calculation
+                <select
+                  name="hdcpTaxProfile"
+                  defaultValue={
+                    editor === "new" ? "NONE" : editor.hdcpTaxProfile
+                  }
+                >
+                  {hdcpTaxProfiles.map((profile) => (
+                    <option key={profile} value={profile}>
+                      {hdcpTaxProfileLabels[profile]}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                Tax value
+                <input
+                  name="hdcpTaxValue"
+                  type="number"
+                  min="0"
+                  step="0.0001"
+                  defaultValue={editor === "new" ? 0 : editor.hdcpTaxValue}
+                />
+                <small>
+                  Enter the value required by the selected profile. Choose “No
+                  HDCP tax” and 0 until the item has been classified.
+                </small>
+              </label>
+            </fieldset>
             <label>
               Flavor
               <input

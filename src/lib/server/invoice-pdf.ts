@@ -2,6 +2,7 @@ type InvoiceItem = {
   name: string;
   quantityCases: number;
   casePriceCents: number | null;
+  hdcpTaxCents: number;
 };
 
 export type InvoicePdfData = {
@@ -16,6 +17,10 @@ export type InvoicePdfData = {
   paymentStatus: string;
   paymentReference: string | null;
   estimatedTotalCents: number | null;
+  subtotalCents: number;
+  hdcpTaxCents: number;
+  salesTaxCents: number;
+  shippingCents: number;
   amountPaidCents: number;
   amountRefundedCents: number;
   address: string[];
@@ -175,7 +180,10 @@ export function generateInvoicePdf(invoice: InvoicePdfData) {
 
   let y = tableHeader(commands, 535);
   for (const item of invoice.items) {
-    const nameLines = wrap(item.name, 49);
+    const nameLines = wrap(
+      `${item.name}${item.hdcpTaxCents > 0 ? ` | TN HDCP tax ${money(item.hdcpTaxCents)}` : ""}`,
+      49,
+    );
     const rowHeight = Math.max(30, nameLines.length * 12 + 12);
     if (y - rowHeight < 92) {
       pageIndex += 1;
@@ -193,7 +201,9 @@ export function generateInvoicePdf(invoice: InvoicePdfData) {
       textCommand(
         item.casePriceCents === null
           ? "Pending"
-          : money(item.casePriceCents * item.quantityCases),
+          : money(
+              item.casePriceCents * item.quantityCases + item.hdcpTaxCents,
+            ),
         512,
         y,
         9,
@@ -212,6 +222,14 @@ export function generateInvoicePdf(invoice: InvoicePdfData) {
     y = 650;
   }
   const totals = [
+    ["Merchandise subtotal", money(invoice.subtotalCents)],
+    ["TN HDCP tax", money(invoice.hdcpTaxCents)],
+    ...(invoice.salesTaxCents
+      ? [["Sales tax", money(invoice.salesTaxCents)]]
+      : []),
+    ...(invoice.shippingCents
+      ? [["Shipping", money(invoice.shippingCents)]]
+      : []),
     ["Order total", money(invoice.estimatedTotalCents)],
     ["Amount paid", money(invoice.amountPaidCents)],
     ["Amount refunded", money(invoice.amountRefundedCents)],

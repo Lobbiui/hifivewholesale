@@ -1042,6 +1042,15 @@ textarea {
 .total-row strong {
   font-size: 26px;
 }
+.checkout-subtotal-row,
+.checkout-tax-row {
+  margin-top: 0;
+  padding: 13px 0;
+}
+.checkout-subtotal-row strong,
+.checkout-tax-row strong {
+  font-size: 16px;
+}
 .integration-note {
   display: block;
   color: rgba(255, 255, 255, 0.4);
@@ -5702,12 +5711,30 @@ html[dir="rtl"] .detail-specs div:last-child {
 }
 .product-option-row {
   display: grid;
-  grid-template-columns:
-    1.35fr 0.9fr repeat(5, 0.72fr) minmax(120px, 0.9fr) minmax(190px, 1.45fr)
-    auto;
+  grid-template-columns: repeat(4, minmax(120px, 1fr));
   gap: 8px;
   align-items: end;
   margin: 10px 0;
+}
+.product-tax-settings {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 14px;
+}
+.product-tax-settings legend {
+  padding: 0 6px;
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+.product-tax-settings > p {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--muted);
+  font-size: 9px;
 }
 .product-option-row.is-hidden {
   border-left: 3px solid #b26a00;
@@ -5997,6 +6024,12 @@ html[dir="rtl"] .detail-specs div:last-child {
   }
   .product-option-row {
     grid-template-columns: 1fr 1fr;
+  }
+  .product-tax-settings {
+    grid-template-columns: 1fr;
+  }
+  .product-tax-settings > p {
+    grid-column: auto;
   }
   .product-image-manager > header {
     align-items: flex-start;

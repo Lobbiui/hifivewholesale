@@ -15,6 +15,10 @@ type InvoiceOrder = {
   purchase_order_number: string | null;
   fulfillment_method: string;
   estimated_total_cents: number | null;
+  subtotal_cents: number;
+  hdcp_tax_cents: number;
+  sales_tax_cents: number;
+  shipping_cents: number;
   payment_status: string;
   amount_paid_cents: number;
   amount_refunded_cents: number;
@@ -32,6 +36,7 @@ type InvoiceItem = {
   product_name_snapshot: string;
   quantity_cases: number;
   case_price_cents: number | null;
+  hdcp_tax_cents: number;
 };
 
 export async function GET(
@@ -47,7 +52,8 @@ export async function GET(
   const [orderResult, itemsResult] = await Promise.all([
     database.query<InvoiceOrder>(
       `SELECT r.order_number,r.submitted_at,r.contact_email,r.purchase_order_number,
-              r.fulfillment_method,r.estimated_total_cents,r.payment_status,
+              r.fulfillment_method,r.estimated_total_cents,r.subtotal_cents,
+              r.hdcp_tax_cents,r.sales_tax_cents,r.shipping_cents,r.payment_status,
               r.amount_paid_cents,r.amount_refunded_cents,r.payment_provider_reference,
               o.display_name AS company_name,owner.display_name AS contact_name,
               location.line1,location.line2,location.city,location.region,location.postal_code
@@ -70,7 +76,7 @@ export async function GET(
       [orderId],
     ),
     database.query<InvoiceItem>(
-      `SELECT product_name_snapshot,quantity_cases,case_price_cents
+      `SELECT product_name_snapshot,quantity_cases,case_price_cents,hdcp_tax_cents
          FROM order_request_items WHERE order_request_id=$1 ORDER BY created_at`,
       [orderId],
     ),
@@ -117,6 +123,10 @@ export async function GET(
     paymentStatus: order.payment_status,
     paymentReference: order.payment_provider_reference,
     estimatedTotalCents: order.estimated_total_cents,
+    subtotalCents: order.subtotal_cents,
+    hdcpTaxCents: order.hdcp_tax_cents,
+    salesTaxCents: order.sales_tax_cents,
+    shippingCents: order.shipping_cents,
     amountPaidCents: order.amount_paid_cents,
     amountRefundedCents: order.amount_refunded_cents,
     address,
@@ -124,6 +134,7 @@ export async function GET(
       name: item.product_name_snapshot,
       quantityCases: item.quantity_cases,
       casePriceCents: item.case_price_cents,
+      hdcpTaxCents: item.hdcp_tax_cents,
     })),
   });
   const filename = `HiFive-invoice-${order.order_number.replace(/[^A-Za-z0-9-]/g, "-")}.pdf`;

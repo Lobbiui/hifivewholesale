@@ -65,6 +65,9 @@ export async function GET() {
         flavor: variant.name,
         price: variant.price,
         casePrice: variant.casePrice,
+        unitsPerCase: variant.unitsPerCase,
+        hdcpTaxProfile: variant.hdcpTaxProfile,
+        hdcpTaxValue: variant.hdcpTaxValue,
         quantity,
       },
     ];
@@ -108,6 +111,9 @@ export async function PUT(request: Request) {
               flavor: variant.name,
               price: variant.price,
               casePrice: variant.casePrice,
+              unitsPerCase: variant.unitsPerCase,
+              hdcpTaxProfile: variant.hdcpTaxProfile,
+              hdcpTaxValue: variant.hdcpTaxValue,
             }
           : product
             ? {

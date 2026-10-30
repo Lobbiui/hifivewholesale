@@ -1,5 +1,6 @@
 import catalog from "@/lib/catalog.generated.json";
 import type { Product } from "@/lib/data";
+import type { HdcpTaxProfile } from "@/lib/hdcp-tax";
 import { getDatabase } from "./database";
 
 const fallbackCatalog = catalog as Product[];
@@ -17,6 +18,8 @@ type CatalogRow = {
   format: string;
   wholesale_price_cents: number | null;
   units_per_case: number | null;
+  hdcp_tax_profile: HdcpTaxProfile;
+  hdcp_tax_value: number | string;
   color: string;
   accent: string;
   badge: string | null;
@@ -39,6 +42,8 @@ const catalogQuery = `
          COALESCE(v.image_urls,'[]'::jsonb) AS variant_image_urls,
          COALESCE(v.coa_urls,'[]'::jsonb) AS variant_coa_urls,
          v.wholesale_price_cents, v.units_per_case,
+         COALESCE(v.hdcp_tax_profile, p.hdcp_tax_profile) AS hdcp_tax_profile,
+         COALESCE(v.hdcp_tax_value, p.hdcp_tax_value) AS hdcp_tax_value,
          COALESCE(d.color, '#39244d') AS color,
          COALESCE(d.accent, '#b67cff') AS accent,
          d.badge, COALESCE(d.image_urls, '[]'::jsonb) AS image_urls,
@@ -103,6 +108,9 @@ function toProduct(row: CatalogRow, rows: CatalogRow[]): Product {
       row.wholesale_price_cents === null
         ? null
         : row.wholesale_price_cents / 100,
+    hdcpTaxProfile: row.hdcp_tax_profile,
+    hdcpTaxValue: Number(row.hdcp_tax_value),
+    unitsPerCase: row.units_per_case ?? 1,
     color: row.color,
     accent: row.accent,
     badge: row.badge ?? undefined,
@@ -124,6 +132,8 @@ function toProduct(row: CatalogRow, rows: CatalogRow[]): Product {
         variant.wholesale_price_cents === null
           ? null
           : variant.wholesale_price_cents / 100,
+      hdcpTaxProfile: variant.hdcp_tax_profile,
+      hdcpTaxValue: Number(variant.hdcp_tax_value),
       images: stringArray(variant.variant_image_urls),
       coa: stringArray(variant.variant_coa_urls),
     })),

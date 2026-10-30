@@ -48,8 +48,17 @@ declare global {
 }
 
 export default function CheckoutPage() {
-  const { items, total, remove, setQuantity, clear, pricingPending, notice } =
-    useCart();
+  const {
+    items,
+    subtotal,
+    hdcpTax,
+    total,
+    remove,
+    setQuantity,
+    clear,
+    pricingPending,
+    notice,
+  } = useCart();
   const { copy } = useLanguage();
   const [method, setMethod] = useState<"pickup" | "delivery">("pickup");
   const [buyer, setBuyer] = useState<BuyerIdentity | null>(null);
@@ -386,9 +395,19 @@ export default function CheckoutPage() {
               onChange={(event) => setPurchaseOrder(event.target.value)}
             />
           </label>
+          <div className="total-row checkout-subtotal-row">
+            <span>Merchandise subtotal</span>
+            <strong>
+              {pricingPending ? copy.checkout.accountPricing : `$${subtotal.toFixed(2)}`}
+            </strong>
+          </div>
+          <div className="total-row checkout-tax-row">
+            <span>TN HDCP tax</span>
+            <strong>{pricingPending ? "Pending" : `$${hdcpTax.toFixed(2)}`}</strong>
+          </div>
           <div className="total-row">
             <span>
-              {pricingPending ? copy.checkout.total : "Estimated total"}
+              {pricingPending ? copy.checkout.total : "Order total"}
             </span>
             <strong>
               {pricingPending
