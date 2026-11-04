@@ -1,6 +1,13 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import type { Product, ProductVariant } from "@/lib/data";
 import { calculateHdcpTax } from "@/lib/hdcp-tax";
 
@@ -15,6 +22,7 @@ type CartContextValue = {
   remove: (key: string) => void;
   setQuantity: (key: string, quantity: number) => void;
   clear: () => void;
+  refresh: () => Promise<void>;
   count: number;
   subtotal: number;
   hdcpTax: number;
@@ -29,6 +37,21 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [hydrated, setHydrated] = useState(false);
   const [authenticated, setAuthenticated] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
+  const refresh = useCallback(async () => {
+    const response = await fetch("/api/buyer/cart", { cache: "no-store" });
+    if (!response.ok) return;
+    const result = (await response.json()) as {
+      items: CartItem[];
+      removedUnavailable?: number;
+    };
+    setItems(result.items);
+    setNotice(
+      result.removedUnavailable
+        ? `${result.removedUnavailable} unavailable cart item${result.removedUnavailable === 1 ? " was" : "s were"} removed. Please choose another flavor if needed.`
+        : "Cart pricing was refreshed to the current catalog prices.",
+    );
+    setAuthenticated(true);
+  }, []);
   useEffect(() => {
     let active = true;
     void fetch("/api/buyer/cart", { cache: "no-store" })
@@ -126,6 +149,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       remove,
       setQuantity,
       clear,
+      refresh,
       count: items.reduce((sum, item) => sum + item.quantity, 0),
       subtotal: subtotalCents / 100,
       hdcpTax: hdcpTaxCents / 100,
@@ -133,7 +157,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       pricingPending: items.some((item) => item.casePrice === null),
       notice,
     }),
-    [hdcpTaxCents, items, notice, subtotalCents],
+    [hdcpTaxCents, items, notice, refresh, subtotalCents],
   );
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

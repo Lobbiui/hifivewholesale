@@ -19,6 +19,8 @@ import {
   LayoutGrid,
   List,
   X,
+  BadgeDollarSign,
+  CalendarClock,
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AdminTaxonomyManager } from "@/components/admin-taxonomy-manager";
@@ -29,6 +31,11 @@ import {
   type HdcpTaxProfile,
   type HdcpTaxSelection,
 } from "@/lib/hdcp-tax";
+import {
+  defaultScheduledSale,
+  scheduledSaleStatus,
+  type ScheduledSale,
+} from "@/lib/scheduled-sales";
 
 type ProductOption = {
   id?: string;
@@ -42,6 +49,7 @@ type ProductOption = {
   stock: number;
   lowAt: number;
   active: boolean;
+  sale: ScheduledSale | null;
   imageUrls?: string[];
   coaUrls?: string[];
 };
@@ -463,6 +471,7 @@ export function AdminCatalogManager() {
         stock: option.stock,
         lowAt: option.lowAt,
         active: option.active,
+        sale: option.sale,
       })),
       productStats: String(form.get("productStats") || ""),
       flavor: String(form.get("flavor") || ""),
@@ -543,6 +552,7 @@ export function AdminCatalogManager() {
               stock: 0,
               lowAt: 0,
               active: true,
+              sale: null,
             },
           ]
         : product.variants,
@@ -550,6 +560,26 @@ export function AdminCatalogManager() {
     setEditor(product);
   };
   const refreshEditor=async(productId:string)=>{const refreshed=await load();const saved=refreshed.find(product=>product.id===productId);if(saved)openEditor(saved)};
+
+  const applySaleToAllOptions = (sourceIndex: number) => {
+    const source = options[sourceIndex]?.sale;
+    if (!source) return;
+    setOptions((current) =>
+      current.map((option, index) =>
+        index === sourceIndex
+          ? option
+          : {
+              ...option,
+              sale: {
+                id: option.sale?.id,
+                price: source.price,
+                startsAt: source.startsAt,
+                endsAt: source.endsAt,
+              },
+            },
+      ),
+    );
+  };
 
   const setTargetImages = (urls: string[], variantId?: string) => {
     if (!variantId) {
@@ -1019,6 +1049,93 @@ export function AdminCatalogManager() {
                       }
                     />
                   </label>
+                  <div className="option-sale-settings">
+                    <div className="option-sale-heading">
+                      <span>
+                        <BadgeDollarSign /> Scheduled sale
+                      </span>
+                      <button
+                        type="button"
+                        className="link-button"
+                        onClick={() =>
+                          updateOption(
+                            index,
+                            "sale",
+                            option.sale ? null : defaultScheduledSale(),
+                          )
+                        }
+                      >
+                        {option.sale ? "Clear sale" : "Add sale"}
+                      </button>
+                    </div>
+                    {option.sale ? (
+                      <>
+                        <label>
+                          Sale case price
+                          <input
+                            type="number"
+                            min="0.01"
+                            step=".01"
+                            value={option.sale.price || ""}
+                            onChange={(event) =>
+                              updateOption(index, "sale", {
+                                ...option.sale!,
+                                price: Number(event.target.value),
+                              })
+                            }
+                            required
+                          />
+                        </label>
+                        <label>
+                          Starts (Central Time)
+                          <input
+                            type="datetime-local"
+                            value={option.sale.startsAt}
+                            onChange={(event) =>
+                              updateOption(index, "sale", {
+                                ...option.sale!,
+                                startsAt: event.target.value,
+                              })
+                            }
+                            required
+                          />
+                        </label>
+                        <label>
+                          Ends (Central Time)
+                          <input
+                            type="datetime-local"
+                            value={option.sale.endsAt}
+                            onChange={(event) =>
+                              updateOption(index, "sale", {
+                                ...option.sale!,
+                                endsAt: event.target.value,
+                              })
+                            }
+                            required
+                          />
+                        </label>
+                        <div className="option-sale-actions">
+                          <span className={`admin-pill sale-${scheduledSaleStatus(option.sale).toLowerCase()}`}>
+                            <CalendarClock /> {scheduledSaleStatus(option.sale)}
+                          </span>
+                          {options.length > 1 ? (
+                            <button
+                              type="button"
+                              className="link-button"
+                              onClick={() => applySaleToAllOptions(index)}
+                            >
+                              Apply to all options
+                            </button>
+                          ) : null}
+                        </div>
+                      </>
+                    ) : (
+                      <small>
+                        Regular case pricing remains active until a sale is
+                        scheduled.
+                      </small>
+                    )}
+                  </div>
                   <label>
                     Case cost
                     <input
@@ -1232,6 +1349,7 @@ export function AdminCatalogManager() {
                       stock: 0,
                       lowAt: 0,
                       active: true,
+                      sale: null,
                     },
                   ])
                 }
@@ -1688,12 +1806,32 @@ export function AdminCatalogManager() {
                       </td>
                       <td>{option.stock}</td>
                       <td>
-                        {option.price === null
-                          ? "Pending"
-                          : new Intl.NumberFormat("en-US", {
-                              style: "currency",
-                              currency: "USD",
-                            }).format(option.price)}
+                        {option.sale ? (
+                          <span className="admin-sale-price">
+                            <b>
+                              {new Intl.NumberFormat("en-US", {
+                                style: "currency",
+                                currency: "USD",
+                              }).format(option.sale.price)}
+                            </b>
+                            <small>
+                              {scheduledSaleStatus(option.sale)} · regular{" "}
+                              {option.price === null
+                                ? "pending"
+                                : new Intl.NumberFormat("en-US", {
+                                    style: "currency",
+                                    currency: "USD",
+                                  }).format(option.price)}
+                            </small>
+                          </span>
+                        ) : option.price === null ? (
+                          "Pending"
+                        ) : (
+                          new Intl.NumberFormat("en-US", {
+                            style: "currency",
+                            currency: "USD",
+                          }).format(option.price)
+                        )}
                       </td>
                       <td>
                         {option.cost === null

@@ -7,6 +7,10 @@ import {
 } from "@/lib/server/admin-auth";
 import { getDatabase } from "@/lib/server/database";
 import { hdcpTaxProfiles, type HdcpTaxProfile } from "@/lib/hdcp-tax";
+import {
+  formatCentralDateTimeInput,
+  parseCentralDateTimeInput,
+} from "@/lib/scheduled-sales";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -50,6 +54,10 @@ type VariantRow = {
   on_hand_units: number;
   image_urls: string[];
   coa_urls: string[];
+  sale_id: string | null;
+  sale_price_cents: number | null;
+  sale_starts_at: Date | string | null;
+  sale_ends_at: Date | string | null;
 };
 type ImportRow = {
   id: string;
@@ -98,6 +106,15 @@ const productInput = z.object({
         stock: z.number().int().min(0).max(100000000),
         lowAt: z.number().int().min(0).max(100000000),
         active: z.boolean().default(true),
+        sale: z
+          .object({
+            id: z.string().optional(),
+            price: z.number().min(0.01).max(1000000),
+            startsAt: z.string().regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/),
+            endsAt: z.string().regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/),
+          })
+          .nullable()
+          .default(null),
       }),
     )
     .min(1)
@@ -127,7 +144,7 @@ export async function GET() {
         `SELECT p.id,p.name,p.alternate_name,p.product_type,p.brand,p.product_line,p.category,p.description,p.tn_registered_upc,p.case_cost_cents,p.hdcp_tax_profile,p.hdcp_tax_value,p.status,COALESCE(d.strength,'') AS strength,COALESCE(d.flavor,'') AS flavor,COALESCE(d.format,'') AS format,COALESCE(d.image_urls,'[]'::jsonb) AS image_urls,COALESCE(d.coa_urls,'[]'::jsonb) AS coa_urls,COALESCE(d.color,'#39244d') AS color,COALESCE(d.accent,'#b67cff') AS accent FROM products p LEFT JOIN product_catalog_details d ON d.product_id=p.id WHERE p.status <> 'ARCHIVED' ORDER BY p.brand,p.name`,
       ),
       database.query<VariantRow>(
-        `SELECT v.id,v.product_id,v.sku,v.upc,v.variant_name,v.units_per_case,v.wholesale_price_cents,v.case_cost_cents,v.hdcp_tax_profile,v.hdcp_tax_value,v.safety_stock_units,v.online_sellable,COALESCE(latest.on_hand_units,0)::int AS on_hand_units,COALESCE(v.image_urls,'[]'::jsonb) AS image_urls,COALESCE(v.coa_urls,'[]'::jsonb) AS coa_urls FROM product_variants v LEFT JOIN LATERAL (SELECT on_hand_units FROM inventory_snapshots s WHERE s.product_variant_id=v.id ORDER BY observed_at DESC LIMIT 1) latest ON TRUE ORDER BY v.created_at`,
+        `SELECT v.id,v.product_id,v.sku,v.upc,v.variant_name,v.units_per_case,v.wholesale_price_cents,v.case_cost_cents,v.hdcp_tax_profile,v.hdcp_tax_value,v.safety_stock_units,v.online_sellable,COALESCE(latest.on_hand_units,0)::int AS on_hand_units,COALESCE(v.image_urls,'[]'::jsonb) AS image_urls,COALESCE(v.coa_urls,'[]'::jsonb) AS coa_urls,sale.id AS sale_id,sale.sale_price_cents,sale.starts_at AS sale_starts_at,sale.ends_at AS sale_ends_at FROM product_variants v LEFT JOIN LATERAL (SELECT on_hand_units FROM inventory_snapshots s WHERE s.product_variant_id=v.id ORDER BY observed_at DESC LIMIT 1) latest ON TRUE LEFT JOIN LATERAL (SELECT id,sale_price_cents,starts_at,ends_at FROM product_variant_sales s WHERE s.product_variant_id=v.id AND s.canceled_at IS NULL AND s.ends_at>CURRENT_TIMESTAMP ORDER BY s.starts_at LIMIT 1) sale ON TRUE ORDER BY v.created_at`,
       ),
       database.query<ImportRow>(
         "SELECT id,filename,import_type,row_count,total_units,draft_products,created_at FROM catalog_imports ORDER BY created_at DESC LIMIT 8",
@@ -159,6 +176,20 @@ export async function GET() {
             stock: variant.on_hand_units,
             lowAt: variant.safety_stock_units,
             active: variant.online_sellable,
+            sale:
+              variant.sale_id &&
+              variant.sale_price_cents !== null &&
+              variant.sale_starts_at &&
+              variant.sale_ends_at
+                ? {
+                    id: variant.sale_id,
+                    price: variant.sale_price_cents / 100,
+                    startsAt: formatCentralDateTimeInput(
+                      variant.sale_starts_at,
+                    ),
+                    endsAt: formatCentralDateTimeInput(variant.sale_ends_at),
+                  }
+                : null,
             imageUrls: Array.isArray(variant.image_urls)
               ? variant.image_urls
               : [],
@@ -258,6 +289,29 @@ async function save(request: Request, updating: boolean) {
             ? `${invalidTax.label} tax percentage cannot exceed 100%.`
             : `${invalidTax.label} requires a tax value greater than zero.`,
       },
+      { status: 422 },
+    );
+  const invalidSale = parsed.data.variants
+    .map((variant, index) => {
+      if (!variant.sale) return null;
+      const startsAt = parseCentralDateTimeInput(variant.sale.startsAt);
+      const endsAt = parseCentralDateTimeInput(variant.sale.endsAt);
+      if (!startsAt || !endsAt)
+        return `Shopper option ${index + 1} has an invalid Central Time sale window.`;
+      if (endsAt <= startsAt)
+        return `Shopper option ${index + 1} sale must end after it starts.`;
+      if (endsAt <= new Date())
+        return `Shopper option ${index + 1} sale must end in the future.`;
+      if (variant.price === null)
+        return `Shopper option ${index + 1} needs a regular case price before a sale can be scheduled.`;
+      if (variant.sale.price >= variant.price)
+        return `Shopper option ${index + 1} sale price must be lower than its regular case price.`;
+      return null;
+    })
+    .find(Boolean);
+  if (invalidSale)
+    return NextResponse.json(
+      { ok: false, message: invalidSale },
       { status: 422 },
     );
   const data = parsed.data,
@@ -369,6 +423,33 @@ async function save(request: Request, updating: boolean) {
           "INSERT INTO inventory_snapshots (id,location_id,product_variant_id,on_hand_units,safety_stock_units,source,observed_at) VALUES ($1,'loc_hifive_warehouse',$2,$3,$4,'MANUAL',CURRENT_TIMESTAMP)",
           [randomUUID(), variantId, option.stock, option.lowAt],
         );
+        if (!option.sale) {
+          await tx.query(
+            "UPDATE product_variant_sales SET canceled_at=CURRENT_TIMESTAMP,canceled_by=$2,updated_at=CURRENT_TIMESTAMP WHERE product_variant_id=$1 AND canceled_at IS NULL AND ends_at>CURRENT_TIMESTAMP",
+            [variantId, admin.id],
+          );
+        } else {
+          const startsAt = parseCentralDateTimeInput(option.sale.startsAt)!;
+          const endsAt = parseCentralDateTimeInput(option.sale.endsAt)!;
+          const other = await tx.query<{ id: string }>(
+            "SELECT id FROM product_variant_sales WHERE product_variant_id=$1 AND canceled_at IS NULL AND ends_at>CURRENT_TIMESTAMP AND ($2::text IS NULL OR id<>$2::text) LIMIT 1",
+            [variantId, option.sale.id ?? null],
+          );
+          if (other.rows[0]) throw new Error("SCHEDULED_SALE_CONFLICT");
+          const salePriceCents = Math.round(option.sale.price * 100);
+          if (option.sale.id) {
+            const updated = await tx.query(
+              "UPDATE product_variant_sales SET sale_price_cents=$3,starts_at=$4,ends_at=$5,updated_at=CURRENT_TIMESTAMP WHERE id=$1 AND product_variant_id=$2 AND canceled_at IS NULL",
+              [option.sale.id, variantId, salePriceCents, startsAt, endsAt],
+            );
+            if (!updated.rowCount) throw new Error("SCHEDULED_SALE_NOT_FOUND");
+          } else {
+            await tx.query(
+              "INSERT INTO product_variant_sales (id,product_variant_id,sale_price_cents,starts_at,ends_at,created_by) VALUES ($1,$2,$3,$4,$5,$6)",
+              [randomUUID(), variantId, salePriceCents, startsAt, endsAt, admin.id],
+            );
+          }
+        }
       }
       for (const old of existing.rows)
         if (!retained.has(old.id))
@@ -423,12 +504,20 @@ async function save(request: Request, updating: boolean) {
     console.error("Product save failed", error);
     const duplicate =
       error instanceof Error && /unique|duplicate/i.test(error.message);
+    const saleConflict =
+      error instanceof Error && error.message === "SCHEDULED_SALE_CONFLICT";
+    const saleMissing =
+      error instanceof Error && error.message === "SCHEDULED_SALE_NOT_FOUND";
     return NextResponse.json(
       {
         ok: false,
         message: duplicate
           ? "That SKU, UPC, or alternate name is already assigned."
-          : "The product could not be saved.",
+          : saleConflict
+            ? "An active or upcoming sale already exists for one of these options. Edit or clear that sale before adding another."
+            : saleMissing
+              ? "A scheduled sale changed before this product was saved. Reload the product and try again."
+              : "The product could not be saved.",
       },
       { status: 422 },
     );

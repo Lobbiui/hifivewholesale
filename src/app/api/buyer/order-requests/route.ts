@@ -28,6 +28,7 @@ const submitSchema = z
     contactEmail: z.string().trim().toLowerCase().email().max(254),
     purchaseOrder: z.string().trim().max(120),
     idempotencyKey: z.string().uuid(),
+    expectedTotalCents: z.number().int().min(0).nullable().optional(),
   })
   .strict();
 
@@ -110,6 +111,20 @@ export async function POST(request: Request) {
           "A selected product or flavor is no longer available. Review the cart and choose another option.",
       },
       { status: 422 },
+    );
+  if (
+    parsed.data.expectedTotalCents !== undefined &&
+    parsed.data.expectedTotalCents !== null &&
+    pricing.totalCents !== parsed.data.expectedTotalCents
+  )
+    return NextResponse.json(
+      {
+        ok: false,
+        pricingChanged: true,
+        message:
+          "A sale or catalog price changed. Your cart has been refreshed; review the new total before submitting.",
+      },
+      { status: 409 },
     );
 
   const database = await getDatabase();

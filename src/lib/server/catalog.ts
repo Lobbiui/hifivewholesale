@@ -17,6 +17,9 @@ type CatalogRow = {
   flavor: string;
   format: string;
   wholesale_price_cents: number | null;
+  sale_price_cents: number | null;
+  sale_starts_at: Date | string | null;
+  sale_ends_at: Date | string | null;
   units_per_case: number | null;
   hdcp_tax_profile: HdcpTaxProfile;
   hdcp_tax_value: number | string;
@@ -42,6 +45,8 @@ const catalogQuery = `
          COALESCE(v.image_urls,'[]'::jsonb) AS variant_image_urls,
          COALESCE(v.coa_urls,'[]'::jsonb) AS variant_coa_urls,
          v.wholesale_price_cents, v.units_per_case,
+         sale.sale_price_cents, sale.starts_at AS sale_starts_at,
+         sale.ends_at AS sale_ends_at,
          COALESCE(v.hdcp_tax_profile, p.hdcp_tax_profile) AS hdcp_tax_profile,
          COALESCE(v.hdcp_tax_value, p.hdcp_tax_value) AS hdcp_tax_value,
          COALESCE(d.color, '#39244d') AS color,
@@ -52,6 +57,16 @@ const catalogQuery = `
          COALESCE(d.source_url, '') AS source_url
     FROM products p
     JOIN product_variants v ON v.product_id=p.id AND v.online_sellable=TRUE
+    LEFT JOIN LATERAL (
+      SELECT s.sale_price_cents,s.starts_at,s.ends_at
+        FROM product_variant_sales s
+       WHERE s.product_variant_id=v.id
+         AND s.canceled_at IS NULL
+         AND s.starts_at <= CURRENT_TIMESTAMP
+         AND s.ends_at > CURRENT_TIMESTAMP
+       ORDER BY s.starts_at DESC
+       LIMIT 1
+    ) sale ON TRUE
     LEFT JOIN product_catalog_details d ON d.product_id = p.id
    WHERE p.status = 'PUBLISHED'
    ORDER BY p.brand, p.name`;
@@ -88,9 +103,16 @@ export async function getStorefrontProductsByIds(
 
 function toProduct(row: CatalogRow, rows: CatalogRow[]): Product {
   const productImages = stringArray(row.image_urls);
+  const priceRow = rows.find((variant) => variant.sale_price_cents !== null) ?? row;
+  const effectivePriceCents =
+    priceRow.sale_price_cents ?? priceRow.wholesale_price_cents;
   const unitPrice =
-    row.wholesale_price_cents !== null && row.units_per_case
-      ? row.wholesale_price_cents / 100 / row.units_per_case
+    effectivePriceCents !== null && priceRow.units_per_case
+      ? effectivePriceCents / 100 / priceRow.units_per_case
+      : null;
+  const regularUnitPrice =
+    priceRow.wholesale_price_cents !== null && priceRow.units_per_case
+      ? priceRow.wholesale_price_cents / 100 / priceRow.units_per_case
       : null;
   return {
     id: row.id,
@@ -105,39 +127,68 @@ function toProduct(row: CatalogRow, rows: CatalogRow[]): Product {
     tnRegisteredUpc: row.tn_registered_upc ?? undefined,
     price: unitPrice,
     casePrice:
-      row.wholesale_price_cents === null
+      effectivePriceCents === null
         ? null
-        : row.wholesale_price_cents / 100,
-    hdcpTaxProfile: row.hdcp_tax_profile,
-    hdcpTaxValue: Number(row.hdcp_tax_value),
-    unitsPerCase: row.units_per_case ?? 1,
+        : effectivePriceCents / 100,
+    regularPrice: regularUnitPrice,
+    regularCasePrice:
+      priceRow.wholesale_price_cents === null
+        ? null
+        : priceRow.wholesale_price_cents / 100,
+    saleStartsAt: dateIso(priceRow.sale_starts_at),
+    saleEndsAt: dateIso(priceRow.sale_ends_at),
+    onSale: priceRow.sale_price_cents !== null,
+    hdcpTaxProfile: priceRow.hdcp_tax_profile,
+    hdcpTaxValue: Number(priceRow.hdcp_tax_value),
+    unitsPerCase: priceRow.units_per_case ?? 1,
     color: row.color,
     accent: row.accent,
-    badge: row.badge ?? undefined,
+    badge: priceRow.sale_price_cents !== null ? "Sale" : row.badge ?? undefined,
     images: productImages.length
       ? productImages
       : ["/images/hifive-logo-black-banner.png"],
     coa: stringArray(row.coa_urls),
     brandLogo: row.brand_logo_url,
     sourceUrl: row.source_url,
-    variants: rows.map((variant) => ({
-      id: variant.variant_id,
-      name: variant.variant_name,
-      unitsPerCase: variant.units_per_case ?? 1,
-      price:
-        variant.wholesale_price_cents !== null && variant.units_per_case
-          ? variant.wholesale_price_cents / 100 / variant.units_per_case
-          : null,
-      casePrice:
-        variant.wholesale_price_cents === null
-          ? null
-          : variant.wholesale_price_cents / 100,
-      hdcpTaxProfile: variant.hdcp_tax_profile,
-      hdcpTaxValue: Number(variant.hdcp_tax_value),
-      images: stringArray(variant.variant_image_urls),
-      coa: stringArray(variant.variant_coa_urls),
-    })),
+    variants: rows.map((variant) => {
+      const effectiveVariantPriceCents =
+        variant.sale_price_cents ?? variant.wholesale_price_cents;
+      return {
+        id: variant.variant_id,
+        name: variant.variant_name,
+        unitsPerCase: variant.units_per_case ?? 1,
+        price:
+          effectiveVariantPriceCents !== null && variant.units_per_case
+            ? effectiveVariantPriceCents / 100 / variant.units_per_case
+            : null,
+        casePrice:
+          effectiveVariantPriceCents === null
+            ? null
+            : effectiveVariantPriceCents / 100,
+        regularPrice:
+          variant.wholesale_price_cents !== null && variant.units_per_case
+            ? variant.wholesale_price_cents / 100 / variant.units_per_case
+            : null,
+        regularCasePrice:
+          variant.wholesale_price_cents === null
+            ? null
+            : variant.wholesale_price_cents / 100,
+        saleStartsAt: dateIso(variant.sale_starts_at),
+        saleEndsAt: dateIso(variant.sale_ends_at),
+        onSale: variant.sale_price_cents !== null,
+        hdcpTaxProfile: variant.hdcp_tax_profile,
+        hdcpTaxValue: Number(variant.hdcp_tax_value),
+        images: stringArray(variant.variant_image_urls),
+        coa: stringArray(variant.variant_coa_urls),
+      };
+    }),
   };
+}
+
+function dateIso(value: Date | string | null) {
+  if (!value) return undefined;
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? undefined : date.toISOString();
 }
 
 function stringArray(value: unknown) {

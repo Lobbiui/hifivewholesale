@@ -540,6 +540,28 @@ em {
   color: var(--muted);
   margin: 0;
 }
+.product-info .sale-price-card {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  color: #7b268f;
+}
+.sale-price-card s,
+.sale-price-detail s,
+.mobile-sale-price s,
+.cart-sale-price s {
+  color: var(--muted);
+  font-weight: 600;
+}
+.product-info .sale-ends-card {
+  display: block;
+  margin-top: 4px;
+  color: #7b268f;
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
 .product-info button {
   width: 40px;
   height: 40px;
@@ -3681,6 +3703,27 @@ body {
   font-size: 9px;
   color: var(--muted);
 }
+.price-block > div .sale-price-detail {
+  margin-top: 7px;
+  color: #7b268f;
+  font-size: 10px;
+  font-weight: 800;
+}
+.sale-price-detail s {
+  margin-right: 7px;
+}
+.mobile-sale-price {
+  display: block;
+  margin-top: 2px;
+  color: #7b268f;
+  font-size: 8px;
+  font-weight: 800;
+}
+.cart-sale-price {
+  display: grid;
+  gap: 3px;
+  color: #7b268f;
+}
 .stock-status {
   display: flex;
   align-items: center;
@@ -5716,6 +5759,73 @@ html[dir="rtl"] .detail-specs div:last-child {
   align-items: end;
   margin: 10px 0;
 }
+.option-sale-settings {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(150px, 1fr));
+  gap: 8px;
+  border: 1px solid #d9c5ed;
+  border-radius: 9px;
+  background: #fbf7ff;
+  padding: 10px;
+}
+.option-sale-heading {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.option-sale-heading > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 9px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+.option-sale-heading svg,
+.option-sale-actions svg {
+  width: 14px;
+  height: 14px;
+}
+.option-sale-settings > small {
+  grid-column: 1 / -1;
+  color: var(--muted);
+  font-size: 8px;
+}
+.option-sale-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.option-sale-actions .admin-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.option-sale-actions .sale-active {
+  background: #d9f2e3;
+  color: #17663a;
+}
+.option-sale-actions .sale-scheduled {
+  background: #efe3ff;
+  color: #6e2b93;
+}
+.admin-sale-price {
+  display: grid;
+  gap: 2px;
+}
+.admin-sale-price b {
+  color: #6e2b93;
+}
+.admin-sale-price small {
+  color: var(--muted);
+  font-size: 7px;
+  text-transform: uppercase;
+}
 .product-tax-settings {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -6024,6 +6134,14 @@ html[dir="rtl"] .detail-specs div:last-child {
   }
   .product-option-row {
     grid-template-columns: 1fr 1fr;
+  }
+  .option-sale-settings {
+    grid-template-columns: 1fr;
+  }
+  .option-sale-settings > *,
+  .option-sale-heading,
+  .option-sale-actions {
+    grid-column: 1;
   }
   .product-tax-settings {
     grid-template-columns: 1fr;
