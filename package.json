@@ -17,6 +17,7 @@
     "catalog:check": "tsx scripts/catalog-import-smoke.ts",
     "product:check": "node scripts/product-fields-smoke.mjs",
     "tax:check": "tsx scripts/hdcp-tax-smoke.ts",
+    "sales:check": "tsx scripts/scheduled-sales-smoke.ts",
     "account:check": "node scripts/account-application-smoke.mjs && tsx scripts/customer-account-input-smoke.ts",
     "catalog:import": "tsx scripts/catalog-import.ts",
     "remotion": "remotion studio src/remotion/index.ts --no-open"

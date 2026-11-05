@@ -56,6 +56,7 @@ export default function CheckoutPage() {
     remove,
     setQuantity,
     clear,
+    refresh,
     pricingPending,
     notice,
   } = useCart();
@@ -135,6 +136,7 @@ export default function CheckoutPage() {
           contactEmail: String(form.get("email") || approvedBuyer.email),
           purchaseOrder: String(form.get("purchaseOrder") || ""),
           idempotencyKey: crypto.randomUUID(),
+          expectedTotalCents: pricingPending ? null : Math.round(total * 100),
         }),
       });
       const result = (await response.json()) as {
@@ -142,6 +144,7 @@ export default function CheckoutPage() {
         order?: { orderNumber: string };
       };
       if (!response.ok || !result.order) {
+        if (response.status === 409) await refresh();
         setMessage(result.message || "The order could not be submitted.");
         return;
       }
@@ -179,13 +182,19 @@ export default function CheckoutPage() {
             purchaseOrder,
             idempotencyKey: paymentAttemptKey.current,
             opaqueData,
+            expectedTotalCents: Math.round(total * 100),
           }),
         });
         const result = (await response.json()) as {
           message?: string;
           order?: { orderNumber: string; paymentStatus: string };
+          pricingChanged?: boolean;
         };
         if (!response.ok || !result.order) {
+          if (result.pricingChanged) {
+            await refresh();
+            paymentAttemptKey.current = "";
+          }
           setMessage(result.message || "The payment could not be completed.");
           if (response.status !== 409 && response.status !== 502)
             paymentAttemptKey.current = "";
@@ -201,7 +210,7 @@ export default function CheckoutPage() {
       } finally {
         setSubmitting(false);
       }
-    }, [buyer, clear, email, items, method, pricingPending, purchaseOrder],
+    }, [buyer, clear, email, items, method, pricingPending, purchaseOrder, refresh, total],
   );
 
   useEffect(() => {
@@ -329,7 +338,14 @@ export default function CheckoutPage() {
                     <small>{item.quantity === 1 ? "case" : "cases"}</small>
                   </div>
                 </div>
-                <strong>
+                <strong className={item.onSale ? "cart-sale-price" : ""}>
+                  {item.onSale &&
+                  item.regularCasePrice !== null &&
+                  item.regularCasePrice !== undefined ? (
+                    <s>
+                      ${(item.regularCasePrice * item.quantity).toFixed(2)}
+                    </s>
+                  ) : null}
                   {item.casePrice === null
                     ? "Account pricing"
                     : `$${(item.casePrice * item.quantity).toFixed(2)}`}

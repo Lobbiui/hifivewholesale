@@ -29,6 +29,7 @@ const paymentSchema = z
     contactEmail: z.string().trim().toLowerCase().email().max(254),
     purchaseOrder: z.string().trim().max(120),
     idempotencyKey: z.string().uuid(),
+    expectedTotalCents: z.number().int().min(1).optional(),
     opaqueData: z
       .object({
         dataDescriptor: z.string().min(1).max(128),
@@ -159,6 +160,19 @@ export async function POST(request: Request) {
     return NextResponse.json(
       { ok: false, message: "The order total must be greater than zero." },
       { status: 422 },
+    );
+  if (
+    parsed.data.expectedTotalCents !== undefined &&
+    totalCents !== parsed.data.expectedTotalCents
+  )
+    return NextResponse.json(
+      {
+        ok: false,
+        pricingChanged: true,
+        message:
+          "A sale or catalog price changed before payment. Your cart has been refreshed; review the new total before trying again.",
+      },
+      { status: 409 },
     );
 
   const orderId = `request_${randomUUID()}`;

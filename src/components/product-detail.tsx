@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import type { Product } from "@/lib/data";
+import { formatSaleEnd } from "@/lib/scheduled-sales";
 import { useCart } from "./cart-provider";
 import { ProductCard } from "./product-card";
 
@@ -45,6 +46,11 @@ export function ProductDetail({
         flavor: selectedVariant.name,
         price: selectedVariant.price,
         casePrice: selectedVariant.casePrice,
+        regularPrice: selectedVariant.regularPrice,
+        regularCasePrice: selectedVariant.regularCasePrice,
+        saleStartsAt: selectedVariant.saleStartsAt,
+        saleEndsAt: selectedVariant.saleEndsAt,
+        onSale: selectedVariant.onSale,
         unitsPerCase: selectedVariant.unitsPerCase,
         hdcpTaxProfile: selectedVariant.hdcpTaxProfile,
         hdcpTaxValue: selectedVariant.hdcpTaxValue,
@@ -186,6 +192,17 @@ export function ProductDetail({
                     ? "Account pricing"
                     : `$${selectedProduct.casePrice.toFixed(2)}`}
                 </strong>
+                {(!hasOptions || selectedVariant) &&
+                  selectedProduct.onSale &&
+                  selectedProduct.regularCasePrice !== null &&
+                  selectedProduct.regularCasePrice !== undefined && (
+                    <span className="sale-price-detail">
+                      <s>${selectedProduct.regularCasePrice.toFixed(2)}</s>
+                      {selectedProduct.saleEndsAt
+                        ? ` Sale ends ${formatSaleEnd(selectedProduct.saleEndsAt)}`
+                        : " Limited-time sale"}
+                    </span>
+                  )}
                 <span>
                   {hasOptions && !selectedVariant
                     ? "Pricing and COA appear after selection"
@@ -312,6 +329,14 @@ export function ProductDetail({
               ? "Account pricing"
               : `$${selectedProduct.casePrice.toFixed(2)}`}
           </strong>
+          {(!hasOptions || selectedVariant) &&
+            selectedProduct.onSale &&
+            selectedProduct.regularCasePrice !== null &&
+            selectedProduct.regularCasePrice !== undefined && (
+              <small className="mobile-sale-price">
+                <s>${selectedProduct.regularCasePrice.toFixed(2)}</s> sale
+              </small>
+            )}
         </div>
         <button
           className={added ? "button primary added" : "button primary"}

@@ -14,6 +14,11 @@ export type Product = {
   tnRegisteredUpc?: string;
   price: number | null;
   casePrice: number | null;
+  regularPrice?: number | null;
+  regularCasePrice?: number | null;
+  saleStartsAt?: string;
+  saleEndsAt?: string;
+  onSale?: boolean;
   hdcpTaxProfile?: HdcpTaxProfile;
   hdcpTaxValue?: number;
   unitsPerCase?: number;
@@ -33,6 +38,11 @@ export type ProductVariant = {
   unitsPerCase: number;
   price: number | null;
   casePrice: number | null;
+  regularPrice?: number | null;
+  regularCasePrice?: number | null;
+  saleStartsAt?: string;
+  saleEndsAt?: string;
+  onSale?: boolean;
   hdcpTaxProfile?: HdcpTaxProfile;
   hdcpTaxValue?: number;
   images?: string[];
