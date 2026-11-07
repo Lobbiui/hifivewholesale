@@ -34,7 +34,7 @@ export async function POST(request: Request) {
       WHERE c.reset_token_hash = $1
         AND c.reset_token_expires_at > CURRENT_TIMESTAMP
         AND u.status = 'INVITED'
-        AND u.system_role IN ('ADMIN', 'SUPER_ADMIN')
+        AND u.system_role IN ('SALES_REP', 'ADMIN', 'SUPER_ADMIN')
       LIMIT 1`,
     [resetTokenHash],
   );

@@ -6,11 +6,12 @@ import { getDatabase } from "./database";
 const SESSION_HOURS = 12;
 
 export type AdminRole = "ADMIN" | "SUPER_ADMIN";
+export type StaffRole = "SALES_REP" | AdminRole;
 export type AdminIdentity = {
   id: string;
   email: string;
   displayName: string;
-  role: AdminRole;
+  role: StaffRole;
 };
 
 type SessionRow = {
@@ -18,7 +19,7 @@ type SessionRow = {
   user_id: string;
   email: string;
   display_name: string;
-  system_role: AdminRole;
+  system_role: StaffRole;
 };
 
 export function sessionCookieName() {
@@ -63,7 +64,7 @@ export async function createAdminSession(userId: string, request: Request, respo
   });
 }
 
-export async function getAdminIdentity(requiredRole?: AdminRole): Promise<AdminIdentity | null> {
+export async function getStaffIdentity(): Promise<AdminIdentity | null> {
   const token = (await cookies()).get(sessionCookieName())?.value;
   if (!token) return null;
 
@@ -76,15 +77,22 @@ export async function getAdminIdentity(requiredRole?: AdminRole): Promise<AdminI
         AND s.revoked_at IS NULL
         AND s.expires_at > CURRENT_TIMESTAMP
         AND u.status = 'ACTIVE'
-        AND u.system_role IN ('ADMIN', 'SUPER_ADMIN')
+        AND u.system_role IN ('SALES_REP', 'ADMIN', 'SUPER_ADMIN')
       LIMIT 1`,
     [hashSessionToken(token)],
   );
   const row = result.rows[0];
-  if (!row || (requiredRole === "SUPER_ADMIN" && row.system_role !== "SUPER_ADMIN")) return null;
+  if (!row) return null;
 
   await database.query("UPDATE sessions SET last_seen_at = CURRENT_TIMESTAMP WHERE id = $1", [row.session_id]);
   return { id: row.user_id, email: row.email, displayName: row.display_name, role: row.system_role };
+}
+
+export async function getAdminIdentity(requiredRole?: AdminRole): Promise<AdminIdentity | null> {
+  const identity = await getStaffIdentity();
+  if (!identity || identity.role === "SALES_REP") return null;
+  if (requiredRole === "SUPER_ADMIN" && identity.role !== "SUPER_ADMIN") return null;
+  return identity;
 }
 
 export async function revokeCurrentSession(response: NextResponse) {

@@ -54,6 +54,9 @@ type OrderRequestRow = {
   payment_status?: string;
   amount_paid_cents?: number;
   amount_refunded_cents?: number;
+  order_source?: string;
+  invoice_status?: string | null;
+  invoice_expires_at?: Date | string | null;
 };
 
 export async function GET() {
@@ -63,7 +66,8 @@ export async function GET() {
   const result = await database.query<OrderRequestRow>(
     `SELECT r.id, r.order_number, r.state, r.fulfillment_method, r.estimated_total_cents,
             r.pricing_pending, r.submitted_at, r.payment_status, r.amount_paid_cents,
-            r.amount_refunded_cents, COALESCE(SUM(i.quantity_cases), 0)::int AS item_count,
+            r.amount_refunded_cents,r.order_source,r.invoice_status,r.invoice_expires_at,
+            COALESCE(SUM(i.quantity_cases), 0)::int AS item_count,
             f.method AS shipping_method, f.status AS shipping_status, f.tracking_number,
             f.tracking_url, f.service_level, f.package_count, f.estimated_delivery_date,
             f.shipped_at, f.delivered_at, f.customer_notes
@@ -235,6 +239,22 @@ function serializeOrder(row: OrderRequestRow) {
       .replace(/^./, (value) => value.toUpperCase()),
     amountPaid: (row.amount_paid_cents ?? 0) / 100,
     amountRefunded: (row.amount_refunded_cents ?? 0) / 100,
+    manualInvoice: row.order_source === "MANUAL_INVOICE",
+    invoiceStatus: row.invoice_status,
+    invoiceExpiresAt: row.invoice_expires_at
+      ? new Date(row.invoice_expires_at).toISOString()
+      : null,
+    invoicePayable:
+      row.order_source === "MANUAL_INVOICE" &&
+      row.invoice_status === "ISSUED" &&
+      (row.payment_status ?? "UNPAID") === "UNPAID" &&
+      Boolean(row.invoice_expires_at) &&
+      new Date(row.invoice_expires_at!).getTime() > Date.now(),
+    invoiceAvailable:
+      row.order_source === "MANUAL_INVOICE" &&
+      row.invoice_status !== "VOID" &&
+      Boolean(row.invoice_expires_at) &&
+      new Date(row.invoice_expires_at!).getTime() > Date.now(),
     submitted: new Date(row.submitted_at).toISOString(),
     itemCount: row.item_count ?? 0,
     shipment: row.shipping_method ? {

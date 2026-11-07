@@ -13,6 +13,7 @@ import {
   LogOut,
   MessageSquare,
   PackageCheck,
+  ReceiptText,
   Settings,
   ShieldCheck,
   ShoppingCart,
@@ -39,6 +40,7 @@ import {
   LiveReports,
 } from "./admin-live-operations";
 import { AdminTeam } from "./admin-team";
+import { AdminSalesWorkspace } from "./admin-sales-workspace";
 
 type Tab =
   | "overview"
@@ -55,6 +57,7 @@ type Tab =
   | "markets"
   | "reports"
   | "operations"
+  | "sales"
   | "team"
   | "security";
 type Product = {
@@ -95,7 +98,7 @@ type AdminIdentity = {
   id: string;
   email: string;
   displayName: string;
-  role: "ADMIN" | "SUPER_ADMIN";
+  role: "SALES_REP" | "ADMIN" | "SUPER_ADMIN";
 };
 const initial: DemoState = {
   products: [
@@ -263,7 +266,10 @@ export function AdminDashboard({
             setAuthMessage(
               "A super-admin account is required for this workspace.",
             );
-          else setSession(result.user);
+          else {
+            setSession(result.user);
+            if (result.user.role === "SALES_REP") setTab("sales");
+          }
         }
       } finally {
         if (active) setReady(true);
@@ -301,6 +307,7 @@ export function AdminDashboard({
         return;
       }
       setSession(result.user);
+      if (result.user.role === "SALES_REP") setTab("sales");
     } catch {
       setAuthMessage("The admin service is temporarily unavailable.");
     } finally {
@@ -328,9 +335,17 @@ export function AdminDashboard({
     setToast(message);
     setTimeout(() => setToast(""), 2200);
   };
-  const nav = superAdmin
-    ? [
+  const salesEntry = ["sales", "Sales & invoices", ReceiptText] as [
+    Tab,
+    string,
+    React.ElementType,
+  ];
+  const nav = session?.role === "SALES_REP"
+    ? [salesEntry]
+    : superAdmin
+      ? [
         ...common,
+        salesEntry,
         ["team", "Admin users", UserRoundCheck] as [
           Tab,
           string,
@@ -342,7 +357,7 @@ export function AdminDashboard({
           React.ElementType,
         ],
       ]
-    : common;
+      : [...common, salesEntry];
   if (!ready) return null;
   if (!session)
     return (
@@ -391,7 +406,7 @@ export function AdminDashboard({
           <button className="button primary full" disabled={authenticating}>
             {authenticating
               ? "Signing in…"
-              : `Sign in as ${superAdmin ? "super admin" : "admin"}`}
+              : `Sign in to staff workspace`}
           </button>
           <button
             type="button"
@@ -419,7 +434,7 @@ export function AdminDashboard({
           />
         </Link>
         <Pill tone="purple">
-          {superAdmin ? "Super admin" : "Admin workspace"}
+          {session.role.replaceAll("_", " ")}
         </Pill>
         <nav>
           {nav.map(([id, label, Icon]) => (
@@ -510,6 +525,7 @@ export function AdminDashboard({
             ]}
           />
         )}{" "}
+        {tab === "sales" && <AdminSalesWorkspace />}{" "}
         {tab === "team" && superAdmin && <AdminTeam />}{" "}
         {tab === "security" && superAdmin && (
           <Capability

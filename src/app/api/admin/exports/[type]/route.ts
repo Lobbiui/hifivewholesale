@@ -33,5 +33,18 @@ const queries:Record<string,string>={
    JOIN order_requests r ON r.id=f.order_request_id
    JOIN organizations o ON o.id=r.organization_id
    ORDER BY f.updated_at DESC`,
+ commissions:`SELECT rep.display_name AS sales_rep,rep.email,r.order_number,o.display_name AS customer,
+   r.invoice_issued_at,r.invoice_expires_at,r.invoice_status,r.payment_status,r.estimated_total_cents,
+   r.amount_paid_cents,r.amount_refunded_cents,r.commission_rate_bps,r.commission_earned_cents
+   FROM order_requests r JOIN users rep ON rep.id=r.sales_rep_user_id
+   JOIN organizations o ON o.id=r.organization_id WHERE r.order_source='MANUAL_INVOICE'
+   ORDER BY rep.display_name,r.invoice_issued_at DESC`,
+ "manual-invoices":`SELECT r.order_number,o.display_name AS customer,rep.display_name AS sales_rep,
+   r.invoice_status,r.invoice_issued_at,r.invoice_expires_at,r.fulfillment_method,
+   r.subtotal_cents,r.hdcp_tax_cents,r.shipping_cents,r.estimated_total_cents,r.payment_status,
+   r.amount_paid_cents,r.amount_refunded_cents,r.purchase_order_number
+   FROM order_requests r JOIN organizations o ON o.id=r.organization_id
+   LEFT JOIN users rep ON rep.id=r.sales_rep_user_id WHERE r.order_source='MANUAL_INVOICE'
+   ORDER BY r.invoice_issued_at DESC`,
  audit:`SELECT a.created_at,u.email AS actor,a.action,a.aggregate_type,a.aggregate_id,a.reason FROM audit_events a LEFT JOIN users u ON u.id=a.actor_user_id ORDER BY a.created_at DESC LIMIT 10000`};
 export async function GET(_request:Request,{params}:{params:Promise<{type:string}>}){if(!await getAdminIdentity())return new Response("Unauthorized",{status:401});const {type}=await params,query=queries[type];if(!query)return new Response("Unknown export",{status:404});const rows=(await (await getDatabase()).query(query)).rows;const headers=rows[0]?Object.keys(rows[0]):[];const cell=(value:unknown)=>`"${String(value??"").replaceAll('"','""')}"`;const csv=[headers.map(cell).join(","),...rows.map(row=>headers.map(key=>cell(row[key])).join(","))].join("\r\n");return new Response(csv,{headers:{"Content-Type":"text/csv; charset=utf-8","Content-Disposition":`attachment; filename="hifive-${type}-${new Date().toISOString().slice(0,10)}.csv"`}})}
