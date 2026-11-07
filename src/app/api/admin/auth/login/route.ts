@@ -18,7 +18,7 @@ type CredentialRow = {
   id: string;
   email: string;
   display_name: string;
-  system_role: "ADMIN" | "SUPER_ADMIN";
+  system_role: "SALES_REP" | "ADMIN" | "SUPER_ADMIN";
   password_hash: string;
   failed_attempts: number;
   locked_until: Date | string | null;
@@ -41,7 +41,7 @@ export async function POST(request: Request) {
        JOIN user_credentials c ON c.user_id = u.id
       WHERE LOWER(u.email) = LOWER($1)
         AND u.status = 'ACTIVE'
-        AND u.system_role IN ('ADMIN', 'SUPER_ADMIN')
+        AND u.system_role IN ('SALES_REP', 'ADMIN', 'SUPER_ADMIN')
       LIMIT 1`,
     [parsed.data.email],
   );

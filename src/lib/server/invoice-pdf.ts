@@ -155,7 +155,7 @@ export function generateInvoicePdf(invoice: InvoicePdfData) {
   const pages: string[][] = [[]];
   let pageIndex = 0;
   let commands = pages[pageIndex];
-  pageHeader(commands, "INTERNAL CUSTOMER INVOICE", invoice.orderNumber);
+  pageHeader(commands, "CUSTOMER INVOICE", invoice.orderNumber);
 
   commands.push(textCommand("BILL TO", 42, 670, 8, true, "0.45 0.22 0.70"));
   commands.push(textCommand(invoice.companyName, 42, 650, 13, true));
@@ -257,7 +257,7 @@ export function generateInvoicePdf(invoice: InvoicePdfData) {
     page.push(textCommand("4710 Old Hickory Blvd, Old Hickory, TN 37138 | (615) 840-8105", 42, 29, 7));
     page.push(
       textCommand(
-        `Internal invoice copy retention: 30 days | Page ${index + 1} of ${pages.length}`,
+        `Invoice copy retention: 30 days | Page ${index + 1} of ${pages.length}`,
         370,
         29,
         7,

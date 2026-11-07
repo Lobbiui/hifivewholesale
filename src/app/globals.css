@@ -2720,6 +2720,96 @@ body {
   width: 13px;
   height: 13px;
 }
+
+.sales-rep-settings {
+  margin-top: 0.75rem;
+  max-width: 620px;
+}
+.sales-rep-settings summary {
+  color: #6d2fa5;
+  cursor: pointer;
+  font-weight: 800;
+}
+.sales-rep-settings form,
+.manual-invoice-lines {
+  display: grid;
+  gap: 0.85rem;
+  margin-top: 1rem;
+}
+.sales-rep-settings fieldset {
+  border: 1px solid #d8cfdf;
+  padding: 0.9rem;
+}
+.sales-customer-checklist {
+  display: grid;
+  gap: 0.4rem;
+  max-height: 210px;
+  overflow: auto;
+}
+.sales-customer-checklist label {
+  align-items: center;
+  display: flex;
+  gap: 0.5rem;
+}
+.manual-invoice-form {
+  margin: 1.25rem 0;
+  padding: clamp(1rem, 2vw, 1.6rem);
+}
+.manual-line-head,
+.manual-invoice-line,
+.manual-invoice-total,
+.buyer-invoice-actions {
+  align-items: center;
+  display: flex;
+  gap: 0.75rem;
+}
+.manual-line-head,
+.manual-invoice-total {
+  justify-content: space-between;
+}
+.manual-invoice-line {
+  background: #f7f3fa;
+  border: 1px solid #e1d8e7;
+  border-radius: 12px;
+  padding: 0.85rem;
+}
+.manual-invoice-line label:first-child {
+  flex: 1 1 420px;
+}
+.manual-invoice-line label:not(:first-child) {
+  flex: 0 1 180px;
+}
+.manual-invoice-total {
+  border-top: 2px solid #201329;
+  margin: 1rem 0;
+  padding-top: 1rem;
+}
+.manual-invoice-total strong {
+  font-size: 1.4rem;
+}
+.manual-invoice-total small {
+  color: #62576a;
+}
+.buyer-invoice-actions {
+  border-top: 1px solid #ded5e4;
+  flex-wrap: wrap;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+}
+.buyer-invoice-actions small {
+  flex-basis: 100%;
+}
+@media (max-width: 800px) {
+  .manual-invoice-line,
+  .manual-invoice-total {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .manual-invoice-line label:first-child,
+  .manual-invoice-line label:not(:first-child) {
+    flex-basis: auto;
+  }
+}
 .gate-card form label {
   margin-bottom: 12px;
 }

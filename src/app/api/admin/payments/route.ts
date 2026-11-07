@@ -149,6 +149,8 @@ export async function POST(request: Request) {
         await transaction.query(
           `UPDATE order_requests
               SET payment_status='VOIDED',amount_refunded_cents=amount_paid_cents,
+                  commission_earned_cents=0,
+                  invoice_status=CASE WHEN order_source='MANUAL_INVOICE' THEN 'VOID' ELSE invoice_status END,
                   updated_at=CURRENT_TIMESTAMP WHERE id=$1`,
           [order.id],
         );
@@ -159,6 +161,9 @@ export async function POST(request: Request) {
                   payment_status=CASE
                     WHEN amount_refunded_cents+$2>=amount_paid_cents THEN 'REFUNDED'
                     ELSE 'PARTIALLY_REFUNDED' END,
+                  commission_earned_cents=ROUND(
+                    GREATEST(amount_paid_cents-(amount_refunded_cents+$2),0)*commission_rate_bps/10000.0
+                  )::int,
                   updated_at=CURRENT_TIMESTAMP
             WHERE id=$1`,
           [order.id, amountCents],
