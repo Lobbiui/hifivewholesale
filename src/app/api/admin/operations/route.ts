@@ -29,9 +29,10 @@ export async function GET() {
     database.query(`SELECT r.id, r.order_number, r.state, r.fulfillment_method, r.contact_email,
       r.purchase_order_number, r.subtotal_cents, r.hdcp_tax_cents,
       r.sales_tax_cents, r.shipping_cents, r.estimated_total_cents,
-      r.pricing_pending, r.submitted_at,
-      r.submitted_at + INTERVAL '30 days' AS invoice_expires_at,
-      CURRENT_TIMESTAMP < r.submitted_at + INTERVAL '30 days' AS invoice_available,
+      r.pricing_pending, r.submitted_at,r.order_source,r.invoice_status,r.invoice_issued_at,
+      COALESCE(r.invoice_expires_at,r.submitted_at + INTERVAL '30 days') AS invoice_expires_at,
+      CURRENT_TIMESTAMP < COALESCE(r.invoice_expires_at,r.submitted_at + INTERVAL '30 days')
+        AND COALESCE(r.invoice_status,'ISSUED')<>'VOID' AS invoice_available,
       r.payment_status, r.amount_paid_cents, r.amount_refunded_cents,
       r.payment_provider, r.payment_provider_reference, r.paid_at,
       o.display_name AS customer, COALESCE(SUM(i.quantity_cases),0)::int AS cases,

@@ -1073,6 +1073,39 @@ textarea {
 .checkout-tax-row strong {
   font-size: 16px;
 }
+.checkout-delivery-quote {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin: 18px 0;
+  padding: 15px;
+  border: 1px solid rgba(190, 117, 255, 0.34);
+  border-radius: 8px;
+  background: rgba(190, 117, 255, 0.1);
+}
+.checkout-delivery-quote svg {
+  flex: 0 0 auto;
+  width: 20px;
+  color: #d8a9ff;
+}
+.checkout-delivery-quote strong,
+.checkout-delivery-quote span {
+  display: block;
+}
+.checkout-delivery-quote span {
+  margin-top: 4px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.checkout-delivery-pending-row {
+  margin-top: 0;
+  padding: 13px 0;
+}
+.checkout-delivery-pending-row strong {
+  color: #d8a9ff;
+  font-size: 16px;
+}
 .integration-note {
   display: block;
   color: rgba(255, 255, 255, 0.4);
@@ -1599,6 +1632,60 @@ textarea {
 .payment-manager > div:first-child > small {
   color: #6d6572;
 }
+.delivery-invoice-issuer {
+  margin: 16px 24px 0;
+  padding: 20px;
+  border: 1px solid rgba(95, 46, 147, 0.22);
+  border-radius: 16px;
+  background: linear-gradient(135deg, #fff 0%, #f7efff 100%);
+}
+.delivery-invoice-issuer h3,
+.delivery-invoice-issuer p {
+  margin: 4px 0;
+}
+.delivery-invoice-issuer p {
+  max-width: 850px;
+  color: #625a67;
+  line-height: 1.55;
+}
+.delivery-invoice-form {
+  display: grid;
+  grid-template-columns: minmax(190px, 0.55fr) minmax(280px, 1.45fr) auto;
+  gap: 14px;
+  align-items: end;
+  margin-top: 18px;
+}
+.delivery-invoice-form label {
+  display: grid;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.delivery-invoice-form input,
+.delivery-invoice-form textarea {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: white;
+  color: var(--ink);
+  padding: 10px;
+  font: inherit;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.delivery-invoice-form textarea {
+  height: 44px;
+  min-height: 44px;
+  resize: vertical;
+}
+.delivery-invoice-form .admin-button {
+  min-height: 44px;
+  white-space: nowrap;
+}
 .payment-history {
   display: grid;
   gap: 8px;
@@ -1685,6 +1772,14 @@ textarea {
 }
 .proof-upload input {
   display: none;
+}
+@media (max-width: 800px) {
+  .delivery-invoice-form {
+    grid-template-columns: 1fr;
+  }
+  .delivery-invoice-form .admin-button {
+    justify-content: center;
+  }
 }
 .admin-button.danger {
   color: #982323;

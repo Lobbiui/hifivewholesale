@@ -15,7 +15,8 @@ type InvoiceOrder = {
 export async function createOrderInvoice(database: Database, orderId: string) {
   const [orders, items] = await Promise.all([
     database.query<InvoiceOrder>(
-      `SELECT r.order_number,r.submitted_at,r.invoice_expires_at,r.contact_email,r.purchase_order_number,
+      `SELECT r.order_number,COALESCE(r.invoice_issued_at,r.submitted_at) AS submitted_at,
+              r.invoice_expires_at,r.contact_email,r.purchase_order_number,
               r.fulfillment_method,r.estimated_total_cents,r.subtotal_cents,r.hdcp_tax_cents,
               r.sales_tax_cents,r.shipping_cents,r.payment_status,r.amount_paid_cents,
               r.amount_refunded_cents,r.payment_provider_reference,o.display_name AS company_name,
