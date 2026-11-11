@@ -21,6 +21,12 @@ export default function ShippingPage() {
           methods, timing, fees, minimums, carrier selection, and receiving
           requirements may vary by order and destination.
         </p>
+        <p>
+          Selecting delivery at checkout submits the order for a delivery
+          quote and does not charge the customer&apos;s card. After HiFive
+          confirms the delivery cost, a final invoice is issued to the
+          customer&apos;s buyer account for review and payment.
+        </p>
         <h2>Warehouse pickup</h2>
         <p>
           Pickup availability and timing will be confirmed with the customer.
