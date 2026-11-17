@@ -4,6 +4,7 @@ import { z } from "zod";
 import { getAdminIdentity, hasValidRequestOrigin } from "@/lib/server/admin-auth";
 import { hashBuyerToken } from "@/lib/server/buyer-auth";
 import { getDatabase } from "@/lib/server/database";
+import { publicSiteOrigin } from "@/lib/server/public-origin";
 import { isTennesseeTerritory } from "@/lib/us-states";
 
 export const runtime = "nodejs";
@@ -159,7 +160,7 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
   if (!updated) return NextResponse.json({ ok: false, message: "Application not found." }, { status: 404 });
   if (updated.validationError) return NextResponse.json({ ok: false, message: updated.validationError }, { status: 422 });
   const activationUrl = updated.includeActivationLink
-    ? new URL(`/activate?token=${encodeURIComponent(activationToken)}`, request.url).toString()
+    ? `${publicSiteOrigin(request)}/activate?token=${encodeURIComponent(activationToken)}`
     : undefined;
   return NextResponse.json({ ok: true, application: { id: updated.id, status: updated.status }, activationUrl });
 }

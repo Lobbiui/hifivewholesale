@@ -4,6 +4,7 @@ import { z } from "zod";
 import { getAdminIdentity, hasValidRequestOrigin } from "@/lib/server/admin-auth";
 import { getDatabase } from "@/lib/server/database";
 import { queueAndSendEmail } from "@/lib/server/email";
+import { publicSiteOrigin } from "@/lib/server/public-origin";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -68,7 +69,7 @@ export async function POST(request: Request) {
       templateKey: "delivery_invoice_issued",
       recipient: invoice.contact_email,
       subject: `HiFive delivery invoice ${invoice.order_number}`,
-      text: `HiFive Supply finalized delivery and issued invoice ${invoice.order_number} for $${(invoice.estimated_total_cents / 100).toFixed(2)}. Sign in to your buyer account to review and pay it within 30 days: ${publicOrigin(request)}/account`,
+      text: `HiFive Supply finalized delivery and issued invoice ${invoice.order_number} for $${(invoice.estimated_total_cents / 100).toFixed(2)}. Sign in to your buyer account to review and pay it within 30 days: ${publicSiteOrigin(request)}/account`,
     });
     return invoice;
   });
@@ -94,10 +95,4 @@ export async function POST(request: Request) {
     },
     { status: 201 },
   );
-}
-
-function publicOrigin(request: Request) {
-  return (
-    process.env.NEXT_PUBLIC_SITE_URL?.trim() || new URL(request.url).origin
-  ).replace(/\/$/, "");
 }

@@ -5,6 +5,7 @@ import { getAdminIdentity, hasValidRequestOrigin } from "@/lib/server/admin-auth
 import { getDatabase, type Database } from "@/lib/server/database";
 import { queueAndSendEmail } from "@/lib/server/email";
 import { hashPassword } from "@/lib/server/passwords";
+import { publicSiteOrigin } from "@/lib/server/public-origin";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -64,7 +65,6 @@ export async function GET() {
   ]);
   return NextResponse.json({ ok: true, users: users.rows, customers: customers.rows });
 }
-
 export async function POST(request: Request) {
   if (!hasValidRequestOrigin(request))
     return NextResponse.json({ ok: false }, { status: 403 });
@@ -97,7 +97,7 @@ export async function POST(request: Request) {
         );
         if (data.role === "SALES_REP")
           await saveSalesSettings(transaction, actor.id, id, data);
-        activationUrl = `${publicOrigin(request)}/admin/activate?token=${encodeURIComponent(token)}`;
+        activationUrl = `${publicSiteOrigin(request)}/admin/activate?token=${encodeURIComponent(token)}`;
         await queueAndSendEmail(transaction, {
           templateKey: "admin_invitation",
           recipient: data.email,
@@ -140,7 +140,7 @@ export async function POST(request: Request) {
           "UPDATE user_credentials SET reset_token_hash=$2,reset_token_expires_at=CURRENT_TIMESTAMP+INTERVAL '24 hours' WHERE user_id=$1",
           [data.id, tokenHash],
         );
-        activationUrl = `${publicOrigin(request)}/admin/activate?token=${encodeURIComponent(token)}`;
+        activationUrl = `${publicSiteOrigin(request)}/admin/activate?token=${encodeURIComponent(token)}`;
         await queueAndSendEmail(transaction, {
           templateKey: "admin_password_reset",
           recipient: found.rows[0].email,
@@ -190,12 +190,4 @@ async function saveSalesSettings(
       [repId, customerId, actorId],
     );
   }
-}
-
-function publicOrigin(request: Request) {
-  const configured = process.env.NEXT_PUBLIC_SITE_URL?.trim();
-  if (configured) return configured.replace(/\/$/, "");
-  const proto = request.headers.get("x-forwarded-proto") || new URL(request.url).protocol.replace(":", "");
-  const host = request.headers.get("x-forwarded-host") || request.headers.get("host") || new URL(request.url).host;
-  return `${proto}://${host}`;
 }

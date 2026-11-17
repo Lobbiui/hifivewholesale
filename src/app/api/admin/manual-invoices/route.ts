@@ -5,6 +5,7 @@ import { calculateHdcpTax, type HdcpTaxProfile } from "@/lib/hdcp-tax";
 import { getStaffIdentity, hasValidRequestOrigin } from "@/lib/server/admin-auth";
 import { getDatabase } from "@/lib/server/database";
 import { queueAndSendEmail } from "@/lib/server/email";
+import { publicSiteOrigin } from "@/lib/server/public-origin";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -218,7 +219,7 @@ export async function POST(request: Request) {
       templateKey: "manual_invoice_issued",
       recipient: customer.rows[0].email,
       subject: `HiFive invoice ${orderNumber}`,
-      text: `HiFive Supply issued invoice ${orderNumber} for $${(totalCents / 100).toFixed(2)}. Sign in to your buyer account to review and pay it within 30 days: ${publicOrigin(request)}/account`,
+      text: `HiFive Supply issued invoice ${orderNumber} for $${(totalCents / 100).toFixed(2)}. Sign in to your buyer account to review and pay it within 30 days: ${publicSiteOrigin(request)}/account`,
     });
   });
   return NextResponse.json({ ok: true, invoice: { id, orderNumber, totalCents } }, { status: 201 });
@@ -235,7 +236,3 @@ const catalogQuery = `SELECT v.id AS variant_id,p.id AS product_id,p.name AS pro
       AND s.starts_at<=CURRENT_TIMESTAMP AND s.ends_at>CURRENT_TIMESTAMP
     ORDER BY s.starts_at DESC LIMIT 1) s ON TRUE
   WHERE p.status='PUBLISHED' AND v.online_sellable=TRUE`;
-
-function publicOrigin(request: Request) {
-  return (process.env.NEXT_PUBLIC_SITE_URL?.trim() || new URL(request.url).origin).replace(/\/$/, "");
-}
