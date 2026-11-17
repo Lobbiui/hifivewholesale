@@ -6,18 +6,11 @@ import { hashBuyerToken } from "@/lib/server/buyer-auth";
 import { getDatabase } from "@/lib/server/database";
 import { queueAndSendEmail } from "@/lib/server/email";
 import { hashPassword } from "@/lib/server/passwords";
+import { publicSiteOrigin } from "@/lib/server/public-origin";
 import { isTennesseeTerritory } from "@/lib/us-states";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-
-function publicOrigin(request: Request) {
-  const configured = process.env.NEXT_PUBLIC_SITE_URL?.trim();
-  if (configured) return configured.replace(/\/$/, "");
-  const proto = request.headers.get("x-forwarded-proto") || new URL(request.url).protocol.replace(":", "");
-  const host = request.headers.get("x-forwarded-host") || request.headers.get("host") || new URL(request.url).host;
-  return `${proto}://${host}`;
-}
 
 export async function POST(request: Request) {
   const requestId = randomUUID();
@@ -38,7 +31,7 @@ export async function POST(request: Request) {
 
   const database = await getDatabase();
   const activationToken = randomBytes(32).toString("base64url");
-  const activationUrl = `${publicOrigin(request)}/activate?token=${encodeURIComponent(activationToken)}`;
+  const activationUrl = `${publicSiteOrigin(request)}/activate?token=${encodeURIComponent(activationToken)}`;
 
   try {
     const created = await database.transaction(async (transaction) => {
