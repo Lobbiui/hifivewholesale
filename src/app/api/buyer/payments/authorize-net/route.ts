@@ -103,6 +103,15 @@ export async function POST(request: Request) {
       { ok: false, message: "Review the checkout information and try again." },
       { status: 422 },
     );
+  if (parsed.data.method === "delivery")
+    return NextResponse.json(
+      {
+        ok: false,
+        message:
+          "Delivery orders must be quoted before payment. Submit the delivery order and wait for the final invoice in your buyer account.",
+      },
+      { status: 422 },
+    );
 
   const database = await getDatabase();
   const duplicate = await existingAttempt(database, parsed.data.idempotencyKey);

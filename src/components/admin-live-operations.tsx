@@ -24,12 +24,12 @@ function FragmentOrder({row,open,toggle,mutate,note,reload}:{row:Row;open:boolea
     <tr>
       <td><b>{text(row.order_number)}</b><small>{date(row.submitted_at)} · PO {text(row.purchase_order_number)||"—"}</small></td>
       <td>{text(row.customer)}<small>{text(row.contact_email)}</small></td>
-      <td>{text(row.cases)}</td><td>{money(row.estimated_total_cents)}<small>{money(row.subtotal_cents)} merchandise · {money(row.hdcp_tax_cents)} TN HDCP tax</small></td><td><b>{text(row.payment_status).replaceAll("_"," ")||"UNPAID"}</b><small>{text(row.payment_account_type)} {text(row.payment_masked_account)}</small></td>
+      <td>{text(row.cases)}</td><td>{money(row.estimated_total_cents)}<small>{money(row.subtotal_cents)} merchandise · {money(row.hdcp_tax_cents)} TN HDCP tax{Number(row.shipping_cents??0)>0?` · ${money(row.shipping_cents)} delivery`:""}</small></td><td><b>{text(row.payment_status).replaceAll("_"," ")||"UNPAID"}</b><small>{text(row.payment_account_type)} {text(row.payment_masked_account)}</small></td>
       <td><select value={text(row.state)} onChange={event=>void mutate({action:"order_status",id:row.id,state:event.target.value})}><option>SUBMITTED_FOR_REVIEW</option><option>PRICING_REVIEW</option><option>READY_FOR_CHECKOUT</option><option>CONVERTED</option><option>DECLINED</option></select></td>
       <td><b>{text(row.shipping_status).replaceAll("_"," ")||"Not scheduled"}</b><small>{text(row.shipping_method).replaceAll("_"," ")||text(row.fulfillment_method)}</small></td>
       <td><button className="admin-button fulfillment-manage" onClick={toggle} aria-expanded={open}>Fulfillment <ChevronDown className={open?"rotate":""}/></button>{row.invoice_available?<a className="link-button invoice-download-link" href={`/api/admin/invoices/${encodeURIComponent(text(row.id))}`} download><Download/>Invoice PDF</a>:<small>Invoice expired</small>}<button className="link-button" onClick={()=>note(row)}>{text(row.latest_note)||"Add note"}</button></td>
     </tr>
-    {open?<tr className="fulfillment-editor-row"><td colSpan={8}><PaymentManager row={row} reload={reload}/><FulfillmentEditor row={row} reload={reload}/></td></tr>:null}
+    {open?<tr className="fulfillment-editor-row"><td colSpan={8}><PaymentManager row={row} reload={reload}/><DeliveryInvoiceIssuer row={row} reload={reload}/><FulfillmentEditor row={row} reload={reload}/></td></tr>:null}
   </>
 }
 
@@ -53,6 +53,37 @@ function PaymentManager({row,reload}:{row:Row;reload:()=>Promise<void>}){
   };
   const transactions=Array.isArray(row.payment_transactions)?row.payment_transactions as Row[]:[];
   return <section className="payment-manager"><div><span className="eyebrow">Authorize.net payment</span><h3>{status.replaceAll("_"," ")}</h3><p>{paid?`${money(paid)} charged · ${money(refunded)} returned · ${money(remaining)} remaining`:"No successful online charge is attached to this order."}</p><small>{text(row.payment_account_type)} {text(row.payment_masked_account)} {text(row.payment_provider_reference)?`· Transaction ${text(row.payment_provider_reference)}`:""}</small></div>{notice?<div className="gate-message">{notice}</div>:null}{transactions.length?<div className="payment-history">{transactions.map(item=><div key={text(item.id)}><span><b>{text(item.operation)}</b> · {money(item.amountCents)}<small>{date(item.createdAt)} · {text(item.message)}</small></span><span className="admin-pill">{text(item.status)}{text(item.transactionId)?` · ${text(item.transactionId)}`:""}</span></div>)}</div>:null}{remaining>0&&text(row.payment_provider_reference)?<div className="fulfillment-actions"><button type="button" className="admin-button danger" disabled={busy||status!=="PAID"} onClick={()=>void act("VOID")}>Void unsettled payment</button><button type="button" className="admin-button" disabled={busy||status==="VOIDED"} onClick={()=>void act("REFUND")}>Refund payment</button></div>:null}</section>
+}
+
+function DeliveryInvoiceIssuer({row,reload}:{row:Row;reload:()=>Promise<void>}){
+  const [notice,setNotice]=useState("");
+  const [busy,setBusy]=useState(false);
+  if(text(row.fulfillment_method)!=="DELIVERY")return null;
+  const issued=text(row.order_source)==="MANUAL_INVOICE";
+  const eligible=!issued&&text(row.payment_status||"UNPAID")==="UNPAID"&&!['CONVERTED','DECLINED'].includes(text(row.state));
+  if(!eligible&&!issued)return null;
+  const submit=async(event:FormEvent<HTMLFormElement>)=>{
+    event.preventDefault();
+    if(!window.confirm(`Issue the final delivery invoice for ${text(row.order_number)}? The buyer will be notified and can pay it from their account.`))return;
+    const form=new FormData(event.currentTarget),shippingCents=Math.round(Number(form.get("deliveryCharge"))*100);
+    if(!Number.isFinite(shippingCents)||shippingCents<0){setNotice("Enter a valid delivery charge.");return}
+    setBusy(true);setNotice("");
+    const response=await fetch("/api/admin/delivery-invoices",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({orderId:row.id,shippingCents,notes:form.get("invoiceNotes")})});
+    const result=await response.json() as {message?:string;invoice?:{orderNumber:string;totalCents:number}};
+    setBusy(false);
+    if(!response.ok){setNotice(result.message||"The delivery invoice could not be issued.");return}
+    setNotice(`Invoice ${result.invoice?.orderNumber??text(row.order_number)} issued for ${money(result.invoice?.totalCents??0)}. The buyer has been notified.`);
+    await reload();
+  };
+  return <section className="delivery-invoice-issuer">
+    <div><span className="eyebrow">Delivery quote & payment</span><h3>{issued?"FINAL INVOICE ISSUED":"ADD DELIVERY, THEN INVOICE."}</h3><p>{issued?`The buyer can review and pay this ${money(row.estimated_total_cents)} invoice from their account. The invoice includes ${money(row.shipping_cents)} for delivery.`:"Confirm the delivery cost before charging the buyer. Issuing the invoice adds the delivery charge, emails the buyer, and opens secure payment in their account."}</p></div>
+    {notice?<div className="gate-message">{notice}</div>:null}
+    {!issued?<form className="delivery-invoice-form" onSubmit={submit}>
+      <label>Customer delivery charge ($)<input name="deliveryCharge" type="number" min="0" step="0.01" required placeholder="0.00"/></label>
+      <label>Invoice note <small>(optional)</small><textarea name="invoiceNotes" maxLength={4000} placeholder="Delivery route, timing, or customer-facing terms"/></label>
+      <button className="admin-button primary" disabled={busy}><Truck/>{busy?"Issuing…":"Issue final invoice"}</button>
+    </form>:null}
+  </section>
 }
 
 function FulfillmentEditor({row,reload}:{row:Row;reload:()=>Promise<void>}){
@@ -79,7 +110,7 @@ function FulfillmentEditor({row,reload}:{row:Row;reload:()=>Promise<void>}){
       <label>UPS tracking number<input name="trackingNumber" defaultValue={text(row.tracking_number)} disabled={method!=="UPS"} placeholder="1Z…"/></label>
       <label>Service level<input name="serviceLevel" defaultValue={text(row.service_level)} placeholder={method==="UPS"?"UPS Ground":"Local route"}/></label>
       <label>Packages<input name="packageCount" type="number" min="1" max="999" defaultValue={Number(row.package_count??1)}/></label>
-      <label>Shipping cost<input name="shippingCost" type="number" min="0" step="0.01" defaultValue={row.shipping_cost_cents==null?"":Number(row.shipping_cost_cents)/100}/></label>
+      <label>Fulfillment cost <small>(internal)</small><input name="shippingCost" type="number" min="0" step="0.01" defaultValue={row.shipping_cost_cents==null?"":Number(row.shipping_cost_cents)/100}/></label>
       <label>Estimated delivery<input name="estimatedDeliveryDate" type="date" defaultValue={initialDate}/></label>
       <label className="fulfillment-wide">Customer message<textarea name="customerNotes" defaultValue={text(row.customer_notes)} placeholder="Visible to the buyer and included in status emails."/></label>
       <label className="fulfillment-wide">Internal driver / delivery notes<textarea name="driverNotes" defaultValue={text(row.driver_notes)} placeholder="Admin-only receiving instructions, driver, or exception details."/></label>

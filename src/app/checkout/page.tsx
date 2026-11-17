@@ -256,7 +256,9 @@ export default function CheckoutPage() {
           </h1>
           <p>
             <strong>{submittedOrder}</strong> has been sent for wholesale
-            review. {submittedPayment === "APPROVED"
+            review. {method === "delivery"
+              ? "HiFive will confirm the delivery charge and issue the final invoice in your buyer account before payment."
+              : submittedPayment === "APPROVED"
               ? "Payment was approved and the order is confirmed."
               : submittedPayment === "HELD"
                 ? "Payment is being reviewed before fulfillment."
@@ -381,10 +383,22 @@ export default function CheckoutPage() {
             >
               <Truck />
               <strong>{copy.checkout.delivery}</strong>
-              <small>{copy.checkout.deliveryTime}</small>
+              <small>Quoted before payment</small>
               {method === "delivery" && <Check />}
             </button>
           </div>
+          {method === "delivery" && (
+            <div className="checkout-delivery-quote" role="status">
+              <Truck />
+              <div>
+                <strong>Delivery is quoted before payment</strong>
+                <span>
+                  Submit this order without payment. HiFive will confirm the
+                  delivery cost and issue a final invoice in your buyer account.
+                </span>
+              </div>
+            </div>
+          )}
           <div className="approved-business">
             <ShieldCheck />
             <div>
@@ -421,9 +435,19 @@ export default function CheckoutPage() {
             <span>TN HDCP tax</span>
             <strong>{pricingPending ? "Pending" : `$${hdcpTax.toFixed(2)}`}</strong>
           </div>
+          {method === "delivery" && (
+            <div className="total-row checkout-delivery-pending-row">
+              <span>Delivery charge</span>
+              <strong>Quoted next</strong>
+            </div>
+          )}
           <div className="total-row">
             <span>
-              {pricingPending ? copy.checkout.total : "Order total"}
+              {pricingPending
+                ? copy.checkout.total
+                : method === "delivery"
+                  ? "Current total before delivery"
+                  : "Order total"}
             </span>
             <strong>
               {pricingPending
@@ -440,7 +464,7 @@ export default function CheckoutPage() {
             <button className="button primary full" type="button" disabled>
               Loading secure checkout…
             </button>
-          ) : paymentConfig.enabled && !pricingPending ? (
+          ) : paymentConfig.enabled && !pricingPending && method === "pickup" ? (
             <button
               type="button"
               className="button primary full AcceptUI"
@@ -466,11 +490,17 @@ export default function CheckoutPage() {
               className="button primary full"
               disabled={!buyer || !items.length || submitting}
             >
-              {submitting ? "Submitting…" : copy.checkout.submit}
+              {submitting
+                ? "Submitting…"
+                : method === "delivery"
+                  ? "Submit delivery order for quote"
+                  : copy.checkout.submit}
             </button>
           )}
           <small className="integration-note">
-            {paymentConfig?.enabled && !pricingPending
+            {method === "delivery"
+              ? "No card is charged now. The final invoice will include the confirmed delivery charge and can be paid from your buyer account."
+              : paymentConfig?.enabled && !pricingPending
               ? "Card details are collected securely by Authorize.net and are never stored by HiFive. The final amount is recalculated by the server before charging."
               : "Approval is re-validated when the order is submitted. Account pricing is confirmed before payment."}
           </small>
