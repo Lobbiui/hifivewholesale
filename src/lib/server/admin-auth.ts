@@ -12,6 +12,7 @@ export type AdminIdentity = {
   email: string;
   displayName: string;
   role: StaffRole;
+  mustChangePassword: boolean;
 };
 
 type SessionRow = {
@@ -20,6 +21,7 @@ type SessionRow = {
   email: string;
   display_name: string;
   system_role: StaffRole;
+  must_change_password: boolean;
 };
 
 export function sessionCookieName() {
@@ -64,13 +66,16 @@ export async function createAdminSession(userId: string, request: Request, respo
   });
 }
 
-export async function getStaffIdentity(): Promise<AdminIdentity | null> {
+export async function getStaffIdentity(
+  options: { allowPasswordChangeRequired?: boolean } = {},
+): Promise<AdminIdentity | null> {
   const token = (await cookies()).get(sessionCookieName())?.value;
   if (!token) return null;
 
   const database = await getDatabase();
   const result = await database.query<SessionRow>(
-    `SELECT s.id AS session_id, u.id AS user_id, u.email, u.display_name, u.system_role
+    `SELECT s.id AS session_id, u.id AS user_id, u.email, u.display_name, u.system_role,
+            u.must_change_password
        FROM sessions s
        JOIN users u ON u.id = s.user_id
       WHERE s.token_hash = $1
@@ -83,9 +88,17 @@ export async function getStaffIdentity(): Promise<AdminIdentity | null> {
   );
   const row = result.rows[0];
   if (!row) return null;
+  if (row.must_change_password && !options.allowPasswordChangeRequired)
+    return null;
 
   await database.query("UPDATE sessions SET last_seen_at = CURRENT_TIMESTAMP WHERE id = $1", [row.session_id]);
-  return { id: row.user_id, email: row.email, displayName: row.display_name, role: row.system_role };
+  return {
+    id: row.user_id,
+    email: row.email,
+    displayName: row.display_name,
+    role: row.system_role,
+    mustChangePassword: row.must_change_password,
+  };
 }
 
 export async function getAdminIdentity(requiredRole?: AdminRole): Promise<AdminIdentity | null> {

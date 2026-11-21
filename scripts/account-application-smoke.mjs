@@ -33,11 +33,15 @@ try {
   );
 
   const result = await database.query(
-    "SELECT resale_id FROM buyer_applications WHERE id=$1",
+    "SELECT resale_id,status FROM buyer_applications WHERE id=$1",
     ["application_optional_resale_smoke"],
   );
-  if (!result.rows[0] || result.rows[0].resale_id !== null) {
-    throw new Error("An application without a resale ID did not round-trip.");
+  if (
+    !result.rows[0] ||
+    result.rows[0].resale_id !== null ||
+    result.rows[0].status !== "PENDING"
+  ) {
+    throw new Error("A public buyer application did not remain pending for administrator approval.");
   }
 
   await database.query(
@@ -70,14 +74,15 @@ try {
   );
   await database.exec(backfillMigration);
   const backfilledProfile = await database.query(
-    `SELECT business_phone,business_type FROM organizations WHERE id=$1`,
+    `SELECT business_phone,business_type,status FROM organizations WHERE id=$1`,
     ["application_profile_backfill_org"],
   );
   if (
     backfilledProfile.rows[0]?.business_phone !== "615-555-0199" ||
-    backfilledProfile.rows[0]?.business_type !== "Smoke / vape shop"
+    backfilledProfile.rows[0]?.business_type !== "Smoke / vape shop" ||
+    backfilledProfile.rows[0]?.status !== "APPROVED"
   ) {
-    throw new Error("Approved application contact fields were not carried into the customer profile.");
+    throw new Error("An administrator-created account was not immediately approved with its profile fields.");
   }
 
   await database.query(

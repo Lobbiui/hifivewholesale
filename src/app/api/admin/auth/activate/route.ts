@@ -33,7 +33,7 @@ export async function POST(request: Request) {
        JOIN users u ON u.id = c.user_id
       WHERE c.reset_token_hash = $1
         AND c.reset_token_expires_at > CURRENT_TIMESTAMP
-        AND u.status = 'INVITED'
+        AND u.status IN ('INVITED', 'ACTIVE')
         AND u.system_role IN ('SALES_REP', 'ADMIN', 'SUPER_ADMIN')
       LIMIT 1`,
     [resetTokenHash],
@@ -44,7 +44,8 @@ export async function POST(request: Request) {
   const passwordHash = await hashPassword(parsed.data.password);
   await database.transaction(async (transaction) => {
     await transaction.query(
-      "UPDATE users SET status = 'ACTIVE', email_verified_at = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP WHERE id = $1",
+      `UPDATE users SET status = 'ACTIVE', must_change_password = FALSE,
+        email_verified_at = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP WHERE id = $1`,
       [invited.user_id],
     );
     await transaction.query(

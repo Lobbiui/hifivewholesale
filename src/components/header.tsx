@@ -38,9 +38,6 @@ export function Header() {
           <Link href="/shop" onClick={() => setOpen(false)}>
             {copy.shop}
           </Link>
-          <Link href="/loyalty" onClick={() => setOpen(false)}>
-            {copy.loyalty}
-          </Link>
           <Link href="/blog" onClick={() => setOpen(false)}>
             {copy.journal}
           </Link>

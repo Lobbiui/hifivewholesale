@@ -77,7 +77,7 @@ export function WholesaleAccessGate() {
       <div className="gate-wave-logo" role="img" aria-label="HiFive Supply Wholesale">
         <Image src="/images/hifive-logo-black-banner.png" alt="" width={1254} height={1254} priority />
       </div>
-      <div><span className="eyebrow light">Private wholesale network</span><h1>THE GOOD STUFF<br/><em>STAYS GATED.</em></h1><p>HiFive is a business-to-business wholesale portal. Catalog, case pricing, inventory, checkout, and loyalty benefits are available only to approved accounts.</p></div>
+      <div><span className="eyebrow light">Private wholesale network</span><h1>THE GOOD STUFF<br/><em>STAYS GATED.</em></h1><p>HiFive is a business-to-business wholesale portal. Catalog, case pricing, inventory, and checkout are available only to approved accounts.</p></div>
       <div className="gate-proof"><span><ShieldCheck/>Wholesaler approved</span><span><LockKeyhole/>Private case pricing</span><span><PackageCheck/>Verified business buyers</span></div>
     </section>
     <section className="gate-panel">

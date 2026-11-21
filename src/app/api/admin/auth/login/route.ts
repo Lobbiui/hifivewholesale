@@ -22,6 +22,7 @@ type CredentialRow = {
   password_hash: string;
   failed_attempts: number;
   locked_until: Date | string | null;
+  must_change_password: boolean;
 };
 
 export async function POST(request: Request) {
@@ -36,7 +37,8 @@ export async function POST(request: Request) {
 
   const database = await getDatabase();
   const result = await database.query<CredentialRow>(
-    `SELECT u.id, u.email, u.display_name, u.system_role, c.password_hash, c.failed_attempts, c.locked_until
+    `SELECT u.id, u.email, u.display_name, u.system_role, u.must_change_password,
+            c.password_hash, c.failed_attempts, c.locked_until
        FROM users u
        JOIN user_credentials c ON c.user_id = u.id
       WHERE LOWER(u.email) = LOWER($1)
@@ -70,7 +72,13 @@ export async function POST(request: Request) {
   await database.query("UPDATE user_credentials SET failed_attempts = 0, locked_until = NULL WHERE user_id = $1", [user.id]);
   const response = NextResponse.json({
     ok: true,
-    user: { id: user.id, email: user.email, displayName: user.display_name, role: user.system_role },
+    user: {
+      id: user.id,
+      email: user.email,
+      displayName: user.display_name,
+      role: user.system_role,
+      mustChangePassword: user.must_change_password,
+    },
   });
   await createAdminSession(user.id, request, response);
   return response;

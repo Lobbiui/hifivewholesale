@@ -5,7 +5,6 @@ import Link from "next/link";
 import {
   BarChart3,
   Boxes,
-  Gift,
   Globe2,
   Handshake,
   LayoutDashboard,
@@ -32,7 +31,6 @@ import {
   LiveBrands,
   LiveCustomers,
   LiveDistributors,
-  LiveLoyalty,
   LiveMarkets,
   LiveOperations,
   LiveOrders,
@@ -49,7 +47,6 @@ type Tab =
   | "products"
   | "customers"
   | "access"
-  | "loyalty"
   | "content"
   | "distributors"
   | "brands"
@@ -99,6 +96,7 @@ type AdminIdentity = {
   email: string;
   displayName: string;
   role: "SALES_REP" | "ADMIN" | "SUPER_ADMIN";
+  mustChangePassword: boolean;
 };
 const initial: DemoState = {
   products: [
@@ -193,7 +191,6 @@ const common: [Tab, string, React.ElementType][] = [
   ["products", "Products", Boxes],
   ["customers", "Customers", Users],
   ["access", "Access approvals", ShieldCheck],
-  ["loyalty", "Loyalty & promos", Gift],
   ["content", "Blog", Sparkles],
   ["distributors", "Distributor CRM", Store],
   ["brands", "Brand pipeline", Handshake],
@@ -232,6 +229,45 @@ function Head({
       {action}
     </div>
   );
+}
+
+function RequiredStaffPasswordChange({
+  staff,
+  complete,
+  signOut,
+}: {
+  staff: AdminIdentity;
+  complete: () => void;
+  signOut: () => Promise<void>;
+}) {
+  const [message, setMessage] = useState("");
+  const [saving, setSaving] = useState(false);
+  const changePassword = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    const next = String(form.get("newPassword") || "");
+    if (next !== String(form.get("confirmation") || "")) {
+      setMessage("The new passwords do not match.");
+      return;
+    }
+    setSaving(true);
+    const response = await fetch("/api/admin/auth/password", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        currentPassword: form.get("currentPassword"),
+        newPassword: next,
+      }),
+    });
+    const result = await response.json() as { message?: string };
+    setSaving(false);
+    if (!response.ok) {
+      setMessage(result.message || "The password could not be changed.");
+      return;
+    }
+    complete();
+  };
+  return <main className="admin-login"><section><Image src="/images/hifive-logo-black-banner.png" alt="HiFive Supply" width={250} height={136}/><div><Pill tone="purple">Required security step</Pill><h1>SECURE YOUR<br/><em>STAFF LOGIN.</em></h1><p>{staff.displayName}, replace the temporary password before entering the staff workspace.</p></div><small>Your permanent password is encrypted and is never shown to the Super Admin.</small></section><form onSubmit={changePassword}><span className="eyebrow">First sign-in</span><h2>CHOOSE A NEW PASSWORD.</h2>{message&&<div className="gate-message">{message}</div>}<label>Temporary password<input name="currentPassword" type="password" autoComplete="current-password" required/></label><label>New password<input name="newPassword" type="password" autoComplete="new-password" minLength={12} required/></label><label>Confirm new password<input name="confirmation" type="password" autoComplete="new-password" minLength={12} required/></label><button className="button primary full" disabled={saving}>{saving?"Saving…":"Save password and continue"}</button><small>Use at least 12 characters with a letter, number, and special character.</small><button type="button" className="link-button" onClick={()=>void signOut()}>Sign out</button></form></main>;
 }
 
 export function AdminDashboard({
@@ -378,7 +414,7 @@ export function AdminDashboard({
             </h1>
             <p>
               One connected view of catalog, inventory, fulfillment, customers,
-              loyalty, content, distributors, and growth.
+              content, distributors, and growth.
             </p>
           </div>
           <small>
@@ -422,6 +458,8 @@ export function AdminDashboard({
         </form>
       </main>
     );
+  if (session.mustChangePassword)
+    return <RequiredStaffPasswordChange staff={session} complete={()=>setSession(current=>current?{...current,mustChangePassword:false}:current)} signOut={signOut}/>;
   return (
     <main className="admin-shell">
       <aside>
@@ -482,7 +520,6 @@ export function AdminDashboard({
         {tab === "products" && <AdminCatalogManager />}{" "}
         {tab === "customers" && <Customers />}{" "}
         {tab === "access" && <AccessApprovals />}{" "}
-        {tab === "loyalty" && <Loyalty state={state} update={update} />}{" "}
         {tab === "content" && <ContentStudio state={state} update={update} />}{" "}
         {tab === "distributors" && (
           <Distributors state={state} update={update} />
@@ -740,13 +777,6 @@ function AccessApprovals() {
 }
 function BrandPipeline() {
   return <LiveBrands />;
-}
-function Loyalty(props: {
-  state: DemoState;
-  update: (next: DemoState, message: string) => void;
-}) {
-  void props;
-  return <LiveLoyalty />;
 }
 function ContentStudio(props: {
   state: DemoState;

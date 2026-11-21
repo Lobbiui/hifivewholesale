@@ -74,7 +74,6 @@ export default function BuyerAccountPage() {
   const [buyer, setBuyer] = useState<BuyerIdentity | null>(null);
   const [orders, setOrders] = useState<BuyerOrder[]>([]);
   const [addresses, setAddresses] = useState<Address[]>([]);
-  const [loyalty, setLoyalty] = useState({ points_balance: 0, tier: "MEMBER" });
   const [message, setMessage] = useState("");
   const [accountManager, setAccountManager] = useState<{
     account_manager_name: string | null;
@@ -104,14 +103,12 @@ export default function BuyerAccountPage() {
       if (active && accountResponse.ok) {
         const result = (await accountResponse.json()) as {
           addresses: Address[];
-          loyalty: { points_balance: number; tier: string };
           accountManager: {
             account_manager_name: string | null;
             account_manager_phone: string | null;
           } | null;
         };
         setAddresses(result.addresses);
-        setLoyalty(result.loyalty);
         setAccountManager(result.accountManager);
       }
     }, 0);
@@ -267,12 +264,6 @@ export default function BuyerAccountPage() {
                 <div>
                   <dt>Approval ID</dt>
                   <dd>{buyer?.applicationId}</dd>
-                </div>
-                <div>
-                  <dt>Loyalty</dt>
-                  <dd>
-                    {loyalty.points_balance} points · {loyalty.tier}
-                  </dd>
                 </div>
               </dl>
               <div className="account-actions">
