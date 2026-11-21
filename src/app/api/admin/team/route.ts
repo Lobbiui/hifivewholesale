@@ -1,6 +1,7 @@
 import { createHash, randomBytes, randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { temporaryBuyerPasswordError } from "@/lib/customer-account-input";
 import { getAdminIdentity, hasValidRequestOrigin } from "@/lib/server/admin-auth";
 import { getDatabase, type Database } from "@/lib/server/database";
 import { queueAndSendEmail } from "@/lib/server/email";
@@ -20,6 +21,8 @@ const input = z.discriminatedUnion("action", [
     commissionRate: z.number().min(0).max(100).optional().default(0),
     customPricingEnabled: z.boolean().optional().default(false),
     customerIds: z.array(z.string()).max(500).optional().default([]),
+    setupMethod: z.enum(["ACTIVATION_LINK", "TEMPORARY_PASSWORD"]).default("ACTIVATION_LINK"),
+    temporaryPassword: z.string().max(200).optional().default(""),
   }),
   z.object({
     action: z.literal("sales_settings"),
@@ -83,27 +86,39 @@ export async function POST(request: Request) {
   try {
     await database.transaction(async (transaction) => {
       if (data.action === "invite") {
+        const temporaryPasswordError = data.setupMethod === "TEMPORARY_PASSWORD"
+          ? temporaryBuyerPasswordError(data.temporaryPassword)
+          : null;
+        if (temporaryPasswordError) throw new Error(temporaryPasswordError);
         const id = randomUUID();
         const token = randomBytes(32).toString("base64url");
         const tokenHash = createHash("sha256").update(token).digest("hex");
-        const placeholder = await hashPassword(randomBytes(32).toString("base64url"));
-        await transaction.query(
-          "INSERT INTO users (id,email,display_name,system_role,status) VALUES ($1,$2,$3,$4,'INVITED')",
-          [id, data.email, data.displayName, data.role],
+        const temporaryPassword = data.setupMethod === "TEMPORARY_PASSWORD";
+        const passwordHash = await hashPassword(
+          temporaryPassword ? data.temporaryPassword : randomBytes(32).toString("base64url"),
         );
         await transaction.query(
-          "INSERT INTO user_credentials (user_id,password_hash,reset_token_hash,reset_token_expires_at) VALUES ($1,$2,$3,CURRENT_TIMESTAMP+INTERVAL '24 hours')",
-          [id, placeholder, tokenHash],
+          `INSERT INTO users (
+             id,email,display_name,system_role,status,must_change_password,email_verified_at
+           ) VALUES ($1,$2,$3,$4,$5,$6,CASE WHEN $5='ACTIVE' THEN CURRENT_TIMESTAMP ELSE NULL END)`,
+          [id, data.email, data.displayName, data.role, temporaryPassword ? "ACTIVE" : "INVITED", temporaryPassword],
+        );
+        await transaction.query(
+          `INSERT INTO user_credentials (user_id,password_hash,reset_token_hash,reset_token_expires_at)
+           VALUES ($1,$2,$3,CASE WHEN $3::text IS NULL THEN NULL ELSE CURRENT_TIMESTAMP+INTERVAL '24 hours' END)`,
+          [id, passwordHash, temporaryPassword ? null : tokenHash],
         );
         if (data.role === "SALES_REP")
           await saveSalesSettings(transaction, actor.id, id, data);
-        activationUrl = `${publicSiteOrigin(request)}/admin/activate?token=${encodeURIComponent(token)}`;
-        await queueAndSendEmail(transaction, {
-          templateKey: "admin_invitation",
-          recipient: data.email,
-          subject: "Activate your HiFive staff account",
-          text: `You were invited to the HiFive staff workspace. Activate your account within 24 hours: ${activationUrl}`,
-        });
+        if (!temporaryPassword) {
+          activationUrl = `${publicSiteOrigin(request)}/admin/activate?token=${encodeURIComponent(token)}`;
+          await queueAndSendEmail(transaction, {
+            templateKey: "admin_invitation",
+            recipient: data.email,
+            subject: "Activate your HiFive staff account",
+            text: `You were invited to the HiFive staff workspace. Activate your account within 24 hours: ${activationUrl}`,
+          });
+        }
       } else if (data.action === "sales_settings") {
         const rep = await transaction.query(
           "SELECT id FROM users WHERE id=$1 AND system_role='SALES_REP'",
@@ -148,16 +163,36 @@ export async function POST(request: Request) {
           text: `Reset your HiFive staff password within 24 hours: ${activationUrl}`,
         });
       }
+      const auditData = data.action === "invite"
+        ? {
+          action: data.action,
+          email: data.email,
+          displayName: data.displayName,
+          role: data.role,
+          commissionRate: data.commissionRate,
+          customPricingEnabled: data.customPricingEnabled,
+          customerIds: data.customerIds,
+          setupMethod: data.setupMethod,
+        }
+        : data;
       await transaction.query(
         "INSERT INTO audit_events (id,actor_user_id,action,aggregate_type,aggregate_id,after_json) VALUES ($1,$2,$3,'ADMIN_USER',$4,$5)",
-        [randomUUID(), actor.id, `ADMIN_${data.action.toUpperCase()}`, "id" in data ? data.id : "new", data],
+        [randomUUID(), actor.id, `ADMIN_${data.action.toUpperCase()}`, "id" in data ? data.id : "new", auditData],
       );
     });
-    return NextResponse.json({ ok: true, activationUrl });
+    return NextResponse.json({
+      ok: true,
+      activationUrl,
+      message: data.action === "invite" && data.setupMethod === "TEMPORARY_PASSWORD"
+        ? "Staff login created. Share the temporary password securely; it must be replaced at first sign-in."
+        : data.action === "invite"
+          ? "Staff login created and activation email requested."
+          : "Saved.",
+    });
   } catch (error) {
     const raw = String(error);
     const message =
-      error instanceof Error && /own account|not found/i.test(error.message)
+      error instanceof Error && /own account|not found|Temporary password/i.test(error.message)
         ? error.message
         : /unique|duplicate/i.test(raw)
           ? "That staff email already exists."

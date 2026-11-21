@@ -20,7 +20,6 @@ export function Footer() {
         <div>
           <span>Shop</span>
           <Link href="/shop">Catalog</Link>
-          <Link href="/loyalty">HiFive Rewards</Link>
           <Link href="/checkout">Pickup & delivery</Link>
           <Link href="/shipping">Shipping policy</Link>
         </div>

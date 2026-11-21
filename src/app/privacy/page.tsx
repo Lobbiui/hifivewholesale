@@ -15,7 +15,7 @@ export default function PrivacyPage() {
         <p>
           Information is used to approve business accounts, provide catalog and
           ordering services, fulfill requests, support customers, administer
-          loyalty benefits, prevent unauthorized access, and meet operational
+          account services, prevent unauthorized access, and meet operational
           and legal obligations.
         </p>
         <h2>Sharing and service providers</h2>
