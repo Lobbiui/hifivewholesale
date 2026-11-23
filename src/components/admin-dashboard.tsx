@@ -5,6 +5,7 @@ import Link from "next/link";
 import {
   BarChart3,
   Boxes,
+  Building2,
   Globe2,
   Handshake,
   LayoutDashboard,
@@ -39,6 +40,7 @@ import {
 } from "./admin-live-operations";
 import { AdminTeam } from "./admin-team";
 import { AdminSalesWorkspace } from "./admin-sales-workspace";
+import { AdminVendors } from "./admin-vendors";
 
 type Tab =
   | "overview"
@@ -55,6 +57,7 @@ type Tab =
   | "reports"
   | "operations"
   | "sales"
+  | "vendors"
   | "team"
   | "security";
 type Product = {
@@ -382,6 +385,11 @@ export function AdminDashboard({
       ? [
         ...common,
         salesEntry,
+        ["vendors", "Vendor access", Building2] as [
+          Tab,
+          string,
+          React.ElementType,
+        ],
         ["team", "Admin users", UserRoundCheck] as [
           Tab,
           string,
@@ -563,6 +571,7 @@ export function AdminDashboard({
           />
         )}{" "}
         {tab === "sales" && <AdminSalesWorkspace />}{" "}
+        {tab === "vendors" && superAdmin && <AdminVendors />}{" "}
         {tab === "team" && superAdmin && <AdminTeam />}{" "}
         {tab === "security" && superAdmin && (
           <Capability
